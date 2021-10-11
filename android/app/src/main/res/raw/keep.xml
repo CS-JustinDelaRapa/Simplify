@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/cantina_band.mp3"
+    tools:keep="@raw/iphonex.mp3"
+    tools:keep="@raw/jazz_and_whistle.mp3"
+    />
