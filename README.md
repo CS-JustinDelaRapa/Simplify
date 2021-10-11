@@ -1,1 +1,3 @@
 # FirebasePractice
+
+try push
