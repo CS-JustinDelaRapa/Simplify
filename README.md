@@ -1,3 +1,4 @@
-# FirebasePractice
+# Simplify-
+Android based task list organizer
 
-try push
+This is the official git repository that will be used throughout the study
