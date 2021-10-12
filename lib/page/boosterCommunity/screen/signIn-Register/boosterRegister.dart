@@ -16,7 +16,11 @@ class BoosterRegister extends StatefulWidget {
 
 class _BoosterRegisterState extends State<BoosterRegister> {
   final auth = FirebaseAuth.instance;
-  String _email = '', _password = '', _lastName = '', _firstName = '', _school = '';
+  String _email = '',
+      _password = '',
+      _lastName = '',
+      _firstName = '',
+      _school = '';
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +129,8 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                 child: ElevatedButton(
                   onPressed: () {
-                    AuthService().registerWithEmailandPassword(_email, _password);
+                    AuthService().registerWithEmailandPassword(
+                        _email, _password, _firstName, _lastName, _school);
                   },
                   child: Text(
                     'Register',
@@ -133,23 +138,6 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                   ),
                 ),
               ),
-
-              //or separator
-              // Row(children: <Widget>[
-              //   Expanded(child: Divider(color: Colors.blueGrey)),
-              //   Text("OR"),
-              //   Expanded(child: Divider(color: Colors.blueGrey)),
-              // ]),
-              // //sign in with Google
-              // Padding(
-              //   padding: const EdgeInsets.all(12.0),
-              //   child: SignInButton(Buttons.Google, onPressed: () {}),
-              // ),
-              // //sign in with facebook
-              // Padding(
-              //   padding: const EdgeInsets.all(12.0),
-              //   child: SignInButton(Buttons.Facebook, onPressed: () {}),
-              // ),              
             ],
           ),
         ),
