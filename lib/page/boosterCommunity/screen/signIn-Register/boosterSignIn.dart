@@ -96,7 +96,7 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                 child: ElevatedButton(
               onPressed: (){
-                signIn(_email, _password);
+                  AuthService().signInWithEmailandPassword(_email, _password);
               },
               child: Text(
                 'Sign In',
@@ -144,14 +144,5 @@ class _BoosterSignInState extends State<BoosterSignIn> {
         ),
       ),
     );
-  }
-
-  signIn(String _email, String _password) async {
-    try {
-      await AuthService().signInWithEmailandPassword(_email, _password);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BoosterHome()));
-    } on FirebaseAuthException catch (error) {
-      Fluttertoast.showToast(msg: error.message.toString());
-    }
   }
 }

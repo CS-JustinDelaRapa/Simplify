@@ -14,14 +14,16 @@ class VerifyScreen extends StatefulWidget {
 
 class _VerifyScreenState extends State<VerifyScreen> {
   final auth = FirebaseAuth.instance;
+
+  bool sendEmail = false;
+
   late User user;
   late Timer timer;
 
   @override
   void initState() {
   user = auth.currentUser!;
-  user.sendEmailVerification();
-  timer = Timer.periodic(Duration(seconds:5), (timer) {
+  timer = Timer.periodic(Duration(seconds:5),(timer) {
     checkEmailVerified();
   });
     super.initState();
@@ -36,7 +38,22 @@ class _VerifyScreenState extends State<VerifyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body:!sendEmail?
+          Center(
+            child: Wrap(
+              children: [
+                ElevatedButton(
+                onPressed: (){
+                  user.sendEmailVerification();
+                  setState(() {
+                    sendEmail = true;
+                  });
+                }, 
+                child: Text('Send Verification'))
+              ]
+            ),
+            )
+          :Center(
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
       children: [
