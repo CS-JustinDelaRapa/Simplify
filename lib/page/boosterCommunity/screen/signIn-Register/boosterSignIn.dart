@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
 import 'package:simplify/page/boosterCommunity/screen/signIn-Register/boosterRegister.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class BoosterSignIn extends StatefulWidget {
   const BoosterSignIn({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class BoosterSignIn extends StatefulWidget {
 }
 
 class _BoosterSignInState extends State<BoosterSignIn> {
-  final auth = FirebaseAuth.instance;
   String _email = '', _password = '';
 
   @override
@@ -22,6 +22,8 @@ class _BoosterSignInState extends State<BoosterSignIn> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
         title: Text('Sign In'),
       ),
       body: Padding(
@@ -129,11 +131,7 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                 padding: const EdgeInsets.all(12.0),
                 child: ElevatedButton(
               onPressed: (){
-                auth.signInAnonymously().then((_){
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => BoosterHome())
-                    );
-                });
+                AuthService().signInAnon();
               },
               child: Text(
                 'Sign In Anonymously',
@@ -150,7 +148,7 @@ class _BoosterSignInState extends State<BoosterSignIn> {
 
   signIn(String _email, String _password) async {
     try {
-      await auth.createUserWithEmailAndPassword(email: _email, password: _password);
+      await AuthService().signInWithEmailandPassword(_email, _password);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BoosterHome()));
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());

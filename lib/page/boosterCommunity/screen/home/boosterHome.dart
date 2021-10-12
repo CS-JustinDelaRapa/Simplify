@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class BoosterHome extends StatefulWidget {
   const BoosterHome({ Key? key}) : super(key: key);
@@ -9,7 +10,6 @@ class BoosterHome extends StatefulWidget {
 }
 
 class _BoosterHomeState extends State<BoosterHome> {
-  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +19,10 @@ class _BoosterHomeState extends State<BoosterHome> {
       ),
       body: ElevatedButton(
         child: Text('Sign Out'),
-        onPressed: (){
-          auth.signOut();
+        onPressed: () {
+          AuthService().signOut();
         },
       ),
-      
     );
   }
 }
