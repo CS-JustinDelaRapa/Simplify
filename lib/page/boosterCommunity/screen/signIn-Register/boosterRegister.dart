@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
 import 'package:simplify/page/boosterCommunity/screen/verifyScreen.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class BoosterRegister extends StatefulWidget {
   const BoosterRegister({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Register'),
@@ -123,60 +125,35 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                 child: ElevatedButton(
                   onPressed: () {
-                    register(_email, _password);
+                    AuthService().registerWithEmailandPassword(_email, _password);
                   },
                   child: Text(
-                    'Sign In',
+                    'Register',
                     style: TextStyle(fontSize: 15),
                   ),
                 ),
               ),
 
               //or separator
-              Row(children: <Widget>[
-                Expanded(child: Divider(color: Colors.blueGrey)),
-                Text("OR"),
-                Expanded(child: Divider(color: Colors.blueGrey)),
-              ]),
-              //sign in with Google
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SignInButton(Buttons.Google, onPressed: () {}),
-              ),
-              //sign in with facebook
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SignInButton(Buttons.Facebook, onPressed: () {}),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    auth.signInAnonymously().then((_) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => BoosterHome()));
-                    });
-                  },
-                  child: Text(
-                    'Sign In Anonymously',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ),
-              ),
+              // Row(children: <Widget>[
+              //   Expanded(child: Divider(color: Colors.blueGrey)),
+              //   Text("OR"),
+              //   Expanded(child: Divider(color: Colors.blueGrey)),
+              // ]),
+              // //sign in with Google
+              // Padding(
+              //   padding: const EdgeInsets.all(12.0),
+              //   child: SignInButton(Buttons.Google, onPressed: () {}),
+              // ),
+              // //sign in with facebook
+              // Padding(
+              //   padding: const EdgeInsets.all(12.0),
+              //   child: SignInButton(Buttons.Facebook, onPressed: () {}),
+              // ),              
             ],
           ),
         ),
       ),
     );
-  }
-
-  register(String _email, String _password) async {
-    try {
-      await auth.createUserWithEmailAndPassword(email: _email, password: _password);
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => VerifyScreen()));
-    } on FirebaseAuthException catch (error) {
-      Fluttertoast.showToast(msg: error.message.toString());
-    }
   }
 }
