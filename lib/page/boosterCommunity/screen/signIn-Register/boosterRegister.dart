@@ -10,8 +10,7 @@ class BoosterRegister extends StatefulWidget {
 }
 
 class _BoosterRegisterState extends State<BoosterRegister> {
-
- final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   final auth = FirebaseAuth.instance;
   String _email = '',
@@ -19,7 +18,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
       _lastName = '',
       _firstName = '',
       _school = '';
-
+//comment
   final List<String> schools = [
     'Don Honorio Ventura State University',
     'Our Lady Of Fatima University',
@@ -27,7 +26,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
     'AMA',
     'Angeles University',
     'University of the Assumption'
-    ];
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +54,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
-                    maxLines: 1,                    
+                    maxLines: 1,
                     decoration: InputDecoration(
                       hintText: 'First Name',
                       labelText: 'First Name',
@@ -63,7 +62,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                     validator: (value) => value != null && value.isEmpty
                         ? 'Required First Name'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _firstName = value.trim();
                       });
@@ -74,7 +73,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
-                    maxLines: 1,                    
+                    maxLines: 1,
                     decoration: InputDecoration(
                       hintText: 'Last Name',
                       labelText: 'Last Name',
@@ -82,7 +81,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                     validator: (value) => value != null && value.isEmpty
                         ? 'Required Last name'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _lastName = value.trim();
                       });
@@ -101,13 +100,13 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                     validator: (value) => value != null && value.isEmpty
                         ? 'Required Email'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _email = value.trim();
                       });
                     },
                   ),
-                ),                       
+                ),
                 //First Name
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -121,7 +120,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                     validator: (value) => value != null && value.isEmpty
                         ? 'Required password'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _password = value.trim();
                       });
@@ -129,38 +128,38 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                   ),
                 ),
                 //school
-                Padding(padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: DropdownButtonFormField<String>(
-                validator: (value) => value == null ? 'Required School' : null,                
-                  isDense: true,
-                  hint: Text('School'),
-                  isExpanded: true,
-                  items: schools.map((String val){
-                    return DropdownMenuItem<String>(
-                      value: val,
-                      child: Text(val, overflow: TextOverflow.ellipsis,),
-                  );
-                  }).toList(),
-                  onChanged: (value){
-                    setState(() {
-                      _school = value!;
-                    });
-                  },
-                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: DropdownButtonFormField<String>(
+                    validator: (value) =>
+                        value == null ? 'Required School' : null,
+                    isDense: true,
+                    hint: Text('School'),
+                    isExpanded: true,
+                    items: schools.map((String val) {
+                      return DropdownMenuItem<String>(
+                        value: val,
+                        child: Text(
+                          val,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _school = value!;
+                      });
+                    },
+                  ),
                 ),
                 //sign in button
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      if(_formKey.currentState!.validate()){
-                                              AuthService().registerWithEmailandPassword(
-                                    _email,
-                                    _password,
-                                    _firstName,
-                                    _lastName,
-                                    _school,
-                                    context);
+                      if (_formKey.currentState!.validate()) {
+                        AuthService().registerWithEmailandPassword(_email,
+                            _password, _firstName, _lastName, _school, context);
                       }
                     },
                     child: Text(
