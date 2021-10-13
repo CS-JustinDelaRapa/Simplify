@@ -5,8 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/service/database.dart';
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final CollectionReference userCollection = _firestore.collection('users');
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final CollectionReference userCollection = _firestore.collection('users');
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,37 +25,40 @@ class AuthService {
   }
 
   Future addItem(String title, String description) async {
-    try{
+    try {
       User? user = _auth.currentUser;
-         DocumentReference documentReferencer =
-        userCollection.doc(user!.uid).collection('items').doc();
+      DocumentReference documentReferencer =
+          userCollection.doc(user!.uid).collection('posts').doc();
 
-    Map<String, dynamic> data = <String, dynamic>{
-      "title": title,
-      "description": description,
-    };
+      Map<String, dynamic> data = <String, dynamic>{
+        "title": title,
+        "description": description,
+      };
 
-await documentReferencer
-        .set(data)
-        .whenComplete(() => print("Note item added to the database"))
-        .catchError((e) => print(e));
-    } catch (e) {
-
-    }
+      await documentReferencer
+          .set(data)
+          .whenComplete(() => print("Note item added to the database"))
+          .catchError((e) => print(e));
+    } catch (e) {}
   }
 
-  Future registerWithEmailandPassword(String email, String password,
-      String firstName, String lastName, String school, BuildContext context) async {
+  Future registerWithEmailandPassword(
+      String email,
+      String password,
+      String firstName,
+      String lastName,
+      String school,
+      BuildContext context) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
       // create a new document for the user with the uid
       await userCollection.doc(user!.uid).set({
-      'first-name': firstName,
-      'last-name': lastName,
-      'school': school,
-    });
+        'first-name': firstName,
+        'last-name': lastName,
+        'school': school,
+      });
       Navigator.pop(context);
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {
