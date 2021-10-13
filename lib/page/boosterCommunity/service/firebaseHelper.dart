@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/service/database.dart';
@@ -20,7 +21,7 @@ class AuthService {
   }
 
   Future registerWithEmailandPassword(String email, String password,
-      String firstName, String lastName, String school) async {
+      String firstName, String lastName, String school, BuildContext context) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -28,6 +29,7 @@ class AuthService {
       // create a new document for the user with the uid
       await DatabaseService(uid: user!.uid)
           .updateUserData(firstName, lastName, school);
+      Navigator.pop(context);
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
