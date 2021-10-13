@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
-import 'package:simplify/page/boosterCommunity/service/database.dart';
+// import 'package:simplify/page/boosterCommunity/service/database.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference userCollection = _firestore.collection('users');
@@ -34,6 +34,7 @@ class AuthService {
       Map<String, dynamic> data = <String, dynamic>{
         "title": title,
         "description": description,
+        "time-posted": DateTime.now()
       };
 
       await documentReferencer

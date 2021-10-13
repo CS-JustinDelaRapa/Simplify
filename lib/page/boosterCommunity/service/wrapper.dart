@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
@@ -16,11 +16,9 @@ class Wrapper extends StatelessWidget {
     //return either home or authenticate widget
     if (user == null) {
       return BoosterSignIn();
-    } 
-    else if (user.verified == false){
+    } else if (user.verified == false) {
       return VerifyScreen();
-    }
-    else {
+    } else {
       return BoosterHome();
     }
   }
