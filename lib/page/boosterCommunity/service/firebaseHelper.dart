@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/service/database.dart';
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference userCollection = _firestore.collection('users');
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,6 +24,15 @@ class AuthService {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
   }
 
+  Future addItem(String title, String description) async {
+    try{
+      User? user = _auth.currentUser;
+      
+    } catch (e) {
+
+    }
+  }
+
   Future registerWithEmailandPassword(String email, String password,
       String firstName, String lastName, String school, BuildContext context) async {
     try {
@@ -27,8 +40,11 @@ class AuthService {
           email: email, password: password);
       User? user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(uid: user!.uid)
-          .updateUserData(firstName, lastName, school);
+      await userCollection.doc(user!.uid).set({
+      'first-name': firstName,
+      'last-name': lastName,
+      'school': school,
+    });
       Navigator.pop(context);
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {

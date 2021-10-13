@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 import 'package:simplify/page/boosterCommunity/service/validator.dart';
 
 class AddPostForm extends StatefulWidget {
@@ -116,13 +117,13 @@ class _AddPostState extends State<AddPostForm> {
                         setState(() {
                           _isProcessing = true;
                         });
-                        //   await Database.addItem(
-                        //     title: _titleController.text,
-                        //     description: _descriptionController.text,
-                        //   );
-                        //   setState(() {
-                        //     _isProcessing = false;
-                        //   });
+                          await AuthService().addItem(
+                             _titleController.text,
+                            _descriptionController.text,
+                          );
+                          setState(() {
+                            _isProcessing = false;
+                          });
                         Navigator.of(context).pop();
                       }
                     },
