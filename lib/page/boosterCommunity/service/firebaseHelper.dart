@@ -27,7 +27,18 @@ class AuthService {
   Future addItem(String title, String description) async {
     try{
       User? user = _auth.currentUser;
-      
+         DocumentReference documentReferencer =
+        userCollection.doc(user!.uid).collection('items').doc();
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "description": description,
+    };
+
+await documentReferencer
+        .set(data)
+        .whenComplete(() => print("Note item added to the database"))
+        .catchError((e) => print(e));
     } catch (e) {
 
     }
@@ -49,6 +60,7 @@ class AuthService {
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
+      //push
     }
   }
 
