@@ -112,19 +112,19 @@ class _AddPostState extends State<AddPostForm> {
                       ),
                     ),
                     onPressed: () async {
-                      // if (_addItemFormKey.currentState!.validate()) {
-                      //   setState(() {
-                      //     _isProcessing = true;
-                      //   });
-                      //   await Database.addItem(
-                      //     title: _titleController.text,
-                      //     description: _descriptionController.text,
-                      //   );
-                      //   setState(() {
-                      //     _isProcessing = false;
-                      //   });
-                      //   Navigator.of(context).pop();
-                      // }
+                      if (_addItemFormKey.currentState!.validate()) {
+                        setState(() {
+                          _isProcessing = true;
+                        });
+                        //   await Database.addItem(
+                        //     title: _titleController.text,
+                        //     description: _descriptionController.text,
+                        //   );
+                        //   setState(() {
+                        //     _isProcessing = false;
+                        //   });
+                        Navigator.of(context).pop();
+                      }
                     },
                     child: Padding(
                       padding: EdgeInsets.only(top: 16.0, bottom: 16.0),

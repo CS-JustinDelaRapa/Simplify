@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final CollectionReference userCollection = _firestore.collection('notes');
+
 class DatabaseService {
   final String? uid;
   DatabaseService({this.uid});
@@ -7,11 +10,6 @@ class DatabaseService {
   Stream<QuerySnapshot> get brews {
     return userCollection.snapshots();
   }
-
-  //get brews stream
-  // collection reference
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
 
   //brew list from the snapshot
   //get brew streams
@@ -26,3 +24,22 @@ class DatabaseService {
     });
   }
 }
+
+//add post
+  // Future<void> addItem({
+  //   required String title,
+  //   required String description,
+  // }) async {
+  //   DocumentReference documentReferencer =
+  //       userCollection.doc(uid).collection('items').doc();
+
+  //   Map<String, dynamic> data = <String, dynamic>{
+  //     "title": title,
+  //     "description": description,
+  //   };
+
+  //   await documentReferencer
+  //       .set(data)
+  //       .whenComplete(() => print("Note item added to the database"))
+  //       .catchError((e) => print(e));
+  // }
