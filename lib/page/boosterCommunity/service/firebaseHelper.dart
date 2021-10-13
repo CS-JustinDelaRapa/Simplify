@@ -24,12 +24,13 @@ class AuthService {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
   }
 
+  //to add post in database
   Future addItem(String title, String description) async {
     try {
       User? user = _auth.currentUser;
       DocumentReference documentReferencer =
           userCollection.doc(user!.uid).collection('posts').doc();
-
+      //updated
       Map<String, dynamic> data = <String, dynamic>{
         "title": title,
         "description": description,
