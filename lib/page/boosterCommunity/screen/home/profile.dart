@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
@@ -12,13 +13,14 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+final FirebaseAuth _auth = FirebaseAuth.instance;
 late String userId;
 
 //comment
 
 @override
   void initState() {
-    userId = AuthService().userID.toString();
+    userId = _auth.currentUser!.uid.toString();
     print('CEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEB ' + userId.toString());
     super.initState();
   }
@@ -28,7 +30,7 @@ late String userId;
 
     return Scaffold(
       body: FutureBuilder<DocumentSnapshot>(
-        future: userCollection.doc('UYejkXZ37GbA2JmAGXX2KCwV8pm2').get(),
+        future: userCollection.doc(userId).get(),
         builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Something went wrong");
@@ -70,8 +72,9 @@ late String userId;
                         ),
                       ),
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text('${data['first-name']} ${data['last-name']}'),
+                          Text('${data['first-name']} ${data['last-name']}', textAlign: TextAlign.left,),
                           Text('${data['school']}'),                          
                         ],
                       )
