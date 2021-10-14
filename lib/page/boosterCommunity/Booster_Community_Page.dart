@@ -15,9 +15,11 @@ class BoosterCommunityPage extends StatefulWidget {
   _BoosterCommunityPageState createState() => _BoosterCommunityPageState();
 }
 
-class _BoosterCommunityPageState extends State<BoosterCommunityPage> {
+class _BoosterCommunityPageState extends State<BoosterCommunityPage> with AutomaticKeepAliveClientMixin {
+  
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamProvider<MyUser?>.value(
       // ignore: non_constant_identifier_names
       catchError: (User, MyUser) => null,
@@ -28,4 +30,8 @@ class _BoosterCommunityPageState extends State<BoosterCommunityPage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

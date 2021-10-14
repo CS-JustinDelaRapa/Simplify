@@ -8,7 +8,12 @@ import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference userCollection = _firestore.collection('users');
 
+
 class AuthService {
+  String? uid;
+
+  AuthService({this.uid});
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //getter for userInfo
@@ -19,9 +24,33 @@ class AuthService {
         : null;
   }
 
-  //auth change user stream
+  String? _infoFromFirebase(User user) {
+    // ignore: unnecessary_null_comparison
+    return user != null
+        ? user.uid.toString()
+        : null;
+  }
+
+  //auth change user stream, value signin
   Stream<MyUser?> get user {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
+  }
+
+  Stream<String?> get userID {
+    return _auth.userChanges().map((User? user) => _infoFromFirebase(user!));
+  } 
+
+  //user information
+    Stream<CurrentUserInfo> get userInfo {
+    return userCollection.doc('UYejkXZ37GbA2JmAGXX2KCwV8pm2').snapshots().map(_userDataFromSnapshot);
+  }
+
+  //map user information from firebase object to dart object
+    CurrentUserInfo _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return CurrentUserInfo(
+        firstName: (snapshot.data() as DocumentSnapshot)['first-name'],
+        lastName: (snapshot.data() as DocumentSnapshot)['last-name'],
+        school: (snapshot.data() as DocumentSnapshot)['school']);
   }
 
   //to add post in database
