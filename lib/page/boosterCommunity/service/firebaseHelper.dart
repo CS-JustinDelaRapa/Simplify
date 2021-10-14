@@ -6,7 +6,7 @@ import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 // import 'package:simplify/page/boosterCommunity/service/database.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final CollectionReference userCollection = _firestore.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
 
 
 class AuthService {
@@ -48,6 +48,7 @@ class AuthService {
   //map user information from firebase object to dart object
     CurrentUserInfo _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return CurrentUserInfo(
+        uid: 'UYejkXZ37GbA2JmAGXX2KCwV8pm2',
         firstName: (snapshot.data() as DocumentSnapshot)['first-name'],
         lastName: (snapshot.data() as DocumentSnapshot)['last-name'],
         school: (snapshot.data() as DocumentSnapshot)['school']);

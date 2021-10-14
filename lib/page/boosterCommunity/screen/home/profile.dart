@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
@@ -13,12 +11,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
+final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
 late String userId;
 
 @override
   void initState() {
     userId = AuthService().userID.toString();
+    print('CEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEB ' + userId.toString());
     super.initState();
   }
 
@@ -26,11 +25,17 @@ late String userId;
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: StreamBuilder<CurrentUserInfo?>(
-        stream: AuthService().userInfo,
+      body: FutureBuilder<DocumentSnapshot>(
+        future: userCollection.doc('UYejkXZ37GbA2JmAGXX2KCwV8pm2').get(),
         builder: (context, snapshot) {
-          if(snapshot.hasData){     
-            CurrentUserInfo? currentUserInfo = snapshot.data;
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }          
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Text("Document does not exist");
+        }          
+          if(snapshot.connectionState == ConnectionState.done){     
+          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
           return Column(
             children: [
               Padding(
@@ -64,8 +69,8 @@ late String userId;
                       ),
                       Column(
                         children: [
-                          Text(currentUserInfo!.firstName.toString()),
-                          Text(currentUserInfo.school.toString())
+                          Text('${data['first-name']} ${data['last-name']}'),
+                          Text('${data['school']}'),                          
                         ],
                       )
                     ],
