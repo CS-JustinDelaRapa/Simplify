@@ -38,7 +38,6 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
-                    obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Email',
                       labelText: 'Email',

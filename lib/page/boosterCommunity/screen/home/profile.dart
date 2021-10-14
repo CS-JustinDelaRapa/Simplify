@@ -28,7 +28,8 @@ late String userId;
     return Scaffold(
       body: StreamBuilder<CurrentUserInfo?>(
         stream: AuthService().userInfo,
-        builder: (context, snapshot) {     
+        builder: (context, snapshot) {
+          if(snapshot.hasData){     
             CurrentUserInfo? currentUserInfo = snapshot.data;
           return Column(
             children: [
@@ -64,7 +65,7 @@ late String userId;
                       Column(
                         children: [
                           Text(currentUserInfo!.firstName.toString()),
-                          Text(currentUserInfo.lastName.toString())
+                          Text(currentUserInfo.school.toString())
                         ],
                       )
                     ],
@@ -73,6 +74,9 @@ late String userId;
               )
             ],
           );
+                    }else{
+                      return Center(child: CircularProgressIndicator());
+                    }
         }
       ),
     );
