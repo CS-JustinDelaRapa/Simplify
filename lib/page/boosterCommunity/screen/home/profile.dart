@@ -78,6 +78,15 @@ class _ProfileState extends State<Profile> {
                                 //     );
                                 //   },
                                 // )
+                                TextButton(
+                                    child: Text('Change'),
+                                    onPressed: () async {
+                                      await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChangeUserIcon()),
+                                      );
+                                    })
                               ],
                             ),
                           ),
