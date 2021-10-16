@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/changeUserIcon/changeUserIcon.dart';
 // import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 // import 'package:simplify/page/boosterCommunity/screen/home/changeUserIcon/changeUserIcon.dart';
 // import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
@@ -62,27 +63,29 @@ class _ProfileState extends State<Profile> {
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               children: [
-                                Container(
-                                    height: 60,
-                                    width: 60,
-                                    child: Image.asset(
-                                        'assets/images/${data['userIcon']}')),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     showDialog(
-                                //       context: context,
-                                //       builder: (context) => ChangeUserIcon(),
-                                //       barrierDismissible: true,
-                                //     );
-                                //   },
-                                // )
+                                GestureDetector(
+                                  child: Container(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.asset(
+                                          'assets/images/${data['userIcon']}')),
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => ChangeUserIcon(
+                                          uid: data['uid'],
+                                          userIcon: data['userIcon']),
+                                      barrierDismissible: true,
+                                    );
+                                  },
+                                )
                                 // TextButton(
                                 //     child: Text('Change'),
                                 //     onPressed: () async {
                                 //       await Navigator.of(context).push(
                                 //         MaterialPageRoute(
                                 //             builder: (context) =>
-                                //                 ChangeUserIcon()),
+                                //                 ChangeUserIcon(uid: data['uid'], userIcon: data['userIcon'])),
                                 //       );
                                 //     })
                               ],

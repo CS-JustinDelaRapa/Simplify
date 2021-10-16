@@ -31,44 +31,32 @@ final List<String> iconImageList = [
   '028-raccoon.png',
   '029-hippo.png',
   '030-monkey.png',
-  '031-meerkat.png',
-  '032-snake.png',
-  '033-zebra.png',
-  '034-donkey.png',
-  '035-bull.png',
-  '036-goat-1.png',
-  '037-goat.png',
-  '038-horse.png',
-  '039-wolf.png',
-  '040-koala.png',
-  '041-hedgehog.png',
-  '042-frog.png',
-  '043-turtle.png',
-  '044-gorilla.png',
-  '045-giraffe.png',
-  '046-deer.png',
-  '047-rhinoceros.png',
-  '048-elephant.png',
-  '049-puma.png',
-  '050-fox.png'
 ];
 
 class ChangeUserIcon extends StatefulWidget {
-  const ChangeUserIcon({Key? key}) : super(key: key);
+  final String uid;
+  final String userIcon;
+  const ChangeUserIcon({Key? key, required this.uid, required this.userIcon})
+      : super(key: key);
 
   @override
   _ChangeUserIconState createState() => _ChangeUserIconState();
 }
 
 class _ChangeUserIconState extends State<ChangeUserIcon> {
-  late String userIcon;
+  late String userIconn;
+
+  @override
+  void initState() {
+    userIconn = widget.userIcon;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Stack(
-      children: <Widget>[
-        SimpleDialog(
+    return Stack(children: <Widget>[
+      SimpleDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16.0))),
           contentPadding: EdgeInsets.zero,
@@ -78,51 +66,48 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
               height: size.height - size.height * 0.12,
               child: Container(
                 child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(8.0),
                   child: GridView.count(
                       crossAxisCount: 4,
+                      mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
                       children: iconImageList.map(_makeGridTile).toList()),
                 ),
               ),
             )
-          ],
-        ),
-        Positioned(
-          bottom: 10,
-          right: 10,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 2.0, right: 2.0),
-                child: ClipOval(
-                  child: Container(
-                    color: Colors.blue,
-                    height: 60.0, // height of the button
-                    width: 60.0, // width of the button
-                    child: RaisedButton(
-                      elevation: 8.0,
-                      color: Colors.black,
-                      onPressed: () {
-                        Navigator.pop(context, userIcon);
-                      },
-                      child: Icon(
-                        Icons.close,
-                        size: 32,
-                        color: Colors.white,
-                      ),
+          ]),
+      Positioned(
+        bottom: 10,
+        right: 10,
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0, right: 2.0),
+              child: ClipOval(
+                child: Container(
+                  color: Colors.blue,
+                  height: 60.0, // height of the button
+                  width: 60.0, // width of the button
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, userIconn);
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: 32,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
-        )
-      ],
-    );
+              ),
+            )
+          ],
+        ),
+      )
+    ]);
   }
 
   Widget _makeGridTile(String userIconPath) {
@@ -130,17 +115,17 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
       child: GestureDetector(
           onTap: () {
             setState(() {
-              userIcon = userIconPath;
+              userIconn = userIconPath;
             });
           },
           child: Container(
               decoration: BoxDecoration(
-                color: userIconPath == userIcon ? Colors.yellow : Colors.white,
-                border: userIconPath == userIcon
+                color: userIconPath == userIconn ? Colors.yellow : Colors.white,
+                border: userIconPath == userIconn
                     ? Border.all(width: 3, color: Colors.red)
                     : null,
               ),
-              child: Image.asset('images/$userIconPath'))), //image,
+              child: Image.asset('assets/images/$userIconPath'))), //image,
     );
   }
 }

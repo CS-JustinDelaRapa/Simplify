@@ -1,5 +1,3 @@
-// ignore_for_file: unrelated_type_equality_checks
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
@@ -15,8 +13,8 @@ class BoosterCommunityPage extends StatefulWidget {
   _BoosterCommunityPageState createState() => _BoosterCommunityPageState();
 }
 
-class _BoosterCommunityPageState extends State<BoosterCommunityPage> with AutomaticKeepAliveClientMixin {
-  
+class _BoosterCommunityPageState extends State<BoosterCommunityPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -32,6 +30,5 @@ class _BoosterCommunityPageState extends State<BoosterCommunityPage> with Automa
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
