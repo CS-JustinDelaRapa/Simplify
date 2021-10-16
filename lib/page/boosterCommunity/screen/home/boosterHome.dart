@@ -9,10 +9,9 @@ class BoosterHome extends StatefulWidget {
   _BoosterHomeState createState() => _BoosterHomeState();
 }
 
-class _BoosterHomeState extends State<BoosterHome> with SingleTickerProviderStateMixin {
- late final TabController _tabController;
- 
-
+class _BoosterHomeState extends State<BoosterHome>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
   @override
   void initState() {
@@ -22,7 +21,6 @@ class _BoosterHomeState extends State<BoosterHome> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -47,19 +45,19 @@ class _BoosterHomeState extends State<BoosterHome> with SingleTickerProviderStat
           children: <Widget>[
             Container(
               child: ElevatedButton(
-          child: Text('Sign Out'),
-          onPressed: () {
-            AuthService().signOut();
-          },
-        ),
+                child: Text('Sign Out'),
+                onPressed: () {
+                  AuthService().signOut();
+                },
+              ),
             ),
-           Profile(),
+            //  Profile(),
           ],
         ),
       ),
     );
   }
-  }
+}
 
     // return Scaffold(
     //     appBar: AppBar(
