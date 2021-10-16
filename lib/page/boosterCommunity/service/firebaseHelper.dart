@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 
-final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
-final CollectionReference threadCollection = FirebaseFirestore.instance.collection('posts');
-
+final CollectionReference userCollection =
+    FirebaseFirestore.instance.collection('users');
+final CollectionReference threadCollection =
+    FirebaseFirestore.instance.collection('posts');
 
 class AuthService {
   String? uid;
@@ -39,15 +40,14 @@ class AuthService {
       //   "title": title,
       //   "description": description,
       //   "time-posted": DateTime.now()
-
       // };
       await threadCollection.doc().set({
         'title': title,
         'description': description,
         'publisher-Id': user!.uid,
         'time-stamp': DateTime.now(),
-        'up-votes' : 0,
-        'down-votes' : 0
+        'up-votes': 0,
+        'down-votes': 0
       });
 
       // await documentReferencer
@@ -55,9 +55,9 @@ class AuthService {
       //     .whenComplete(() => print("Note item added to the database"))
       //     .catchError((e) => print(e));
     } on FirebaseException catch (error) {
-          Fluttertoast.showToast(msg: error.message.toString());
+      Fluttertoast.showToast(msg: error.message.toString());
     }
-  } 
+  }
 
   Future registerWithEmailandPassword(
       String email,
@@ -75,6 +75,7 @@ class AuthService {
         'first-name': firstName,
         'last-name': lastName,
         'school': school,
+        'userIcon': '001-panda.png',
       });
       Navigator.pop(context);
       return _userfromFirebase(user);
@@ -104,8 +105,7 @@ class AuthService {
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
-  }  
-
+  }
 
   Future signOut() async {
     try {

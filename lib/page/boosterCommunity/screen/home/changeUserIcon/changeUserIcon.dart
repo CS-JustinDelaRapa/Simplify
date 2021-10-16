@@ -64,12 +64,6 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
   late String userIcon;
 
   @override
-  void initState() {
-    userIcon = '001-panda.png';
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Stack(
