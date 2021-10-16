@@ -22,24 +22,34 @@ class _BoosterHomeState extends State<BoosterHome>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              title: Text('Booster Community'),
-              pinned: true,
-              floating: true,
-              forceElevated: innerBoxIsScrolled,
-              bottom: TabBar(
+      appBar: AppBar(
+        title: Text('sample'),
+        bottom: TabBar(
                 tabs: <Tab>[
                   Tab(text: 'Home'),
                   Tab(text: 'Profile'),
                 ],
                 controller: _tabController,
               ),
-            ),
-          ];
-        },
+      ),
+      // body: NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return <Widget>[
+      //       SliverAppBar(
+      //         title: Text('Booster Community'),
+      //         pinned: true,
+      //         floating: true,
+      //         forceElevated: innerBoxIsScrolled,
+      //         bottom: TabBar(
+      //           tabs: <Tab>[
+      //             Tab(text: 'Home'),
+      //             Tab(text: 'Profile'),
+      //           ],
+      //           controller: _tabController,
+      //         ),
+      //       ),
+      //     ];
+      //   },
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
@@ -47,7 +57,7 @@ class _BoosterHomeState extends State<BoosterHome>
            Profile(),
           ],
         ),
-      ),
-    );
+      );
+    // );
   }
   }

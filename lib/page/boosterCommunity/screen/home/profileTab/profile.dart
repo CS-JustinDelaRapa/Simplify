@@ -63,22 +63,20 @@ class _ProfileState extends State<Profile> {
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               children: [
-                                GestureDetector(
-                                  child: Container(
-                                      height: 60,
-                                      width: 60,
-                                      child: Image.asset(
-                                          'assets/images/${data['userIcon']}')),
+                            GestureDetector(
+                              child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    child: Image.asset(
+                                        'assets/images/${data['userIcon']}')),
                                   onTap: () {
                                     showDialog(
                                       context: context,
-                                      builder: (context) => ChangeUserIcon(
-                                          uid: data['uid'],
-                                          userIcon: data['userIcon']),
+                                      builder: (context) => ChangeUserIcon(uid: data['uid'], userIcon: data['userIcon']),
                                       barrierDismissible: true,
                                     );
                                   },
-                                )
+                                ),
                                 // TextButton(
                                 //     child: Text('Change'),
                                 //     onPressed: () async {
