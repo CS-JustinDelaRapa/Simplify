@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
 import 'package:simplify/page/boosterCommunity/screen/signIn-Register/boosterSignIn.dart';
-import 'package:simplify/page/boosterCommunity/screen/verifyScreen.dart';
+import 'package:simplify/page/boosterCommunity/screen/verification/verifyScreen.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);

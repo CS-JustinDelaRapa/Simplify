@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 final List<String> iconImageList = [
   '001-panda.png',
@@ -93,7 +94,7 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
                   width: 60.0, // width of the button
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context, userIconn);
+                      AuthService().updateUserIcon(userIconn, context);
                     },
                     child: Icon(
                       Icons.close,
@@ -116,6 +117,7 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
           onTap: () {
             setState(() {
               userIconn = userIconPath;
+              print(userIconn);
             });
           },
           child: Container(

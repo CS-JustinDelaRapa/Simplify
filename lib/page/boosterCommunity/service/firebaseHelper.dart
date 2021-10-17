@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +18,8 @@ class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //getter for userInfo
+
+  //getter for userInfo, from firebase to dart object
   MyUser? _userfromFirebase(User user) {
     // ignore: unnecessary_null_comparison
     return user != null
@@ -24,40 +27,15 @@ class AuthService {
         : null;
   }
 
-  //auth change user stream, value signin
+//**Getters */
+
+  //auth change user stream, Sign In value
   Stream<MyUser?> get user {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
   }
 
-  //to add post in database
-  Future addItem(String title, String description) async {
-    try {
-      User? user = _auth.currentUser;
-      // DocumentReference documentReferencer =
-      //     threadCollection.doc(user!.uid).collection('posts').doc();
-      // //updated
-      // Map<String, dynamic> data = <String, dynamic>{
-      //   "title": title,
-      //   "description": description,
-      //   "time-posted": DateTime.now()
-      // };
-      await threadCollection.doc().set({
-        'title': title,
-        'description': description,
-        'publisher-Id': user!.uid,
-        'time-stamp': DateTime.now(),
-        'up-votes': 0,
-        'down-votes': 0
-      });
+//**Account */
 
-      // await documentReferencer
-      //     .set(data)
-      //     .whenComplete(() => print("Note item added to the database"))
-      //     .catchError((e) => print(e));
-    } on FirebaseException catch (error) {
-      Fluttertoast.showToast(msg: error.message.toString());
-    }
-  }
 
   Future registerWithEmailandPassword(
       String email,
@@ -113,5 +91,43 @@ class AuthService {
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
+
+
   }
+
+
+//**Data manipulation */
+
+ //to add post in database
+  Future addItem(String title, String description) async {
+    try {
+      User? user = _auth.currentUser;
+      await threadCollection.doc().set({
+        'title': title,
+        'description': description,
+        'publisher-Id': user!.uid,
+        'time-stamp': DateTime.now(),
+        'up-votes': 0,
+        'down-votes': 0
+      });
+    } on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+    }
+  }
+
+//update user Icon
+Future updateUserIcon (String userIcon, BuildContext context) async {
+  try {
+      User? user = _auth.currentUser;
+      Map<String, Object> data = new HashMap();
+      data['userIcon'] = userIcon;
+
+      await userCollection.doc(user!.uid).update(data);
+    Navigator.pop(context);
+  } 
+  on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+  }
+
+}
 }

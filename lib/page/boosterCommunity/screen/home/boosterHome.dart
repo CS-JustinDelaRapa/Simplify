@@ -23,7 +23,7 @@ class _BoosterHomeState extends State<BoosterHome>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('sample'),
+        title: Text('Support Cummunity'),
         bottom: TabBar(
                 tabs: <Tab>[
                   Tab(text: 'Home'),
@@ -32,24 +32,6 @@ class _BoosterHomeState extends State<BoosterHome>
                 controller: _tabController,
               ),
       ),
-      // body: NestedScrollView(
-      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //     return <Widget>[
-      //       SliverAppBar(
-      //         title: Text('Booster Community'),
-      //         pinned: true,
-      //         floating: true,
-      //         forceElevated: innerBoxIsScrolled,
-      //         bottom: TabBar(
-      //           tabs: <Tab>[
-      //             Tab(text: 'Home'),
-      //             Tab(text: 'Profile'),
-      //           ],
-      //           controller: _tabController,
-      //         ),
-      //       ),
-      //     ];
-      //   },
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
@@ -58,6 +40,5 @@ class _BoosterHomeState extends State<BoosterHome>
           ],
         ),
       );
-    // );
   }
   }

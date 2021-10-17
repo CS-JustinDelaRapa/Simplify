@@ -57,20 +57,35 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin{
                     ],
                 ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 5),
                         ListTile(
-                          title: Text(userInfo['first-name'] + ' ' + userInfo['last-name'], style: TextStyle(fontWeight:  FontWeight.bold),),
-                          subtitle: Text(userInfo['school']),
+                          leading: Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: Image.asset('assets/images/${userInfo['userIcon']}')),
+                          title: Text(userInfo['first-name'] +' '+ userInfo['last-name'], style: TextStyle(fontSize: 14)),
+                          subtitle: Text('of '+userInfo['school'], style: TextStyle(fontSize: 12)),
                           trailing: Icon(Icons.more_vert),
                           ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0,0),
                           child: Divider(color: Colors.grey,),
                         ),
-                        ListTile(
-                          title: Text(postInfo.get('title')),
-                          subtitle: Text(postInfo.get('title')),
-                          
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                              child: Text(postInfo.get('title'), style: TextStyle(fontWeight: FontWeight.w500)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(postInfo.get('description')),
+                            ),
+                          ],
                         )
                       ],
                     ),
