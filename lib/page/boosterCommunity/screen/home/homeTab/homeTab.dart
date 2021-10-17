@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
@@ -11,8 +12,16 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  late String userId;
+
+  @override
+  void initState() {
+    userId = _auth.currentUser!.uid;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,24 +111,23 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                     ),
                                                   ),
                                                 ],
-                                                // onSelected: (value) {
-                                                //   showDialog(
-                                                //       context: context,
-                                                //       builder: (BuildContext
-                                                //               context) =>
-                                                //           ReportPost(
-                                                //             publisherUID: postInfo[
-                                                //                 'publisher-Id'], //publisher id
-                                                //             postID: postInfo[
-                                                //                 'postID'], //post id
-                                                //             postTitle: postInfo[
-                                                //                 'title'], //post title
-                                                //             postContent: postInfo[
-                                                //                 'description'], //post content
-                                                //             reporterUID: postInfo[
-                                                //                 'uid'], //current user id
-                                                //           ));
-                                                // },
+                                                onSelected: (value) {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ReportPost(
+                                                            publisherUID: postInfo[
+                                                                'publisher-Id'], //publisher id
+                                                            postID: postInfo.id, //post id
+                                                            postTitle: postInfo[
+                                                                'title'], //post title
+                                                            postContent: postInfo[
+                                                                'description'], //post content
+                                                            reporterUID: userId
+                                                            //current user id
+                                                          ));
+                                                },
                                               ),
                                             ),
                                             Padding(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -19,6 +20,9 @@ class ReportPost extends StatefulWidget {
   @override
   _ReportPostState createState() => _ReportPostState();
 }
+
+final CollectionReference reportCollection =
+    FirebaseFirestore.instance.collection('reports');
 
 class _ReportPostState extends State<ReportPost> {
   @override
@@ -47,7 +51,7 @@ class _ReportPostState extends State<ReportPost> {
 
   Widget _blockButton(String buttonText) {
     return ElevatedButton(
-      onPressed: () => null, //_reportUser(buttonText),
+      onPressed: () => _sendReport(buttonText), //_reportUser(buttonText),
       child: Padding(
         padding: const EdgeInsets.only(top: 12.0, bottom: 12),
         child: Container(
@@ -61,11 +65,19 @@ class _ReportPostState extends State<ReportPost> {
     );
   }
 
-  // void _reportUser(String reportReason) async{
-  //   showToastMessage();
-  //   await FBCloudStore.sendReportUserToFB(context,reportReason,widget.postUserName,widget.postId,widget.content,widget.reporter);
-  //   Navigator.of(context).pop();
-  // }
+  void _sendReport(String reportReason) async{
+    showToastMessage();
+    await reportCollection.doc().set({
+        'post-title': widget.postTitle,
+        'post-description': widget.postContent,
+        'post-Id': widget.postID,
+        'publisher-Id': widget.publisherUID,
+        'reporterUId': widget.reporterUID,
+        'report-reason': reportReason,
+
+      });
+    Navigator.of(context).pop();
+  }
 
   static void showToastMessage() {
     Fluttertoast.showToast(
