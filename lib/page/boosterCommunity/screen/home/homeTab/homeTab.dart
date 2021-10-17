@@ -12,7 +12,8 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   late String userId;
@@ -56,6 +57,16 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                     Map<String, dynamic> userInfo =
                                         snapshot.data!.data()
                                             as Map<String, dynamic>;
+                                    // print('${postInfo['time-stamp']}');
+                                    Timestamp timer = postInfo['time-stamp'];
+                                    DateTime time =
+                                        DateTime.fromMicrosecondsSinceEpoch(
+                                            timer.microsecondsSinceEpoch);
+                                    print(timer);
+                                    DateTime dt =
+                                        (postInfo['time-stamp'] as Timestamp)
+                                            .toDate();
+                                    //print(dt);
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
@@ -87,8 +98,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                       userInfo['last-name'],
                                                   style:
                                                       TextStyle(fontSize: 14)),
-                                              subtitle: Text(
-                                                  'of ' + userInfo['school'],
+                                              subtitle: Text(time.toString(),
                                                   style:
                                                       TextStyle(fontSize: 12)),
                                               trailing: PopupMenuButton<int>(
@@ -117,16 +127,24 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                       builder: (BuildContext
                                                               context) =>
                                                           ReportPost(
-                                                            publisherUID: postInfo[
-                                                                'publisher-Id'], //publisher id
-                                                            postID: postInfo.id, //post id
-                                                            postTitle: postInfo[
-                                                                'title'], //post title
-                                                            postContent: postInfo[
-                                                                'description'], //post content
-                                                            reporterUID: userId
-                                                            //current user id
-                                                          ));
+                                                              userFirstName:
+                                                                  userInfo[
+                                                                      'first-name'],
+                                                              userLastName:
+                                                                  userInfo[
+                                                                      'last-name'],
+                                                              publisherUID:
+                                                                  postInfo[
+                                                                      'publisher-Id'], //publisher id
+                                                              postID: postInfo
+                                                                  .id, //post id
+                                                              postTitle: postInfo[
+                                                                  'title'], //post title
+                                                              postContent: postInfo[
+                                                                  'description'], //post content
+                                                              reporterUID:
+                                                                  userId //current user id
+                                                              ));
                                                 },
                                               ),
                                             ),

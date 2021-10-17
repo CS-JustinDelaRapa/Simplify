@@ -8,6 +8,8 @@ class ReportPost extends StatefulWidget {
   final String postID;
   final String reporterUID;
   final String publisherUID;
+  final String userFirstName;
+  final String userLastName;
   const ReportPost({
     Key? key,
     required this.postContent,
@@ -15,6 +17,8 @@ class ReportPost extends StatefulWidget {
     required this.reporterUID,
     required this.publisherUID,
     required this.postTitle,
+    required this.userFirstName,
+    required this.userLastName,
   }) : super(key: key);
 
   @override
@@ -33,7 +37,7 @@ class _ReportPostState extends State<ReportPost> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Text(
-              "Post Author: ${widget.publisherUID}\n\nPlease choice why do you want to report the post\n"),
+              "Post Author: ${widget.userFirstName} ${widget.userLastName}\n\nPlease choice why do you want to report the post\n"),
           _blockButton('Possible Spam Post.'),
           _blockButton('Inappropriate Post or Photo.'),
           _blockButton('Not relative about subject'),
@@ -65,17 +69,16 @@ class _ReportPostState extends State<ReportPost> {
     );
   }
 
-  void _sendReport(String reportReason) async{
+  void _sendReport(String reportReason) async {
     showToastMessage();
     await reportCollection.doc().set({
-        'post-title': widget.postTitle,
-        'post-description': widget.postContent,
-        'post-Id': widget.postID,
-        'publisher-Id': widget.publisherUID,
-        'reporterUId': widget.reporterUID,
-        'report-reason': reportReason,
-
-      });
+      'post-title': widget.postTitle,
+      'post-description': widget.postContent,
+      'post-Id': widget.postID,
+      'publisher-Id': widget.publisherUID,
+      'reporterUId': widget.reporterUID,
+      'report-reason': reportReason,
+    });
     Navigator.of(context).pop();
   }
 
