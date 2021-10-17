@@ -160,6 +160,15 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                   child: Text(postInfo
                                                       .get('description')),
                                                 ),
+                                                // ListTile(
+                                                //   leading: Wrap(
+                                                //     children: [
+                                                //       Icon(Icons.vot)
+                                                //     ],
+                                                //   )
+                                                //   title:
+                                                //   trailing:
+                                                // )
                                               ],
                                             )
                                           ],
