@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class HomeTab extends StatefulWidget {
   _HomeTabState createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin{
+class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -34,63 +35,129 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin{
                         context: context,
                         child: ListView(
                           shrinkWrap: true,
-                          children:
-                              snapshot.data!.docs.map((DocumentSnapshot postInfo) {
+                          children: snapshot.data!.docs
+                              .map((DocumentSnapshot postInfo) {
                             return FutureBuilder<DocumentSnapshot>(
-                                future: userCollection.doc(postInfo.get('publisher-Id')).get(),
+                                future: userCollection
+                                    .doc(postInfo.get('publisher-Id'))
+                                    .get(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.done) {
-                                    Map<String, dynamic> userInfo = snapshot.data!
-                                        .data() as Map<String, dynamic>;
+                                    Map<String, dynamic> userInfo =
+                                        snapshot.data!.data()
+                                            as Map<String, dynamic>;
                                     return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                      BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(2, 2)),
-                    ],
-                ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5),
-                        ListTile(
-                          leading: Container(
-                                    height: 40,
-                                    width: 40,
-                                    child: Image.asset('assets/images/${userInfo['userIcon']}')),
-                          title: Text(userInfo['first-name'] +' '+ userInfo['last-name'], style: TextStyle(fontSize: 14)),
-                          subtitle: Text('of '+userInfo['school'], style: TextStyle(fontSize: 12)),
-                          trailing: Icon(Icons.more_vert),
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0,0),
-                          child: Divider(color: Colors.grey,),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                              child: Text(postInfo.get('title'), style: TextStyle(fontWeight: FontWeight.w500)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(postInfo.get('description')),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[50],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black26,
+                                                blurRadius: 4,
+                                                offset: Offset(2, 2)),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 5),
+                                            ListTile(
+                                              leading: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: Image.asset(
+                                                      'assets/images/${userInfo['userIcon']}')),
+                                              title: Text(
+                                                  userInfo['first-name'] +
+                                                      ' ' +
+                                                      userInfo['last-name'],
+                                                  style:
+                                                      TextStyle(fontSize: 14)),
+                                              subtitle: Text(
+                                                  'of ' + userInfo['school'],
+                                                  style:
+                                                      TextStyle(fontSize: 12)),
+                                              trailing: PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.report),
+                                                        ),
+                                                        Text("Report"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                // onSelected: (value) {
+                                                //   showDialog(
+                                                //       context: context,
+                                                //       builder: (BuildContext
+                                                //               context) =>
+                                                //           ReportPost(
+                                                //             publisherUID: postInfo[
+                                                //                 'publisher-Id'], //publisher id
+                                                //             postID: postInfo[
+                                                //                 'postID'], //post id
+                                                //             postTitle: postInfo[
+                                                //                 'title'], //post title
+                                                //             postContent: postInfo[
+                                                //                 'description'], //post content
+                                                //             reporterUID: postInfo[
+                                                //                 'uid'], //current user id
+                                                //           ));
+                                                // },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8.0, 0, 8.0, 0),
+                                              child: Divider(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          12, 8, 12, 0),
+                                                  child: Text(
+                                                      postInfo.get('title'),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Text(postInfo
+                                                      .get('description')),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
                                   } else {
                                     return Center();
                                   }
