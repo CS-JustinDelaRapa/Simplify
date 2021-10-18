@@ -37,10 +37,13 @@ class _ReportPostState extends State<ReportPost> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Text(
-              "Post Author: ${widget.userFirstName} ${widget.userLastName}\n\nPlease choice why do you want to report the post\n"),
+              "Post Author: ${widget.userFirstName} ${widget.userLastName}\n\nPlease choose why do you want to report the post\n"),
           _blockButton('Possible Spam Post.'),
-          _blockButton('Inappropriate Post or Photo.'),
+          SizedBox(height: 5,),
+          _blockButton('Inappropriate Post'),
+          SizedBox(height: 5,),
           _blockButton('Not relative about subject'),
+          SizedBox(height: 5,),
           _blockButton('Impersonation.')
         ],
       ),
@@ -54,15 +57,27 @@ class _ReportPostState extends State<ReportPost> {
   }
 
   Widget _blockButton(String buttonText) {
-    return ElevatedButton(
-      onPressed: () => _sendReport(buttonText), //_reportUser(buttonText),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12.0, bottom: 12),
-        child: Container(
-          width: double.infinity,
-          child: Text(
-            buttonText,
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          style: BorderStyle.solid
+        )
+      ), 
+      child: ElevatedButton(
+        style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0.0),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent,),
+  ),
+        onPressed: () => _sendReport(buttonText), //_reportUser(buttonText),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0, bottom: 12),
+          child: Container(
+            width: double.infinity,
+            child: Text(
+              buttonText,
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),

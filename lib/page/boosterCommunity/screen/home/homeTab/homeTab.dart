@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
+import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -32,8 +34,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         //get data from collection posts
         body: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('posts')
-                .orderBy('time-stamp', descending: true)
+                .collection('thread')
+                .orderBy('published-time', descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -57,15 +59,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                     Map<String, dynamic> userInfo =
                                         snapshot.data!.data()
                                             as Map<String, dynamic>;
-                                    // print('${postInfo['time-stamp']}');
-                                    Timestamp timer = postInfo['time-stamp'];
-                                    DateTime time =
-                                        DateTime.fromMicrosecondsSinceEpoch(
-                                            timer.microsecondsSinceEpoch);
-                                    print(timer);
-                                    DateTime dt =
-                                        (postInfo['time-stamp'] as Timestamp)
-                                            .toDate();
+                                    // DateTime dt = (postInfo['time-stamp'] as Timestamp).toDate();
                                     //print(dt);
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -98,10 +92,82 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                       userInfo['last-name'],
                                                   style:
                                                       TextStyle(fontSize: 14)),
-                                              subtitle: Text(time.toString(),
-                                                  style:
-                                                      TextStyle(fontSize: 12)),
-                                              trailing: PopupMenuButton<int>(
+                                              subtitle: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(userInfo['school'] ,style: TextStyle(fontSize: 12)),
+                                                  Text(TimeManage.readTimestamp(postInfo['published-time']) + ' ago' ,style: TextStyle(fontSize: 12))
+                                                ],
+                                              ),
+                                              trailing: userId == postInfo['publisher-Id']?
+                                              PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.edit),
+                                                        ),
+                                                        Text("Edit"),
+                                                      ],
+                                                    ),
+                                                    
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 2,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.delete_forever),
+                                                        ),
+                                                        Text("Delete"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onSelected: (value) {
+                                                  if(value == 2){
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) => 
+                                                      AlertDialog(
+                                                        title: Text('Delete Post?'),
+                                                        content: Text("By continuing this post will be deleted permanently." ),
+                                                        actions: [
+                                                          TextButton(onPressed: (){
+                                                            Navigator.of(context).pop();
+                                                          }, 
+                                                          child: Text('Cancel')),
+                                                          TextButton(onPressed: (){
+                                                            AuthService().deletePost(postInfo.id, context);
+                                                          }, 
+                                                          child: Text('Continue'))                                                          
+                                                        ],
+                                                      )
+                                                      );
+                                                  } else if (value == 1){
+                                                    Navigator.of(context).push(
+                                                  MaterialPageRoute(builder: (context) => AddPostForm(
+                                                    title: postInfo['title'], description: postInfo['description'], postUid: postInfo.id, contextFromPopUp: context,)));
+                                                  }
+                                                },
+                                              )
+
+                                              //when post is not from the current user
+                                              :PopupMenuButton<int>(
                                                 itemBuilder: (context) => [
                                                   PopupMenuItem(
                                                     value: 1,
@@ -178,17 +244,35 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                                                   child: Text(postInfo
                                                       .get('description')),
                                                 ),
-                                                // ListTile(
-                                                //   leading: Wrap(
-                                                //     children: [
-                                                //       Icon(Icons.vot)
-                                                //     ],
-                                                //   )
-                                                //   title:
-                                                //   trailing:
-                                                // )
                                               ],
-                                            )
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(12),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Wrap(
+                                                      children: [
+                                                    //upvote
+                                                    Icon(Icons.upload),
+                                                    Text(' ${postInfo['up-votes']}'),
+                                                    SizedBox(width: 5),
+
+                                                    //downVote
+                                                    Icon(Icons.download),
+                                                    Text(' ${postInfo['down-votes']}'),
+                                                    ],),
+                        
+                                                    Wrap(
+                                                      children: [
+                                                    Icon(Icons.comment_outlined),
+                                                    SizedBox(width: 5),                                                  
+                                                    Text('0'),
+                                                      ],),
+
+                                                  ],
+                                                  ),
+                                              )
                                           ],
                                         ),
                                       ),

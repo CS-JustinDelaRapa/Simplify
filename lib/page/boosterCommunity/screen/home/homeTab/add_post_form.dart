@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
+// ignore: must_be_immutable
 class AddPostForm extends StatefulWidget {
-  const AddPostForm({Key? key}) : super(key: key);
+  String? title;
+  String? description;
+  String? postUid;
+  BuildContext? contextFromPopUp;
+  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp}) : super(key: key);
 
   @override
   _AddPostState createState() => _AddPostState();
@@ -13,8 +18,18 @@ class _AddPostState extends State<AddPostForm> {
   bool _isProcessing = false;
 
   //input holder
-  String _title = '',
-        _description = ''; 
+ late String? _postUid;
+ late String _title, _description;
+ late BuildContext _currentContext; 
+
+  @override
+  void initState() {
+    super.initState();
+    _title = widget.title ?? '';
+    _description = widget.description ?? '';
+    _postUid = widget.postUid ?? null;
+    _currentContext = widget.contextFromPopUp ?? this.context;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +53,12 @@ class _AddPostState extends State<AddPostForm> {
                   await AuthService().addItem(
                     _title,
                     _description,
+                    _postUid,
                   );
                   setState(() {
                     _isProcessing = false;
                   });
-                  Navigator.of(context).pop();
+                  Navigator.of(_currentContext).pop();
                 }
               },
             child: Text('Post', style: TextStyle(color: Colors.white,))
@@ -57,6 +73,7 @@ class _AddPostState extends State<AddPostForm> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: TextFormField(
+                  initialValue: _title,
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: 'An Interesting Title',
@@ -74,6 +91,7 @@ class _AddPostState extends State<AddPostForm> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: TextFormField(
+                  initialValue: _description,
                   maxLines: null,
                   decoration: InputDecoration(
                     hintText: 'Brief and clear explanation',

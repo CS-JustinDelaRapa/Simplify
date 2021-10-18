@@ -9,7 +9,7 @@ import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 final CollectionReference userCollection =
     FirebaseFirestore.instance.collection('users');
 final CollectionReference threadCollection =
-    FirebaseFirestore.instance.collection('posts');
+    FirebaseFirestore.instance.collection('thread');
 
 class AuthService {
   String? uid;
@@ -99,16 +99,17 @@ class AuthService {
 //**Data manipulation */
 
  //to add post in database
-  Future addItem(String title, String description) async {
+  Future addItem(String title, String description, String? postUid) async {
     try {
       User? user = _auth.currentUser;
-      await threadCollection.doc().set({
+      await threadCollection.doc(postUid).set({
         'title': title,
         'description': description,
         'publisher-Id': user!.uid,
-        'time-stamp': DateTime.now(),
+        'published-time': DateTime.now().millisecondsSinceEpoch,
         'up-votes': 0,
-        'down-votes': 0
+        'down-votes': 0,
+        'comment-count' : 0
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
@@ -129,5 +130,15 @@ Future updateUserIcon (String userIcon, BuildContext context) async {
       Fluttertoast.showToast(msg: error.message.toString());
   }
 
+}
+
+//delete post
+Future deletePost (String postUid, BuildContext context) async {
+  try {
+   await threadCollection.doc(postUid).delete();
+    Navigator.pop(context);
+  } on FirebaseException catch (error) {
+   Fluttertoast.showToast(msg: error.message.toString());
+  }
 }
 }
