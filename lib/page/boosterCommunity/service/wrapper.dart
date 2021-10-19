@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTry.dart';
 import 'package:simplify/page/boosterCommunity/screen/signIn-Register/boosterSignIn.dart';
 import 'package:simplify/page/boosterCommunity/screen/verification/verifyScreen.dart';
 
@@ -19,7 +20,7 @@ class Wrapper extends StatelessWidget {
     } else if (user.verified == false) {
       return VerifyScreen();
     } else {
-      return BoosterHome();
+      return UserFeed();
     }
   }
 }
