@@ -43,11 +43,11 @@ class _UserFeedState extends State<UserFeed> {
                 shrinkWrap: true,
                 children: snapshot.data!.docs.map((DocumentSnapshot postInfo){
                   return FutureBuilder(
-                    future: FirebaseFirestore.instance.collection('threads').doc(postInfo['publisher-Id']).get(),
+                    future: FirebaseFirestore.instance.collection('users').doc(postInfo['publisher-Id']).get(),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       // Map<String, dynamic> userInfo = snapshot.data!.data()
                       // as Map<String, dynamic>;                      
-                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data);                     
+                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data.data());                     
                     },);
                   // return ThreadItem(postInfo: postInfo);
                 }).toList(),
@@ -131,11 +131,11 @@ class _ThreadItemState extends State<ThreadItem> {
                                           children: [
                                             SizedBox(height: 5),
                                             ListTile(
-                                              // leading: Container(
-                                              //     height: 40,
-                                              //     width: 40,
-                                              //     child: Image.asset(
-                                              //         'assets/images/${widget.userInfo['userIcon']}')),
+                                              leading: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: Image.asset(
+                                                      'assets/images/${widget.userInfo['userIcon']}')),
                                               title: Text(
                                                   widget.userInfo['first-name'] +
                                                       ' ' +
