@@ -43,11 +43,11 @@ class _UserFeedState extends State<UserFeed> {
                 shrinkWrap: true,
                 children: snapshot.data!.docs.map((DocumentSnapshot postInfo){
                   return FutureBuilder(
-                    future: FirebaseFirestore.instance.collection('users').doc(postInfo['publisher-Id']).get(),
+                    future: FirebaseFirestore.instance.collection('users').doc(postInfo.get('publisher-Id')).get(),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       // Map<String, dynamic> userInfo = snapshot.data!.data()
                       // as Map<String, dynamic>;                      
-                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data.data());                     
+                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data);                     
                     },);
                   // return ThreadItem(postInfo: postInfo);
                 }).toList(),
@@ -135,7 +135,7 @@ class _ThreadItemState extends State<ThreadItem> {
                                                   height: 40,
                                                   width: 40,
                                                   child: Image.asset(
-                                                      'assets/images/${widget.userInfo['userIcon']}')),
+                                                      'assets/images/${widget.userInfo.get('userIcon')}')),
                                               title: Text(
                                                   widget.userInfo['first-name'] +
                                                       ' ' +
