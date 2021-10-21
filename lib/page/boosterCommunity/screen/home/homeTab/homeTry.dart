@@ -45,9 +45,15 @@ class _UserFeedState extends State<UserFeed> {
                   return FutureBuilder(
                     future: FirebaseFirestore.instance.collection('users').doc(postInfo.get('publisher-Id')).get(),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      // Map<String, dynamic> userInfo = snapshot.data!.data()
-                      // as Map<String, dynamic>;                      
-                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data);                     
+                        if (snapshot.connectionState == ConnectionState.done) {
+                                    Map<String, dynamic> userInfo =
+                                        snapshot.data!.data()
+                                            as Map<String, dynamic>;
+                        return ThreadItem(postInfo: postInfo, userInfo: userInfo);                    
+                      }
+                      else {
+                                    return Center();
+                                  }                     
                     },);
                   // return ThreadItem(postInfo: postInfo);
                 }).toList(),
@@ -89,7 +95,7 @@ class _UserFeedState extends State<UserFeed> {
 //thread Item
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  final DocumentSnapshot userInfo;
+  final Map<String, dynamic> userInfo;
   const ThreadItem({ Key? key, required this.postInfo, required this.userInfo }) : super(key: key);
 
   @override
