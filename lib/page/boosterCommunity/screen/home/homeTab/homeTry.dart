@@ -7,6 +7,7 @@ import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
+import 'package:rxdart/rxdart.dart';
 
 class UserFeed extends StatefulWidget {
   const UserFeed({ Key? key }) : super(key: key);
@@ -27,12 +28,12 @@ class _UserFeedState extends State<UserFeed> {
     userId = _auth.currentUser!.uid;
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('thread').orderBy('published-time',descending: true).snapshots(),
+        stream: FirebaseFirestore.instance.collection('thread').orderBy('published-time', descending: true).snapshots(),
         builder: (context,snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           return Stack(
@@ -41,7 +42,14 @@ class _UserFeedState extends State<UserFeed> {
               ListView(
                 shrinkWrap: true,
                 children: snapshot.data!.docs.map((DocumentSnapshot postInfo){
-                  return ThreadItem(postInfo: postInfo);
+                  return FutureBuilder(
+                    future: FirebaseFirestore.instance.collection('threads').doc(postInfo['publisher-Id']).get(),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      // Map<String, dynamic> userInfo = snapshot.data!.data()
+                      // as Map<String, dynamic>;                      
+                      return ThreadItem(postInfo: postInfo, userInfo: snapshot.data);                     
+                    },);
+                  // return ThreadItem(postInfo: postInfo);
                 }).toList(),
               ) 
               : Container(
@@ -81,7 +89,8 @@ class _UserFeedState extends State<UserFeed> {
 //thread Item
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  const ThreadItem({ Key? key, required this.postInfo }) : super(key: key);
+  final DocumentSnapshot userInfo;
+  const ThreadItem({ Key? key, required this.postInfo, required this.userInfo }) : super(key: key);
 
   @override
   _ThreadItemState createState() => _ThreadItemState();
@@ -102,7 +111,7 @@ class _ThreadItemState extends State<ThreadItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return  Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -121,6 +130,140 @@ class _ThreadItemState extends State<ThreadItem> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(height: 5),
+                                            ListTile(
+                                              // leading: Container(
+                                              //     height: 40,
+                                              //     width: 40,
+                                              //     child: Image.asset(
+                                              //         'assets/images/${widget.userInfo['userIcon']}')),
+                                              title: Text(
+                                                  widget.userInfo['first-name'] +
+                                                      ' ' +
+                                                      widget.userInfo['last-name'],
+                                                  style:
+                                                      TextStyle(fontSize: 14)),
+                                              subtitle: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(widget.userInfo['school'] ,style: TextStyle(fontSize: 12)),
+                                                  Text(TimeManage.readTimestamp(widget.postInfo['published-time']) + ' ago' ,style: TextStyle(fontSize: 12))
+                                                ],
+                                              ),
+                                              trailing: userId == widget.postInfo['publisher-Id']?
+                                              PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.edit),
+                                                        ),
+                                                        Text("Edit"),
+                                                      ],
+                                                    ),
+                                                    
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 2,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.delete_forever),
+                                                        ),
+                                                        Text("Delete"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onSelected: (value) {
+                                                  if(value == 2){
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) => 
+                                                      AlertDialog(
+                                                        title: Text('Delete Post?'),
+                                                        content: Text("By continuing this post will be deleted permanently." ),
+                                                        actions: [
+                                                          TextButton(onPressed: (){
+                                                            Navigator.of(context).pop();
+                                                          }, 
+                                                          child: Text('Cancel')),
+                                                          TextButton(onPressed: (){
+                                                            AuthService().deletePost(widget.postInfo.id, context);
+                                                          }, 
+                                                          child: Text('Continue'))                                                          
+                                                        ],
+                                                      )
+                                                      );
+                                                  } else if (value == 1){
+                                                    Navigator.of(context).push(
+                                                  MaterialPageRoute(builder: (context) => AddPostForm(
+                                                    title: widget.postInfo['title'], description: widget.postInfo['description'], postUid: widget.postInfo.id, contextFromPopUp: context,)));
+                                                  }
+                                                },
+                                              )
+
+                                              //when post is not from the current user
+                                              :PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.report),
+                                                        ),
+                                                        Text("Report"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onSelected: (value) {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ReportPost(
+                                                              userFirstName:
+                                                                  widget.userInfo[
+                                                                      'first-name'],
+                                                              userLastName:
+                                                                  widget.userInfo[
+                                                                      'last-name'],
+                                                              publisherUID:
+                                                                  widget.postInfo[
+                                                                      'publisher-Id'], //publisher id
+                                                              postID: widget.postInfo
+                                                                  .id, //post id
+                                                              postTitle: widget.postInfo[
+                                                                  'title'], //post title
+                                                              postContent: widget.postInfo[
+                                                                  'description'], //post content
+                                                              reporterUID:
+                                                                  userId //current user id
+                                                              ));
+                                                },
+                                              ),
+                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.fromLTRB(
@@ -179,10 +322,10 @@ class _ThreadItemState extends State<ThreadItem> {
 
                                                   ],
                                                   ),
-                                              )
-                                          ],
-                                        ),
-                                      ),
-                                    );
+                                              ),
+                                          ]
+                                        )
+          )
+    );
   }
 }
