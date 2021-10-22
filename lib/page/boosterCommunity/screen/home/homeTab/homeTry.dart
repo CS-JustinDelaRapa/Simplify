@@ -10,7 +10,7 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserFeed extends StatefulWidget {
-  const UserFeed({Key? key}) : super(key: key);
+  const UserFeed({ Key? key }) : super(key: key);
 
   @override
   _UserFeedState createState() => _UserFeedState();
@@ -28,75 +28,48 @@ class _UserFeedState extends State<UserFeed> {
     userId = _auth.currentUser!.uid;
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('thread')
-              .orderBy('published-time', descending: true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
-            return Stack(
-              children: <Widget>[
-                snapshot.data!.docs.length > 0
-                    ? ListView(
-                        shrinkWrap: true,
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot postInfo) {
-                          return FutureBuilder(
-                            future: FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(postInfo.get('publisher-Id'))
-                                .get(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                Map<String, dynamic> userInfo = snapshot.data!
-                                    .data() as Map<String, dynamic>;
-                                return ThreadItem(
-                                    postInfo: postInfo, userInfo: userInfo);
-                              } else {
-                                return Center();
-                              }
-                            },
-                          );
-                          // return ThreadItem(postInfo: postInfo);
-                        }).toList(),
-                      )
-                    : Container(
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.error,
-                              color: Colors.grey[700],
-                              size: 64,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Text(
-                                'There is no post',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.grey[700]),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        )),
+        stream: FirebaseFirestore.instance.collection('thread').orderBy('published-time', descending: true).snapshots(),
+        builder: (context,snapshot) {
+          if (!snapshot.hasData) return LinearProgressIndicator();
+          return Stack(
+            children:<Widget>[
+              snapshot.data!.docs.length > 0 ?
+              ListView(
+                shrinkWrap: true,
+                children: snapshot.data!.docs.map((DocumentSnapshot postInfo){
+                  return ThreadItem(postInfo: postInfo,);
+                }).toList(),
+              ) 
+              : Container(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.error,color: Colors.grey[700],
+                        size: 64,),
+                        Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Text('There is no post',
+                          style: TextStyle(fontSize: 16,color: Colors.grey[700]),
+                          textAlign: TextAlign.center,),
                       ),
-                // Center(child: CircularProgressIndicator() ,)
-              ],
-            );
-          }),
+                    ],
+                  )
+                ),
+              ),
+              // Center(child: CircularProgressIndicator() ,)
+            ],
+          );
+        }
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddPostForm()));
+        onPressed:(){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddPostForm()));
         },
         tooltip: 'Increment',
         child: Icon(Icons.create),
@@ -105,217 +78,276 @@ class _UserFeedState extends State<UserFeed> {
   }
 }
 
+
 //thread Item
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  final Map<String, dynamic> userInfo;
-  const ThreadItem({Key? key, required this.postInfo, required this.userInfo})
-      : super(key: key);
+  const ThreadItem({ Key? key, required this.postInfo,}) : super(key: key);
 
   @override
   _ThreadItemState createState() => _ThreadItemState();
 }
 
 class _ThreadItemState extends State<ThreadItem> {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late String userId;
+  // late var singleCall;
 
-  @override
+  bool loading = false;
+
+  late String userId;
+  late String publisherFullName;
+  late String publisherSchool;
+  late String publisherUserIcon;
+
+  late  Map<String, dynamic> data;
+
+    @override
   void initState() {
     userId = _auth.currentUser!.uid;
+      // DocumentSnapshot variable = FirebaseFirestore.instance.collection('users').doc(widget.postInfo['publisher-Id']).get() as DocumentSnapshot<Object?>;
+      // this.publisherFullName = variable['first-name'] + ' '+ variable['last-name'];
+      // this.publisherSchool = variable['school'];
+      // this.publisherUserIcon = variable['userIcon'];
+    // setState(() {
+    //   loading = true;
+    // });
+    // getFirebase();
+    // setState(() {
+    //   loading = false;
+    // });
+    getFirebase();
+    print(data['firstname']);
     super.initState();
   }
 
+    Future<void> getFirebase() async {
+      var collection = FirebaseFirestore.instance.collection('users');
+      var querySnapshot = await collection 
+          .where('uid', isEqualTo: widget.postInfo['publisher-Id'])
+          .get();
+      for (var snapshot in querySnapshot.docs) {
+        this.data = snapshot.data();
+      }
+      this.publisherFullName = data['first-name'] + ' '+ data['last-name'];
+      this.publisherSchool = data['school'];
+      this.publisherUserIcon = data['userIcon'];
+    }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26, blurRadius: 4, offset: Offset(2, 2)),
-              ],
-            ),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 5),
-              ListTile(
-                leading: Container(
-                    height: 40,
-                    width: 40,
-                    child: Image.asset(
-                        'assets/images/${widget.userInfo['userIcon']}')),
-                title: Text(
-                    widget.userInfo['first-name'] +
-                        ' ' +
-                        widget.userInfo['last-name'],
-                    style: TextStyle(fontSize: 14)),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.userInfo['school'],
-                        style: TextStyle(fontSize: 12)),
-                    Text(
-                        TimeManage.readTimestamp(
-                                widget.postInfo['published-time']) +
-                            ' ago',
-                        style: TextStyle(fontSize: 12))
-                  ],
-                ),
-                trailing: userId == widget.postInfo['publisher-Id']
-                    ? PopupMenuButton<int>(
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 1,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0, left: 8.0),
-                                  child: Icon(Icons.edit),
-                                ),
-                                Text("Edit"),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 2,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0, left: 8.0),
-                                  child: Icon(Icons.delete_forever),
-                                ),
-                                Text("Delete"),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 2) {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                      title: Text('Delete Post?'),
-                                      content: Text(
-                                          "By continuing this post will be deleted permanently."),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Cancel')),
-                                        TextButton(
-                                            onPressed: () {
-                                              AuthService().deletePost(
-                                                  widget.postInfo.id, context);
-                                            },
-                                            child: Text('Continue'))
-                                      ],
-                                    ));
-                          } else if (value == 1) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddPostForm(
-                                      title: widget.postInfo['title'],
-                                      description:
-                                          widget.postInfo['description'],
-                                      postUid: widget.postInfo.id,
-                                      contextFromPopUp: context,
-                                    )));
-                          }
-                        },
-                      )
+    return loading? Center(child: CircularProgressIndicator())  
+    :Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[50],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black26,
+                                                blurRadius: 4,
+                                                offset: Offset(2, 2)),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 5),
+                                            ListTile(
+                                              leading: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: Image.asset(
+                                                      'assets/images/'+publisherUserIcon)),
+                                              title: Text(publisherFullName,
+                                                  style:
+                                                      TextStyle(fontSize: 14)),
+                                              subtitle: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(publisherSchool ,style: TextStyle(fontSize: 12)),
+                                                  Text(TimeManage.readTimestamp(widget.postInfo['published-time']) + ' ago' ,style: TextStyle(fontSize: 12))
+                                                ],
+                                              ),
+                                              trailing: userId == widget.postInfo['publisher-Id']?
+                                              PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.edit),
+                                                        ),
+                                                        Text("Edit"),
+                                                      ],
+                                                    ),
+                                                    
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 2,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.delete_forever),
+                                                        ),
+                                                        Text("Delete"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onSelected: (value) {
+                                                  if(value == 2){
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) => 
+                                                      AlertDialog(
+                                                        title: Text('Delete Post?'),
+                                                        content: Text("By continuing this post will be deleted permanently." ),
+                                                        actions: [
+                                                          TextButton(onPressed: (){
+                                                            Navigator.of(context).pop();
+                                                          }, 
+                                                          child: Text('Cancel')),
+                                                          TextButton(onPressed: (){
+                                                            AuthService().deletePost(widget.postInfo.id, context);
+                                                          }, 
+                                                          child: Text('Continue'))                                                          
+                                                        ],
+                                                      )
+                                                      );
+                                                  } else if (value == 1){
+                                                    Navigator.of(context).push(
+                                                  MaterialPageRoute(builder: (context) => AddPostForm(
+                                                    title: widget.postInfo['title'], description: widget.postInfo['description'], postUid: widget.postInfo.id, contextFromPopUp: context,)));
+                                                  }
+                                                },
+                                              )
 
-                    //when post is not from the current user
-                    : PopupMenuButton<int>(
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 1,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0, left: 8.0),
-                                  child: Icon(Icons.report),
-                                ),
-                                Text("Report"),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => ReportPost(
-                                  userFirstName: widget.userInfo['first-name'],
-                                  userLastName: widget.userInfo['last-name'],
-                                  publisherUID: widget
-                                      .postInfo['publisher-Id'], //publisher id
-                                  postID: widget.postInfo.id, //post id
-                                  postTitle:
-                                      widget.postInfo['title'], //post title
-                                  postContent: widget
-                                      .postInfo['description'], //post content
-                                  reporterUID: userId //current user id
-                                  ));
-                        },
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-                child: Divider(
-                  color: Colors.grey,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                    child: Text(widget.postInfo.get('title'),
-                        style: TextStyle(fontWeight: FontWeight.w500)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(widget.postInfo.get('description')),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Wrap(
-                      children: [
-                        //upvote
-                        Icon(Icons.upload),
-                        Text(' ${widget.postInfo['up-votes']}'),
-                        SizedBox(width: 5),
+                                              //when post is not from the current user
+                                              :PopupMenuButton<int>(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0,
+                                                                  left: 8.0),
+                                                          child: Icon(
+                                                              Icons.report),
+                                                        ),
+                                                        Text("Report"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onSelected: (value) {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ReportPost(
+                                                              userFirstName:
+                                                              publisherFullName,
+                                                              userLastName:
+                                                              publisherFullName,
+                                                              publisherUID:
+                                                                  widget.postInfo[
+                                                                      'publisher-Id'], //publisher id
+                                                              postID: widget.postInfo
+                                                                  .id, //post id
+                                                              postTitle: widget.postInfo[
+                                                                  'title'], //post title
+                                                              postContent: widget.postInfo[
+                                                                  'description'], //post content
+                                                              reporterUID:
+                                                                  userId //current user id
+                                                              ));
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8.0, 0, 8.0, 0),
+                                              child: Divider(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          12, 8, 12, 0),
+                                                  child: Text(
+                                                      widget.postInfo.get('title'),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Text(widget.postInfo
+                                                      .get('description')),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(12),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Wrap(
+                                                      children: [
+                                                    //upvote
+                                                    Icon(Icons.upload),
+                                                    Text(' ${widget.postInfo['up-votes']}'),
+                                                    SizedBox(width: 5),
 
-                        //downVote
-                        Icon(Icons.download),
-                        Text(' ${widget.postInfo['down-votes']}'),
-                      ],
-                    ),
-                    Wrap(
-                      children: [
-                        Icon(Icons.comment_outlined),
-                        SizedBox(width: 5),
-                        Text('0'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ])));
+                                                    //downVote
+                                                    Icon(Icons.download),
+                                                    Text(' ${widget.postInfo['down-votes']}'),
+                                                    ],),
+                        
+                                                    Wrap(
+                                                      children: [
+                                                    Icon(Icons.comment_outlined),
+                                                    SizedBox(width: 5),                                                  
+                                                    Text('0'),
+                                                      ],),
+
+                                                  ],
+                                                  ),
+                                              ),
+                                          ]
+                                        )
+          )
+    );
   }
 }
