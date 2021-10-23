@@ -7,8 +7,6 @@ import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 
 class UserFeed extends StatefulWidget {
   const UserFeed({Key? key}) : super(key: key);
@@ -44,22 +42,10 @@ class _UserFeedState extends State<UserFeed> {
                 snapshot.data!.docs.length > 0
                     ? ListView(
                         shrinkWrap: true,
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot postInfo) {
-                          // var publisherInfo = AuthService(publisherId: postInfo.get('publisher-Id')).publisherInfo;
-                          // FirebaseFirestore.instance.collection('users').doc(postInfo['publisher-Id']).get().then((value)
-                          // {
-                          //   // print(value.get('first-name'));
-                          //   setState(() {
-                          //   firstName = value.get('firstName');
-                          //   lastName = value.get('last-name');
-                          //   school = value.get('school');
-                          //   userIcon = value.get('userIcon');
-                          //   });
-                          //   // print(firstName);
-                          // });
-                          // print(publisherInfo);
+                        children: snapshot.data!.docs.map((DocumentSnapshot postInfo) {
+
                           return ThreadItem(postInfo: postInfo);
+
                         }).toList(),
                       )
                     : Container(
@@ -99,17 +85,6 @@ class _UserFeedState extends State<UserFeed> {
     );
   }
 
-//get firebase
-// Future<void> getName(String publisherUid) async {
-//   DocumentSnapshot ds = await FirebaseFirestore.instance.collection('users').doc(publisherUid).get();
-//   setState(() {
-//   firstName = ds.get('first-name');
-//   lastName = ds.get('lastt-name');
-//   school = ds.get('school');
-//   userIcon = ds.get('userIcon');
-//    });
-// }
-
 }
 
 //thread Item
@@ -127,38 +102,35 @@ class ThreadItem extends StatefulWidget {
 class _ThreadItemState extends State<ThreadItem>
     with AutomaticKeepAliveClientMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // late var singleCall;
+
   bool loading = false;
   late String userId;
   String publisherFullName = '';
-  late String publisherSchool;
-  String publisherUserIcon = '';
-  // late String publisherFullName;
-  // late String publisherSchool;
-  // late String publisherUserIcon;
-  // late DocumentSnapshot publisherSnapshot;
+  String publisherSchool = '';
+  String publisherUserIcon = '001-panda.png';
+  String publisherFirstName = '';
+  String publisherLastName = '';
 
   @override
   void initState() {
     userId = _auth.currentUser!.uid;
-    // publisherFullName = widget.firstName + ' ' + widget.lastName;
-    // publisherSchool = widget.school;
-    // publisherUserIcon = widget.userIcon;
-    //working single call DO NOT DELETE
-    //---------------
-    //FirebaseFirestore.instance.collection('users').doc(widget.postInfo['publisher-Id']).get().then((value) =>  print(value.get('first-name')!));
-    //---------------
-    publisherSchool =
-        getName(widget.postInfo['publisher-Id'], 'school').toString();
+    getName(widget.postInfo['publisher-Id']);
     super.initState();
   }
 
-  getName(String publisherUid, String fieldname) async {
-    DocumentSnapshot publisherSnapshot = await FirebaseFirestore.instance
+  Future getName(String publisherUid) async {
+  FirebaseFirestore.instance
         .collection('users')
         .doc(publisherUid)
-        .get();
-    return publisherSnapshot.get(fieldname);
+        .get().then((value) {
+           setState(() {
+            publisherSchool = value.get('school');
+            publisherFirstName = value.get('first-name');
+            publisherLastName = value.get('last-name');
+            publisherFullName = publisherFirstName + ' ' +publisherLastName;
+            publisherUserIcon = value.get('userIcon');
+          });
+        });
   }
 
   @override
@@ -189,8 +161,8 @@ class _ThreadItemState extends State<ThreadItem>
                         //     width: 40,
                         //     child: Image.asset(
                         //         'assets/images/' + publisherUserIcon)),
-                        // title: Text(publisherFullName,
-                        //     style: TextStyle(fontSize: 14)),
+                        title: Text(publisherFullName,
+                            style: TextStyle(fontSize: 14)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -294,8 +266,8 @@ class _ThreadItemState extends State<ThreadItem>
                                       context: context,
                                       builder: (BuildContext context) =>
                                           ReportPost(
-                                              userFirstName: publisherFullName,
-                                              userLastName: publisherFullName,
+                                              userFirstName: publisherFirstName,
+                                              userLastName: publisherLastName,
                                               publisherUID: widget.postInfo[
                                                   'publisher-Id'], //publisher id
                                               postID:
