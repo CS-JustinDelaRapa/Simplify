@@ -99,8 +99,7 @@ class ThreadItem extends StatefulWidget {
   _ThreadItemState createState() => _ThreadItemState();
 }
 
-class _ThreadItemState extends State<ThreadItem>
-    with AutomaticKeepAliveClientMixin {
+class _ThreadItemState extends State<ThreadItem>{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool loading = false;
@@ -135,7 +134,6 @@ class _ThreadItemState extends State<ThreadItem>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return loading
         ? Center(child: CircularProgressIndicator())
         : Padding(
@@ -324,7 +322,7 @@ class _ThreadItemState extends State<ThreadItem>
                               children: [
                                 Icon(Icons.comment_outlined),
                                 SizedBox(width: 5),
-                                Text('0'),
+                                Text(' ${widget.postInfo['comment-count']}'),
                               ],
                             ),
                           ],
@@ -332,7 +330,4 @@ class _ThreadItemState extends State<ThreadItem>
                       ),
                     ])));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
