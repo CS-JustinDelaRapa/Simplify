@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
@@ -20,6 +21,8 @@ class _UserFeedState extends State<UserFeed> {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String firstName = '', lastName= '', school= '', userIcon= '';
 
   late String userId;
 
@@ -42,7 +45,20 @@ class _UserFeedState extends State<UserFeed> {
               ListView(
                 shrinkWrap: true,
                 children: snapshot.data!.docs.map((DocumentSnapshot postInfo){
-                  return ThreadItem(postInfo: postInfo,);
+                  // var publisherInfo = AuthService(publisherId: postInfo.get('publisher-Id')).publisherInfo;
+                  // FirebaseFirestore.instance.collection('users').doc(postInfo['publisher-Id']).get().then((value) 
+                  // {
+                  //   // print(value.get('first-name'));
+                  //   setState(() {
+                  //   firstName = value.get('firstName');
+                  //   lastName = value.get('last-name');
+                  //   school = value.get('school');
+                  //   userIcon = value.get('userIcon');                                                                                 
+                  //   });
+                  //   // print(firstName); 
+                  // });
+                  // print(publisherInfo);
+                  return ThreadItem(postInfo: postInfo, firstName: firstName, lastName: lastName, school: school, userIcon: userIcon);
                 }).toList(),
               ) 
               : Container(
@@ -76,67 +92,70 @@ class _UserFeedState extends State<UserFeed> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+//get firebase
+// Future<void> getName(String publisherUid) async {
+//   DocumentSnapshot ds = await FirebaseFirestore.instance.collection('users').doc(publisherUid).get();
+//   setState(() {
+//   firstName = ds.get('first-name');
+//   lastName = ds.get('lastt-name');
+//   school = ds.get('school');
+//   userIcon = ds.get('userIcon');
+//    });
+// }
+
 }
 
 
 //thread Item
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  const ThreadItem({ Key? key, required this.postInfo,}) : super(key: key);
+  final String firstName, lastName, school, userIcon;
+  const ThreadItem({ Key? key, required this.postInfo, required this.firstName, required this.lastName, required this.school, required this.userIcon}) : super(key: key);
 
   @override
   _ThreadItemState createState() => _ThreadItemState();
 }
 
-class _ThreadItemState extends State<ThreadItem> {
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+class _ThreadItemState extends State<ThreadItem> with AutomaticKeepAliveClientMixin{
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   // late var singleCall;
 
   bool loading = false;
 
   late String userId;
-  late String publisherFullName;
-  late String publisherSchool;
-  late String publisherUserIcon;
 
-  late  Map<String, dynamic> data;
+  // late String publisherFullName;
+  // late String publisherSchool;
+  // late String publisherUserIcon;
+
+  String publisherFullName = 'Rasta Man';
+  String publisherSchool = 'DHVSU';
+  String publisherUserIcon = '001-panda.png';
+  // late DocumentSnapshot publisherSnapshot;
 
     @override
   void initState() {
     userId = _auth.currentUser!.uid;
-      // DocumentSnapshot variable = FirebaseFirestore.instance.collection('users').doc(widget.postInfo['publisher-Id']).get() as DocumentSnapshot<Object?>;
-      // this.publisherFullName = variable['first-name'] + ' '+ variable['last-name'];
-      // this.publisherSchool = variable['school'];
-      // this.publisherUserIcon = variable['userIcon'];
-    // setState(() {
-    //   loading = true;
-    // });
-    // getFirebase();
-    // setState(() {
-    //   loading = false;
-    // });
-    getFirebase();
-    print(data['firstname']);
+    // publisherFullName = widget.firstName + ' ' + widget.lastName;
+    // publisherSchool = widget.school;
+    // publisherUserIcon = widget.userIcon;
+    //working single call DO NOT DELETE
+    //---------------
+    //FirebaseFirestore.instance.collection('users').doc(widget.postInfo['publisher-Id']).get().then((value) =>  print(value.get('first-name')!));
+    //---------------
+    getName(widget.postInfo['publisher-Id']);
     super.initState();
   }
 
-    Future<void> getFirebase() async {
-      var collection = FirebaseFirestore.instance.collection('users');
-      var querySnapshot = await collection 
-          .where('uid', isEqualTo: widget.postInfo['publisher-Id'])
-          .get();
-      for (var snapshot in querySnapshot.docs) {
-        this.data = snapshot.data();
-      }
-      this.publisherFullName = data['first-name'] + ' '+ data['last-name'];
-      this.publisherSchool = data['school'];
-      this.publisherUserIcon = data['userIcon'];
-    }
+  Future<void> getName(String publisherUid) async {
+  DocumentSnapshot publisherSnapshot = await FirebaseFirestore.instance.collection('users').doc(publisherUid).get();
+  print(publisherSnapshot.data());
+}
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return loading? Center(child: CircularProgressIndicator())  
     :Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -350,4 +369,7 @@ class _ThreadItemState extends State<ThreadItem> {
           )
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

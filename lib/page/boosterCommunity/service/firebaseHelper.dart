@@ -13,8 +13,9 @@ final CollectionReference threadCollection =
 
 class AuthService {
   String? uid;
+  String? publisherId;
 
-  AuthService({this.uid});
+  AuthService({this.uid, this.publisherId});
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -32,6 +33,12 @@ class AuthService {
   //auth change user stream, Sign In value
   Stream<MyUser?> get user {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
+  }
+
+  // get publisherInfo
+  Future<DocumentSnapshot> get publisherInfo async {
+  DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(publisherId).get();
+  return userSnapshot;
   }
 
 //**Account */
