@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTab.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTry.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/profileTab/profile.dart';
 
 class BoosterHome extends StatefulWidget {
@@ -35,7 +36,7 @@ class _BoosterHomeState extends State<BoosterHome>
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-           HomeTab(),
+           UserFeed(),
            Profile(),
           ],
         ),
