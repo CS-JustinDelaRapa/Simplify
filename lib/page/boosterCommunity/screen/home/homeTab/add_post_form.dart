@@ -6,8 +6,12 @@ class AddPostForm extends StatefulWidget {
   String? title;
   String? description;
   String? postUid;
+  String? userIcon;
+  String? firstName;
+  String? lastName;
+  String? school; 
   BuildContext? contextFromPopUp;
-  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp}) : super(key: key);
+  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp, this.userIcon, this.firstName, this.lastName, this.school}) : super(key: key);
 
   @override
   _AddPostState createState() => _AddPostState();
@@ -19,7 +23,7 @@ class _AddPostState extends State<AddPostForm> {
 
   //input holder
  late String? _postUid;
- late String _title, _description;
+ late String _title, _description, _firstName, _lastName, _school, _userIcon;
  late BuildContext _currentContext; 
 
   @override
@@ -29,6 +33,10 @@ class _AddPostState extends State<AddPostForm> {
     _description = widget.description ?? '';
     _postUid = widget.postUid ?? null;
     _currentContext = widget.contextFromPopUp ?? this.context;
+    _firstName = widget.firstName!;
+    _lastName = widget.lastName!;
+    _school = widget.school!;
+    _userIcon = widget.userIcon!;
   }
 
   @override
@@ -54,6 +62,10 @@ class _AddPostState extends State<AddPostForm> {
                     _title,
                     _description,
                     _postUid,
+                    _userIcon,
+                    _firstName,
+                    _lastName,
+                    _school
                   );
                   setState(() {
                     _isProcessing = false;
