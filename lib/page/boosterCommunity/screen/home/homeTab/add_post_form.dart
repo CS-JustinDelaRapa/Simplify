@@ -76,27 +76,22 @@ class _AddPostState extends State<AddPostForm> {
                     ),
                   )
           :TextButton(
-              onPressed: () async {      
-                  print(_publisherSchool);
-                  print(_publisherFirstName);
-                  print(_publisherLastName);
-                  print(_publisherUserIcon);
-                     
-                // if (_addItemFormKey.currentState!.validate()) {
-                //   await AuthService().addItem(
-                //     _title,
-                //     _description,
-                //     _postUid,
-                //     _publisherSchool,
-                //     _publisherFirstName,
-                //     _publisherLastName,
-                //     _publisherUserIcon                    
-                //   );
-                //   setState(() {
-                //     _isProcessing = false;
-                //   });
-                //   Navigator.of(_currentContext).pop();
-                // }
+              onPressed: () async {                           
+                if (_addItemFormKey.currentState!.validate()) {
+                  await AuthService().addItem(
+                    _title,
+                    _description,
+                    _postUid,
+                    _publisherSchool,
+                    _publisherFirstName,
+                    _publisherLastName,
+                    _publisherUserIcon                    
+                  );
+                  setState(() {
+                    _isProcessing = false;
+                  });
+                  Navigator.of(_currentContext).pop();
+                }
               },
             child: Text('Post', style: TextStyle(color: Colors.white,))
           )
