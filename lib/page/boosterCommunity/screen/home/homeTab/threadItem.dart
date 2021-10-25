@@ -36,11 +36,11 @@ class _ThreadItemState extends State<ThreadItem> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: 5),
               ListTile(
-                leading: Container(
-                    height: 40,
-                    width: 40,
-                    child: Image.asset('assets/images/' +
-                        widget.postInfo.get('publisher-UserIcon'))),
+                // leading: Container(
+                //     height: 40,
+                //     width: 40,
+                //     child: Image.asset('assets/images/' +
+                //         widget.postInfo.get('publisher-UserIcon'))),
                 title: Text(
                     widget.postInfo.get('publisher-FirstName') +
                         ' ' +
