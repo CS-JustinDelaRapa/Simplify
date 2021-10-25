@@ -1,28 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTry.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/profileTab/profile.dart';
 
 class BoosterHome extends StatefulWidget {
-  const BoosterHome({ Key? key}) : super(key: key);
+  const BoosterHome({Key? key}) : super(key: key);
 
   @override
   _BoosterHomeState createState() => _BoosterHomeState();
 }
 
-class _BoosterHomeState extends State<BoosterHome> {
+class _BoosterHomeState extends State<BoosterHome>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('Boosters Community'),
+        title: Text('Support Cummunity'),
+        bottom: TabBar(
+                tabs: <Tab>[
+                  Tab(text: 'Home'),
+                  Tab(text: 'Profile'),
+                ],
+                controller: _tabController,
+              ),
       ),
-      body: ElevatedButton(
-        child: Text('Sign Out'),
-        onPressed: () {
-          AuthService().signOut();
-        },
-      ),
-    );
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+           UserFeed(),
+           Profile(),
+          ],
+        ),
+      );
   }
-}
+  }

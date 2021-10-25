@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
 
 class VerifyScreen extends StatefulWidget {
@@ -41,7 +41,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
     return Scaffold(
       body: !sendEmail
           ? Center(
-              child: Wrap(children: [
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text('The Provided Email is not yet validated'),
+                SizedBox(height: 10,),                
                 ElevatedButton(
                     onPressed: () {
                       user.sendEmailVerification();
@@ -50,11 +54,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       });
                     },
                     child: Text('Send Verification')),
+              Row(children: <Widget>[
+                Expanded(child: Divider(color: Colors.blueGrey)),
+                Text("OR"),
+                Expanded(child: Divider(color: Colors.blueGrey)),
+              
+              ]
+              ),                    
                 ElevatedButton(
                     onPressed: () {
                       auth.signOut();
                     },
-                    child: Text('Sign out')),
+                    child: Text('Use another Email')),
               ]),
             )
           : Center(
