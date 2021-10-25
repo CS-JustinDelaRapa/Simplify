@@ -128,13 +128,13 @@ class _ThreadItemState extends State<ThreadItem> {
                             height: 40,
                             width: 40,
                             child: Image.asset(
-                                'assets/images/' + widget.postInfo.get('publishUserIcon'))),
-                        title: Text(widget.postInfo.get('first-name') + ' ' + widget.postInfo.get('first-name'),
+                                'assets/images/' + widget.postInfo.get('publisher-UserIcon'))),
+                        title: Text(widget.postInfo.get('publisher-FirstName') + ' ' + widget.postInfo.get('publisher-LastName'),
                             style: TextStyle(fontSize: 14)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.postInfo.get('school'),
+                            Text(widget.postInfo.get('publisher-School'),
                                 style: TextStyle(fontSize: 12)),
                             Text(
                                 TimeManage.readTimestamp(

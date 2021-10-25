@@ -111,6 +111,10 @@ class AuthService {
         'up-votes': 0,
         'down-votes': 0,
         'comment-count' : 0,
+        'publisher-UserIcon' : publisherUserIcon,
+        'publisher-FirstName': publisherFirstName,
+        'publisher-LastName': publisherLastName,
+        'publisher-School': publisherSchool,                
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());

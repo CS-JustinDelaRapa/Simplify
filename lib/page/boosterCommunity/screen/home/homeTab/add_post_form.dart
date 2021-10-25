@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
@@ -15,7 +14,7 @@ class AddPostForm extends StatefulWidget {
   String? userIcon;  
 
   BuildContext? contextFromPopUp;
-  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp,}) : super(key: key);
+  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp, this.school, this.firstName, this.lastName, this.userIcon}) : super(key: key);
 
   @override
   _AddPostState createState() => _AddPostState();
@@ -38,10 +37,10 @@ class _AddPostState extends State<AddPostForm> {
  late String _publisherUserIcon;
 
 //null right hand operand
- late String fromFirebaseSchool;
- late String fromFirebaseFirstName;
- late String fromFirebaseLastName;
- late String fromFirebaseUserIcon;
+ String fromFirebaseSchool = '';
+ String fromFirebaseFirstName = '';
+ String fromFirebaseLastName = '';
+ String fromFirebaseUserIcon = '';
 
   @override
   void initState() {
@@ -55,7 +54,7 @@ class _AddPostState extends State<AddPostForm> {
 
     //left hand operand if existing/editing, if creating a new one => right operand
     _publisherSchool = widget.school ?? fromFirebaseSchool;
-    _publisherLastName = widget.firstName ?? fromFirebaseFirstName;
+    _publisherFirstName = widget.firstName ?? fromFirebaseFirstName;
     _publisherLastName = widget.lastName ?? fromFirebaseLastName;
     _publisherUserIcon = widget.userIcon ?? fromFirebaseUserIcon;
   }
