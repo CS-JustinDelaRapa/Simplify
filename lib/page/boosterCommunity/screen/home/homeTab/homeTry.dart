@@ -39,20 +39,14 @@ class _UserFeedState extends State<UserFeed> with AutomaticKeepAliveClientMixin{
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-            return Container(
-              child: snapshot.data!.docs.length > 0
+            return Stack(
+              children:<Widget> [snapshot.data!.docs.length > 0
                     ? ListView(
                         shrinkWrap: true,
                         children: snapshot.data!.docs.map((DocumentSnapshot postInfo) {
-                          return GestureDetector(
-                            onLongPress: (){
-                              // AuthService().deletePost(postInfo.id,context);
-                              print('long pressed');
-                            },
-                            child: ThreadItem(
-                              postInfo: postInfo,
-                              userId: userId),
-                          );
+                          return ThreadItem(
+                            postInfo: postInfo,
+                            userId: userId);
                         }).toList(),
                       )
                     : Container(
@@ -78,8 +72,7 @@ class _UserFeedState extends State<UserFeed> with AutomaticKeepAliveClientMixin{
                         )),
                       ),
                 // Center(child: CircularProgressIndicator() ,)
-              
-            );
+              ]);
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -26,10 +26,8 @@ class ThreadItem extends StatefulWidget {
 }
 
 class _ThreadItemState extends State<ThreadItem>{
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool loading = false;
-  late String userId;
   String publisherFullName = '';
   String publisherSchool = '';
   String publisherUserIcon = '001-panda.png';
@@ -39,8 +37,6 @@ class _ThreadItemState extends State<ThreadItem>{
 
   @override
   void initState() {
-    userId = _auth.currentUser!.uid;
-    publisherFullName = widget.postInfo.get('publisher-Id');
     getName(widget.postInfo['publisher-Id']);
     super.initState();
   }
@@ -56,8 +52,6 @@ class _ThreadItemState extends State<ThreadItem>{
             publisherLastName = value.get('last-name');
             publisherFullName = publisherFirstName + ' ' +publisherLastName;
             publisherUserIcon = value.get('userIcon');
-
-            print(publisherUid +'|||'+ value.id+' '+publisherFullName);
           });
         });
   }
@@ -152,7 +146,7 @@ class _ThreadItemState extends State<ThreadItem>{
                                                     onPressed: () {
                                                       AuthService().deletePost(
                                                           widget.postInfo.id,
-                                                          ).then((value) => dispose);
+                                                          context).then((value) => dispose);
                                                     },
                                                     child: Text('Continue'))
                                               ],
@@ -204,7 +198,7 @@ class _ThreadItemState extends State<ThreadItem>{
                                               postContent: widget.postInfo[
                                                   'description'], //post content
                                               reporterUID:
-                                                  userId //current user id
+                                                  widget.userId //current user id
                                               ));
                                 },
                               ),
