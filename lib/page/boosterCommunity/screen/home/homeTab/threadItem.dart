@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
@@ -8,10 +11,15 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
+  final String fullName;
+  final String userId;
+
   // final publisherInfo;
   const ThreadItem({
     Key? key,
     required this.postInfo,
+    required this.fullName,
+    required this.userId
     // required this.publisherInfo
   }) : super(key: key);
 
@@ -34,6 +42,7 @@ class _ThreadItemState extends State<ThreadItem>{
   @override
   void initState() {
     userId = _auth.currentUser!.uid;
+    publisherFullName = widget.postInfo.get('publisher-Id');
     getName(widget.postInfo['publisher-Id']);
     super.initState();
   }
@@ -49,6 +58,8 @@ class _ThreadItemState extends State<ThreadItem>{
             publisherLastName = value.get('last-name');
             publisherFullName = publisherFirstName + ' ' +publisherLastName;
             publisherUserIcon = value.get('userIcon');
+
+            print(publisherUid +'|||'+ value.id+' '+publisherFullName);
           });
         });
   }
@@ -93,7 +104,7 @@ class _ThreadItemState extends State<ThreadItem>{
                                 style: TextStyle(fontSize: 12))
                           ],
                         ),
-                        trailing: userId == widget.postInfo['publisher-Id']
+                        trailing: widget.userId == widget.postInfo['publisher-Id']
                             ? PopupMenuButton<int>(
                                 itemBuilder: (context) => [
                                   PopupMenuItem(

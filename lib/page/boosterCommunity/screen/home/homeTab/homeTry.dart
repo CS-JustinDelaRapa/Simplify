@@ -16,7 +16,7 @@ class UserFeed extends StatefulWidget {
   _UserFeedState createState() => _UserFeedState();
 }
 
-class _UserFeedState extends State<UserFeed> {
+class _UserFeedState extends State<UserFeed> with AutomaticKeepAliveClientMixin{
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,18 +28,9 @@ class _UserFeedState extends State<UserFeed> {
     super.initState();
   }
 
-  Future<String> getInfo (String publisherUid,) async {
-    DocumentReference docRef = FirebaseFirestore.instance.collection('users').doc(publisherUid);
-    String firstName = '';
-    await docRef.get().then((snapshot) {
-      firstName = snapshot.get('first-name').toString();
-    });
-
-    return firstName;
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
@@ -47,14 +38,22 @@ class _UserFeedState extends State<UserFeed> {
               .orderBy('published-time', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
+            if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
             return Stack(
               children: <Widget>[
                 snapshot.data!.docs.length > 0
                     ? ListView(
                         shrinkWrap: true,
                         children: snapshot.data!.docs.map((DocumentSnapshot postInfo) {
-                          return new ThreadItem(postInfo: postInfo);
+                          return GestureDetector(
+                            onLongPress: (){
+                              print('delete press');
+                            },
+                            child: ThreadItem(
+                              postInfo: postInfo,
+                              fullName: postInfo.get('publisher-Id'),
+                              userId: userId),
+                          );
                         }).toList(),
                       )
                     : Container(
@@ -93,6 +92,9 @@ class _UserFeedState extends State<UserFeed> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 //thread Item
