@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/boosterHome.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTab.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTry.dart';
 import 'package:simplify/page/boosterCommunity/screen/signIn-Register/boosterSignIn.dart';
 import 'package:simplify/page/boosterCommunity/screen/verification/verifyScreen.dart';
 

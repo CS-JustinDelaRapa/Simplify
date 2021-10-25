@@ -11,14 +11,12 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  final String fullName;
   final String userId;
 
   // final publisherInfo;
   const ThreadItem({
     Key? key,
     required this.postInfo,
-    required this.fullName,
     required this.userId
     // required this.publisherInfo
   }) : super(key: key);
@@ -154,7 +152,7 @@ class _ThreadItemState extends State<ThreadItem>{
                                                     onPressed: () {
                                                       AuthService().deletePost(
                                                           widget.postInfo.id,
-                                                          context);
+                                                          ).then((value) => dispose);
                                                     },
                                                     child: Text('Continue'))
                                               ],

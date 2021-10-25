@@ -140,10 +140,10 @@ Future updateUserIcon (String userIcon, BuildContext context) async {
 }
 
 //delete post
-Future deletePost (String postUid, BuildContext context) async {
+Future deletePost (String postUid) async {
   try {
    await threadCollection.doc(postUid).delete();
-    Navigator.pop(context);
+    // Navigator.pop(context);
   } on FirebaseException catch (error) {
    Fluttertoast.showToast(msg: error.message.toString());
   }

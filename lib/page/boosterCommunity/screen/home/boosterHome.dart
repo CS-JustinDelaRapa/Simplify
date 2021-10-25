@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTab.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTry.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/profileTab/profile.dart';
 
