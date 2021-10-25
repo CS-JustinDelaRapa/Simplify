@@ -35,12 +35,6 @@ class AuthService {
     return _auth.userChanges().map((User? user) => _userfromFirebase(user!));
   }
 
-  // get publisherInfo
-  Future<DocumentSnapshot> get publisherInfo async {
-  DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(publisherId).get();
-  return userSnapshot;
-  }
-
 //**Account */
 
 
@@ -106,7 +100,7 @@ class AuthService {
 //**Data manipulation */
 
  //to add post in database
-  Future addItem(String title, String description, String? postUid, String userIcon, String firstName, String lastName, String school) async {
+  Future addItem(String title, String description, String? postUid, String publisherSchool, String publisherFirstName, String publisherLastName, String publisherUserIcon, ) async {
     try {
       User? user = _auth.currentUser;
       await threadCollection.doc(postUid).set({
@@ -117,9 +111,6 @@ class AuthService {
         'up-votes': 0,
         'down-votes': 0,
         'comment-count' : 0,
-        'publisherIcon': userIcon,
-        'publisherFullName': firstName + ' '+ lastName,
-        'publisherSchool': school
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());

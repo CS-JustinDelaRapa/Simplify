@@ -43,9 +43,7 @@ class _UserFeedState extends State<UserFeed> {
                     ? ListView(
                         shrinkWrap: true,
                         children: snapshot.data!.docs.map((DocumentSnapshot postInfo) {
-
-                          return ThreadItem(postInfo: postInfo);
-
+                          return ThreadItem(postInfo: postInfo, userId: userId);
                         }).toList(),
                       )
                     : Container(
@@ -90,55 +88,25 @@ class _UserFeedState extends State<UserFeed> {
 //thread Item
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
+  final String userId;
   const ThreadItem({
     Key? key,
     required this.postInfo,
+    required this.userId
   }) : super(key: key);
 
   @override
   _ThreadItemState createState() => _ThreadItemState();
 }
 
-class _ThreadItemState extends State<ThreadItem>
-    with AutomaticKeepAliveClientMixin {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _ThreadItemState extends State<ThreadItem> {
 
   bool loading = false;
   late String userId;
-  String publisherFullName = '';
-  String publisherSchool = '';
-  String publisherUserIcon = '001-panda.png';
-  String publisherFirstName = '';
-  String publisherLastName = '';
-
-  @override
-  void initState() {
-    userId = _auth.currentUser!.uid;
-    getName(widget.postInfo['publisher-Id']);
-    super.initState();
-  }
-
-  Future getName(String publisherUid) async {
-  FirebaseFirestore.instance
-        .collection('users')
-        .doc(publisherUid)
-        .get().then((value) {
-           setState(() {
-            publisherSchool = value.get('school');
-            publisherFirstName = value.get('first-name');
-            publisherLastName = value.get('last-name');
-            publisherFullName = publisherFirstName + ' ' +publisherLastName;
-            publisherUserIcon = value.get('userIcon');
-          });
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return loading
-        ? Center(child: CircularProgressIndicator())
-        : Padding(
+    return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
                 decoration: BoxDecoration(
@@ -156,26 +124,25 @@ class _ThreadItemState extends State<ThreadItem>
                     children: [
                       SizedBox(height: 5),
                       ListTile(
-                        // leading: Container(
-                        //     height: 40,
-                        //     width: 40,
-                        //     child: Image.asset(
-                        //         'assets/images/' + publisherUserIcon)),
-                        title: Text(publisherFullName,
+                        leading: Container(
+                            height: 40,
+                            width: 40,
+                            child: Image.asset(
+                                'assets/images/' + widget.postInfo.get('publishUserIcon'))),
+                        title: Text(widget.postInfo.get('first-name') + ' ' + widget.postInfo.get('first-name'),
                             style: TextStyle(fontSize: 14)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(publisherSchool,
+                            Text(widget.postInfo.get('school'),
                                 style: TextStyle(fontSize: 12)),
                             Text(
                                 TimeManage.readTimestamp(
-                                        widget.postInfo['published-time']) +
-                                    ' ago',
+                                        widget.postInfo.get('published-time')),
                                 style: TextStyle(fontSize: 12))
                           ],
                         ),
-                        trailing: userId == widget.postInfo['publisher-Id']
+                        trailing: userId == widget.postInfo.get('publisher-Id')
                             ? PopupMenuButton<int>(
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
@@ -266,8 +233,8 @@ class _ThreadItemState extends State<ThreadItem>
                                       context: context,
                                       builder: (BuildContext context) =>
                                           ReportPost(
-                                              userFirstName: publisherFirstName,
-                                              userLastName: publisherLastName,
+                                              userFirstName: widget.postInfo.get('first-name'),
+                                              userLastName: widget.postInfo.get('last-name'),
                                               publisherUID: widget.postInfo[
                                                   'publisher-Id'], //publisher id
                                               postID:
@@ -332,7 +299,4 @@ class _ThreadItemState extends State<ThreadItem>
                       ),
                     ])));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

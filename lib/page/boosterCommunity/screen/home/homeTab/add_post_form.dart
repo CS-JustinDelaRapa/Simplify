@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
@@ -6,12 +9,13 @@ class AddPostForm extends StatefulWidget {
   String? title;
   String? description;
   String? postUid;
-  String? userIcon;
+  String? school;
   String? firstName;
   String? lastName;
-  String? school; 
+  String? userIcon;  
+
   BuildContext? contextFromPopUp;
-  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp, this.userIcon, this.firstName, this.lastName, this.school}) : super(key: key);
+  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp,}) : super(key: key);
 
   @override
   _AddPostState createState() => _AddPostState();
@@ -19,12 +23,25 @@ class AddPostForm extends StatefulWidget {
 
 class _AddPostState extends State<AddPostForm> {
   final _addItemFormKey = GlobalKey<FormState>();
+  FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isProcessing = false;
 
   //input holder
  late String? _postUid;
- late String _title, _description, _firstName, _lastName, _school, _userIcon;
+ late String _title, _description;
  late BuildContext _currentContext; 
+
+//upload to firebase
+ late String _publisherSchool;
+ late String _publisherFirstName;
+ late String _publisherLastName;
+ late String _publisherUserIcon;
+
+//null right hand operand
+ late String fromFirebaseSchool;
+ late String fromFirebaseFirstName;
+ late String fromFirebaseLastName;
+ late String fromFirebaseUserIcon;
 
   @override
   void initState() {
@@ -33,10 +50,28 @@ class _AddPostState extends State<AddPostForm> {
     _description = widget.description ?? '';
     _postUid = widget.postUid ?? null;
     _currentContext = widget.contextFromPopUp ?? this.context;
-    _firstName = widget.firstName!;
-    _lastName = widget.lastName!;
-    _school = widget.school!;
-    _userIcon = widget.userIcon!;
+
+    getInfo(_auth.currentUser!.uid);
+
+    //left hand operand if existing/editing, if creating a new one => right operand
+    _publisherSchool = widget.school ?? fromFirebaseSchool;
+    _publisherLastName = widget.firstName ?? fromFirebaseFirstName;
+    _publisherLastName = widget.lastName ?? fromFirebaseLastName;
+    _publisherUserIcon = widget.userIcon ?? fromFirebaseUserIcon;
+  }
+
+  Future getInfo(String publisherUid) async {
+  FirebaseFirestore.instance
+        .collection('users')
+        .doc(publisherUid)
+        .get().then((value) {
+           setState(() {
+            fromFirebaseSchool = value.get('school');
+            fromFirebaseFirstName = value.get('first-name');
+            fromFirebaseLastName = value.get('last-name');
+            fromFirebaseUserIcon = value.get('userIcon');
+          });
+        });
   }
 
   @override
@@ -62,10 +97,10 @@ class _AddPostState extends State<AddPostForm> {
                     _title,
                     _description,
                     _postUid,
-                    _userIcon,
-                    _firstName,
-                    _lastName,
-                    _school
+                    _publisherSchool,
+                    _publisherFirstName,
+                    _publisherLastName,
+                    _publisherUserIcon                    
                   );
                   setState(() {
                     _isProcessing = false;
