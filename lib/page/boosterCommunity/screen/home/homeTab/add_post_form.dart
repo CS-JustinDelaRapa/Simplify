@@ -11,10 +11,20 @@ class AddPostForm extends StatefulWidget {
   String? school;
   String? firstName;
   String? lastName;
-  String? userIcon;  
+  String? userIcon;
 
   BuildContext? contextFromPopUp;
-  AddPostForm({Key? key, this.description, this.title, this.postUid, this.contextFromPopUp, this.school, this.firstName, this.lastName, this.userIcon}) : super(key: key);
+  AddPostForm(
+      {Key? key,
+      this.description,
+      this.title,
+      this.postUid,
+      this.contextFromPopUp,
+      this.school,
+      this.firstName,
+      this.lastName,
+      this.userIcon})
+      : super(key: key);
 
   @override
   _AddPostState createState() => _AddPostState();
@@ -26,21 +36,21 @@ class _AddPostState extends State<AddPostForm> {
   bool _isProcessing = false;
 
   //input holder
- late String? _postUid;
- late String _title, _description;
- late BuildContext _currentContext; 
+  late String? _postUid;
+  late String _title, _description;
+  late BuildContext _currentContext;
 
 //upload to firebase
- late String _publisherSchool;
- late String _publisherFirstName;
- late String _publisherLastName;
- late String _publisherUserIcon;
+  late String _publisherSchool;
+  late String _publisherFirstName;
+  late String _publisherLastName;
+  late String _publisherUserIcon;
 
 //null right hand operand
- String fromFirebaseSchool = '';
- String fromFirebaseFirstName = '';
- String fromFirebaseLastName = '';
- String fromFirebaseUserIcon = '';
+  String fromFirebaseSchool = '';
+  String fromFirebaseFirstName = '';
+  String fromFirebaseLastName = '';
+  String fromFirebaseUserIcon = '';
 
   @override
   void initState() {
@@ -53,24 +63,25 @@ class _AddPostState extends State<AddPostForm> {
     getInfo(_auth.currentUser!.uid);
 
     //left hand operand if existing/editing, if creating a new one => right operand
-    _publisherSchool = widget.school ?? fromFirebaseSchool;
-    _publisherFirstName = widget.firstName ?? fromFirebaseFirstName;
-    _publisherLastName = widget.lastName ?? fromFirebaseLastName;
-    _publisherUserIcon = widget.userIcon ?? fromFirebaseUserIcon;
+    _publisherSchool = fromFirebaseSchool;
+    _publisherFirstName = fromFirebaseFirstName;
+    _publisherLastName = fromFirebaseLastName;
+    _publisherUserIcon = fromFirebaseUserIcon;
   }
 
   Future getInfo(String publisherUid) async {
-  FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(publisherUid)
-        .get().then((value) {
-           setState(() {
-            fromFirebaseSchool = value.get('school');
-            fromFirebaseFirstName = value.get('first-name');
-            fromFirebaseLastName = value.get('last-name');
-            fromFirebaseUserIcon = value.get('userIcon');
-          });
-        });
+        .get()
+        .then((value) {
+      setState(() {
+        fromFirebaseSchool = value.get('school');
+        fromFirebaseFirstName = value.get('first-name');
+        fromFirebaseLastName = value.get('last-name');
+        fromFirebaseUserIcon = value.get('userIcon');
+      });
+    });
   }
 
   @override
@@ -80,35 +91,37 @@ class _AddPostState extends State<AddPostForm> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Write Post'),
-        actions: [           _isProcessing
-                ? Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.orange,
-                      ),
+        actions: [
+          _isProcessing
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.orange,
                     ),
-                  )
-          :TextButton(
-              onPressed: () async {
-                if (_addItemFormKey.currentState!.validate()) {
-                  await AuthService().addItem(
-                    _title,
-                    _description,
-                    _postUid,
-                    _publisherSchool,
-                    _publisherFirstName,
-                    _publisherLastName,
-                    _publisherUserIcon                    
-                  );
-                  setState(() {
-                    _isProcessing = false;
-                  });
-                  Navigator.of(_currentContext).pop();
-                }
-              },
-            child: Text('Post', style: TextStyle(color: Colors.white,))
-          )
+                  ),
+                )
+              : TextButton(
+                  onPressed: () async {
+                    if (_addItemFormKey.currentState!.validate()) {
+                      await AuthService().addItem(
+                          _title,
+                          _description,
+                          _postUid,
+                          _publisherSchool,
+                          _publisherFirstName,
+                          _publisherLastName,
+                          _publisherUserIcon);
+                      setState(() {
+                        _isProcessing = false;
+                      });
+                      Navigator.of(_currentContext).pop();
+                    }
+                  },
+                  child: Text('Post',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )))
         ],
       ),
       body: SingleChildScrollView(
@@ -142,21 +155,22 @@ class _AddPostState extends State<AddPostForm> {
                   decoration: InputDecoration(
                     hintText: 'Brief and clear explanation',
                     labelText: 'Description',
-                    border: InputBorder.none, 
+                    border: InputBorder.none,
                   ),
-                  validator: (value) =>
-                      value != null && value.isEmpty ? 'Required Description' : null,
+                  validator: (value) => value != null && value.isEmpty
+                      ? 'Required Description'
+                      : null,
                   onChanged: (value) {
                     setState(() {
                       _description = value.trim();
                     });
                   },
                 ),
-              ),            
+              ),
             ],
           ),
         ),
       ),
-      );
+    );
   }
 }
