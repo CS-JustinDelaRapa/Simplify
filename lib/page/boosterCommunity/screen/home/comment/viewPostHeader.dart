@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/comment/comment.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';

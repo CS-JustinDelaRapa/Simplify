@@ -10,7 +10,8 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
   final String userId;
-  const ThreadItem({Key? key, required this.postInfo, required this.userId})
+  final Map<String, dynamic>? myLikeList;
+  const ThreadItem({Key? key, this.myLikeList, required this.postInfo, required this.userId})
       : super(key: key);
 
   @override
@@ -18,7 +19,14 @@ class ThreadItem extends StatefulWidget {
 }
 
 class _ThreadItemState extends State<ThreadItem> {
+  
   bool loading = false;
+
+  @override
+  void initState() {
+    print(widget.myLikeList);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,17 +202,28 @@ class _ThreadItemState extends State<ThreadItem> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Wrap(
-                        children: [
-                          //upvote
-                          Icon(Icons.upload),
-                          Text(' ${widget.postInfo['up-votes']}'),
-                          SizedBox(width: 5),
-    
-                          //downVote
-                          Icon(Icons.download),
-                          Text(' ${widget.postInfo['down-votes']}'),
-                        ],
+                      GestureDetector(
+                        onTap: (){
+                          //increment up-vote count
+                          FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(1)});
+                          FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).set({widget.postInfo.id: true});                          
+                        },
+                        child: Wrap(
+                          children: [
+                            //upvote
+                            Icon(Icons.upload, color: 
+                              widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)?
+                              Colors.blue
+                              : Colors.black 
+                             ),
+                            Text(' ${widget.postInfo['up-votes']}'),
+                            SizedBox(width: 5),
+                          
+                            //downVote
+                            Icon(Icons.download),
+                            Text(' ${widget.postInfo['down-votes']}'),
+                          ],
+                        ),
                       ),
     
                       //comment section

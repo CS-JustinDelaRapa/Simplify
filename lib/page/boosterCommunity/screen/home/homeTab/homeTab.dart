@@ -17,12 +17,19 @@ class _UserFeedState extends State<UserFeed> {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+  //call the userLikeDocument  
+
   late String userId;
+
+  Map<String, dynamic>? myLikeList;
 
   @override
   void initState() {
     userId = _auth.currentUser!.uid;
-    super.initState();
+    var likeListRef = FirebaseFirestore.instance.collection('users').doc(userId).collection('myLikeList').doc(userId);
+    super.initState(); 
+    likeListRef.get().then((value) => myLikeList = value.data());
   }
 
   @override
@@ -42,7 +49,7 @@ class _UserFeedState extends State<UserFeed> {
                         shrinkWrap: true,
                         children: snapshot.data!.docs
                             .map((DocumentSnapshot postInfo) {
-                          return ThreadItem(postInfo: postInfo, userId: userId);
+                          return ThreadItem(postInfo: postInfo, userId: userId, myLikeList: myLikeList);
                         }).toList(),
                       )
                     : Container(
