@@ -223,23 +223,6 @@ class _ThreadItemState extends State<ThreadItem> {
                             ),
                           ),
                           SizedBox(width: 5),
-                          //downVote
-                          // GestureDetector(
-                          //   onTap: (){
-                          //     handleDownVote();
-                          //   },
-                          //   child: Wrap(
-                          //     children: [
-                          //     Icon(Icons.download, color: 
-                          //       widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
-                          //       && widget.myLikeList!.containsValue(false)?
-                          //     Colors.blue
-                          //     : Colors.black 
-                          //    ),
-                          //   Text(' ${widget.postInfo['down-votes']}'),                              
-                          //     ],
-                          //   ),
-                          // )                          
                         ],
                       ),
     
@@ -283,30 +266,5 @@ handleUpVote(){
         widget.myLikeList!.remove(widget.postInfo.id);
       });
       }                     
-}
-
-//update DownVotes
-handleDownVote(){
-          if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
-        FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"down-votes": FieldValue.increment(1)});
-        FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: false});     
-        if(widget.myLikeList == null){
-      setState(() {
-        widget.myLikeList = {widget.postInfo.id:false};
-      });
-        } else{
-        setState(() {
-          widget.myLikeList!.addEntries([
-          MapEntry(widget.postInfo.id,false)
-        ]);
-        });
-        }
-        } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
-        FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"down-votes": FieldValue.increment(-1)});
-        FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
-        setState(() {
-          widget.myLikeList!.remove(widget.postInfo.id);
-        });
-        }                     
 }
 }

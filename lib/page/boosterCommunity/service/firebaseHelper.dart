@@ -160,6 +160,13 @@ class AuthService {
       data['userIcon'] = userIcon;
 
       await userCollection.doc(user!.uid).update(data);
+      var querySnapshots = await threadCollection.where('publisher-Id', isEqualTo: user.uid).get();
+      for (var doc in querySnapshots.docs) {
+        await doc.reference.update({
+          'publisher-UserIcon': userIcon,
+        });
+    }
+    Navigator.pop(context);
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
