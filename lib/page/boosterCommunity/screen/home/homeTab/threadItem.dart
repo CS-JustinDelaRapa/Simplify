@@ -7,11 +7,12 @@ import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 //thread Item
+// ignore: must_be_immutable
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
   final String userId;
-  final Map<String, dynamic>? myLikeList;
-  const ThreadItem({Key? key, this.myLikeList, required this.postInfo, required this.userId})
+  Map<String, dynamic>? myLikeList;
+  ThreadItem({Key? key, this.myLikeList, required this.postInfo, required this.userId})
       : super(key: key);
 
   @override
@@ -202,28 +203,44 @@ class _ThreadItemState extends State<ThreadItem> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: (){
-                          //increment up-vote count
-                          FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(1)});
-                          FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).set({widget.postInfo.id: true});                          
-                        },
-                        child: Wrap(
-                          children: [
-                            //upvote
-                            Icon(Icons.upload, color: 
-                              widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)?
+                      Row(
+                        children: [
+                          // upvote
+                          GestureDetector(
+                            onTap: (){
+                              handleUpVote();
+                            },
+                            child: Wrap(
+                              children: [
+                              Icon(Icons.upload, color: 
+                                widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
+                                && widget.myLikeList!.containsValue(true)?
                               Colors.blue
                               : Colors.black 
                              ),
-                            Text(' ${widget.postInfo['up-votes']}'),
-                            SizedBox(width: 5),
-                          
-                            //downVote
-                            Icon(Icons.download),
-                            Text(' ${widget.postInfo['down-votes']}'),
-                          ],
-                        ),
+                            Text(' ${widget.postInfo['up-votes']}'),                              
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          //downVote
+                          // GestureDetector(
+                          //   onTap: (){
+                          //     handleDownVote();
+                          //   },
+                          //   child: Wrap(
+                          //     children: [
+                          //     Icon(Icons.download, color: 
+                          //       widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
+                          //       && widget.myLikeList!.containsValue(false)?
+                          //     Colors.blue
+                          //     : Colors.black 
+                          //    ),
+                          //   Text(' ${widget.postInfo['down-votes']}'),                              
+                          //     ],
+                          //   ),
+                          // )                          
+                        ],
                       ),
     
                       //comment section
@@ -240,4 +257,56 @@ class _ThreadItemState extends State<ThreadItem> {
               ]))),
     );
   }
+
+//update UpVote
+handleUpVote(){
+        if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
+      FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(1)});
+
+      FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: true});     
+      if(widget.myLikeList == null){
+    setState(() {
+      widget.myLikeList = {widget.postInfo.id:true};
+    });
+      } else{
+      setState(() {
+        widget.myLikeList!.addEntries([
+        MapEntry(widget.postInfo.id,true)
+      ]);
+      });
+      }
+      } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
+      FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(-1)});
+      FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
+      print('kahit ano');
+      setState(() {
+        widget.myLikeList!.remove(widget.postInfo.id);
+      });
+      }                     
+}
+
+//update DownVotes
+handleDownVote(){
+          if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
+        FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"down-votes": FieldValue.increment(1)});
+        FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: false});     
+        if(widget.myLikeList == null){
+      setState(() {
+        widget.myLikeList = {widget.postInfo.id:false};
+      });
+        } else{
+        setState(() {
+          widget.myLikeList!.addEntries([
+          MapEntry(widget.postInfo.id,false)
+        ]);
+        });
+        }
+        } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
+        FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"down-votes": FieldValue.increment(-1)});
+        FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
+        setState(() {
+          widget.myLikeList!.remove(widget.postInfo.id);
+        });
+        }                     
+}
 }

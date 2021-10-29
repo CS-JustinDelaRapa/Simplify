@@ -13,7 +13,7 @@ class UserFeed extends StatefulWidget {
   _UserFeedState createState() => _UserFeedState();
 }
 
-class _UserFeedState extends State<UserFeed> {
+class _UserFeedState extends State<UserFeed> with AutomaticKeepAliveClientMixin{
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -21,6 +21,10 @@ class _UserFeedState extends State<UserFeed> {
   //call the userLikeDocument  
 
   late String userId;
+  late Timer timer;
+
+  bool counting = true;
+  bool futureDone = false;
 
   Map<String, dynamic>? myLikeList;
 
@@ -29,19 +33,34 @@ class _UserFeedState extends State<UserFeed> {
     userId = _auth.currentUser!.uid;
     var likeListRef = FirebaseFirestore.instance.collection('users').doc(userId).collection('myLikeList').doc(userId);
     super.initState(); 
-    likeListRef.get().then((value) => myLikeList = value.data());
+    likeListRef.get().then((value) {
+      myLikeList = value.data();
+      futureDone = true;
+    });
+
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if(futureDone == true){
+        setState(() {
+          counting = false;
+        });
+        timer.cancel();
+      }
+    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    super.build(context);
+    return counting? Center(child: CircularProgressIndicator(),)
+    :Scaffold(
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('thread')
               .orderBy('published-time', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
+            if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
             return Stack(
               children: <Widget>[
                 snapshot.data!.docs.length > 0
@@ -74,7 +93,6 @@ class _UserFeedState extends State<UserFeed> {
                           ],
                         )),
                       ),
-                // Center(child: CircularProgressIndicator() ,)
               ],
             );
           }),
@@ -88,4 +106,8 @@ class _UserFeedState extends State<UserFeed> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
