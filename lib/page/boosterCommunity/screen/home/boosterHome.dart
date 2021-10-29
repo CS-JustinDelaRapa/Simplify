@@ -35,7 +35,7 @@ class _BoosterHomeState extends State<BoosterHome>
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-           HomeTab(),
+           UserFeed(),
            Profile(),
           ],
         ),

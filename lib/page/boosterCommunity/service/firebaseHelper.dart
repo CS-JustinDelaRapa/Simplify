@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +20,6 @@ class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   //getter for userInfo, from firebase to dart object
   MyUser? _userfromFirebase(User user) {
     // ignore: unnecessary_null_comparison
@@ -36,7 +36,6 @@ class AuthService {
   }
 
 //**Account */
-
 
   Future registerWithEmailandPassword(
       String email,
@@ -92,15 +91,20 @@ class AuthService {
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
-
-
   }
-
 
 //**Data manipulation */
 
- //to add post in database
-  Future addItem(String title, String description, String? postUid, String publisherSchool, String publisherFirstName, String publisherLastName, String publisherUserIcon, ) async {
+  //to add post in database
+  Future addItem(
+    String title,
+    String description,
+    String? postUid,
+    String publisherSchool,
+    String publisherFirstName,
+    String publisherLastName,
+    String publisherUserIcon,
+  ) async {
     try {
       User? user = _auth.currentUser;
       await threadCollection.doc(postUid).set({
@@ -110,40 +114,64 @@ class AuthService {
         'published-time': DateTime.now().millisecondsSinceEpoch,
         'up-votes': 0,
         'down-votes': 0,
-        'comment-count' : 0,
-        'publisher-UserIcon' : publisherUserIcon,
+        'comment-count': 0,
+        'publisher-UserIcon': publisherUserIcon,
         'publisher-FirstName': publisherFirstName,
         'publisher-LastName': publisherLastName,
-        'publisher-School': publisherSchool,                
+        'publisher-School': publisherSchool,
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
   }
 
+  Future addComment(
+      String commentContent,
+      String? postUid,
+      String commenterFirstName,
+      String commenterLastName,
+      String commenterIcon,
+      String commenterSchool) async {
+    try {
+      User? user = _auth.currentUser;
+
+      await threadCollection.doc(postUid).collection('comment').doc().set({
+        'commentContent': commentContent,
+        'commenter-id': user!.uid,
+        'commenter-firstName': commenterFirstName,
+        'commenter-lastName': commenterLastName,
+        'commenter-icon': commenterIcon,
+        'commenter-school': commenterSchool,
+        'published-time': DateTime.now().millisecondsSinceEpoch,
+      });
+      await threadCollection
+          .doc(postUid)
+          .update({"comment-count": FieldValue.increment(1)});
+    } on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+    }
+  }
+
 //update user Icon
-Future updateUserIcon (String userIcon, BuildContext context) async {
-  try {
+  Future updateUserIcon(String userIcon, BuildContext context) async {
+    try {
       User? user = _auth.currentUser;
       Map<String, Object> data = new HashMap();
       data['userIcon'] = userIcon;
 
       await userCollection.doc(user!.uid).update(data);
-    Navigator.pop(context);
-  } 
-  on FirebaseException catch (error) {
+    } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
+    }
   }
-
-}
 
 //delete post
-Future deletePost (String postUid, BuildContext context) async {
-  try {
-   await threadCollection.doc(postUid).delete();
-    Navigator.pop(context);
-  } on FirebaseException catch (error) {
-   Fluttertoast.showToast(msg: error.message.toString());
+  Future deletePost(String postUid, BuildContext context) async {
+    try {
+      await threadCollection.doc(postUid).delete();
+      Navigator.pop(context);
+    } on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+    }
   }
-}
 }
