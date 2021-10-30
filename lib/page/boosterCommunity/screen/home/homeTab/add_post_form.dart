@@ -66,7 +66,7 @@ class _AddPostState extends State<AddPostForm> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Write Post'),
-        actions: [           _isProcessing
+        actions: [ _isProcessing
                 ? Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: CircularProgressIndicator(
@@ -78,17 +78,28 @@ class _AddPostState extends State<AddPostForm> {
           :TextButton(
               onPressed: () async {                           
                 if (_addItemFormKey.currentState!.validate()) {
-                  await AuthService().addItem(
+                  //if Creating a new post
+                  if(widget.postUid == null){
+                    await AuthService().addItem(
                     _title,
                     _description,
-                    _postUid,
                     _publisherSchool,
                     _publisherFirstName,
                     _publisherLastName,
                     _publisherUserIcon                    
                   );
+                  }
+                  //if editing a new post
+                  else{
+                    await AuthService().updateItem(
+                      _title,
+                      _description,
+                      _postUid!,
+                    );
+                  } 
+                  
                   setState(() {
-                    _isProcessing = false;
+                    _isProcessing = true;
                   });
                   Navigator.of(_currentContext).pop();
                 }

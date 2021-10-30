@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/comment.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
@@ -33,12 +34,17 @@ class _ThreadItemState extends State<ThreadItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        try{
+        FirebaseFirestore.instance.collection('threads').doc(widget.postInfo.id).update({"view-count": FieldValue.increment(1)});
         Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => CommentSection(
                                     postInfo: widget.postInfo,
                                     postId: widget.postInfo.id,
                                     userId: widget.userId,
                                       )));
+        } on FirebaseException catch (error) {
+        Fluttertoast.showToast(msg: error.message.toString());
+        }
       },
       child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -203,29 +209,38 @@ class _ThreadItemState extends State<ThreadItem> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          // upvote
-                          GestureDetector(
-                            onTap: (){
-                              handleUpVote();
-                            },
-                            child: Wrap(
-                              children: [
-                              Icon(Icons.upload, color: 
-                                widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
-                                && widget.myLikeList!.containsValue(true)?
-                              Colors.blue
-                              : Colors.black 
-                             ),
-                            Text(' ${widget.postInfo['up-votes']}'),                              
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                        ],
-                      ),
-    
+                      //like button
+                      // Row(
+                      //   children: [
+                      //     // upvote
+                      //     GestureDetector(
+                      //       onTap: (){
+                      //         handleUpVote();
+                      //       },
+                      //       child: Wrap(
+                      //         children: [
+                      //         Icon(Icons.upload, color: 
+                      //           widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
+                      //           && widget.myLikeList!.containsValue(true)?
+                      //         Colors.blue
+                      //         : Colors.black 
+                      //        ),
+                      //       Text(' ${widget.postInfo['up-votes']}'),                              
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 5),
+                      //   ],
+                      // ),
+                    Wrap(
+                      children: [
+                        Icon(Icons.remove_red_eye),                        
+                        SizedBox(width: 5),          
+                        Text(' ${widget.postInfo['comment-count']}'),              
+                      ],
+                    ),     
+                      
+
                       //comment section
                       Wrap(
                       children: [
@@ -243,9 +258,8 @@ class _ThreadItemState extends State<ThreadItem> {
 
 //update UpVote
 handleUpVote(){
-        if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
+      if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(1)});
-
       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: true});     
       if(widget.myLikeList == null){
     setState(() {
@@ -261,7 +275,6 @@ handleUpVote(){
       } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(-1)});
       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
-      print('kahit ano');
       setState(() {
         widget.myLikeList!.remove(widget.postInfo.id);
       });

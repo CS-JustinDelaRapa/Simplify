@@ -94,12 +94,28 @@ class AuthService {
   }
 
 //**Data manipulation */
+  Future updateItem(
+    String title,
+    String description,
+    String postUid
+  )async{
+    try {
+      User? user = _auth.currentUser;
+      await threadCollection.doc(postUid).update({
+        'title': title,
+        'description': description,
+        'publisher-Id': user!.uid,
+        'published-time': DateTime.now().millisecondsSinceEpoch,
+      });
+    } on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+    }
+  }
 
   //to add post in database
   Future addItem(
     String title,
     String description,
-    String? postUid,
     String publisherSchool,
     String publisherFirstName,
     String publisherLastName,
@@ -107,13 +123,14 @@ class AuthService {
   ) async {
     try {
       User? user = _auth.currentUser;
-      await threadCollection.doc(postUid).set({
+      await threadCollection.doc().set({
         'title': title,
         'description': description,
         'publisher-Id': user!.uid,
         'published-time': DateTime.now().millisecondsSinceEpoch,
-        'up-votes': 0,
-        'down-votes': 0,
+        // 'up-votes': 0,
+        // 'down-votes': 0,
+        'view-count': 0,
         'comment-count': 0,
         'publisher-UserIcon': publisherUserIcon,
         'publisher-FirstName': publisherFirstName,
