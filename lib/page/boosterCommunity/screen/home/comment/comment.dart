@@ -18,10 +18,10 @@ class CommentSection extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CommentState createState() => _CommentState();
+  _CommentSectionState createState() => _CommentSectionState();
 }
 
-class _CommentState extends State<CommentSection> {
+class _CommentSectionState extends State<CommentSection> {
   final TextEditingController _msgTextController = new TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -68,7 +68,8 @@ class _CommentState extends State<CommentSection> {
                   .doc(widget.postId)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return LinearProgressIndicator();
+                if (!snapshot.hasData)
+                  return Center(child: CircularProgressIndicator());
                 return PostHeader(
                     postInfo: snapshot.data!, userId: widget.userId);
               }),
