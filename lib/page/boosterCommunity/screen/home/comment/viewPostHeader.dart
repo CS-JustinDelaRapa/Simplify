@@ -186,25 +186,20 @@ class _PostHeaderState extends State<PostHeader> {
                   children: [
                     Wrap(
                       children: [
-                        //upvote
-                        Icon(Icons.upload),
-                        Text(' ${widget.postInfo['up-votes']}'),
-                        SizedBox(width: 5),
-    
-                        //downVote
-                        Icon(Icons.download),
-                        Text(' ${widget.postInfo['down-votes']}'),
+                        Icon(Icons.remove_red_eye),                        
+                        SizedBox(width: 5),          
+                        Text(' ${widget.postInfo['view-count']}'),              
                       ],
-                    ),
-    
-                    //comment section
-                  Wrap(
+                    ),     
+                      
+                      //comment section
+                      Wrap(
                       children: [
-                        Text(' ${widget.postInfo['comment-count']}'),                        
-                        SizedBox(width: 5),
-                        Icon(Icons.comment_outlined),                        
+                        Text(' ${widget.postInfo['comment-count']}'),
+                        SizedBox(width: 5),                        
+                        Icon(Icons.comment_outlined),
                       ],
-                    ),
+                    ),                     
                   ],
                 ),
               ),

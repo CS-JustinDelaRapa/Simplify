@@ -35,7 +35,7 @@ class _ThreadItemState extends State<ThreadItem> {
     return GestureDetector(
       onTap: (){
         try{
-        FirebaseFirestore.instance.collection('threads').doc(widget.postInfo.id).update({"view-count": FieldValue.increment(1)});
+        FirebaseFirestore.instance.collection('thread').doc(widget.postInfo.id).update({"view-count": FieldValue.increment(1)});
         Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => CommentSection(
                                     postInfo: widget.postInfo,
@@ -236,7 +236,7 @@ class _ThreadItemState extends State<ThreadItem> {
                       children: [
                         Icon(Icons.remove_red_eye),                        
                         SizedBox(width: 5),          
-                        Text(' ${widget.postInfo['comment-count']}'),              
+                        Text(' ${widget.postInfo['view-count']}'),              
                       ],
                     ),     
                       
