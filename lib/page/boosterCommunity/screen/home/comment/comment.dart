@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/comment/commentItem.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/viewPostHeader.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/homeTab/threadItem.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class CommentSection extends StatefulWidget {
@@ -60,16 +62,38 @@ class _CommentState extends State<CommentSection> {
       ),
       body: Column(
         children: [
+          StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('thread')
+                  .doc(widget.postId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return LinearProgressIndicator();
+                return PostHeader(
+                    postInfo: snapshot.data!, userId: widget.userId);
+              }),
           Expanded(
-            child: StreamBuilder<DocumentSnapshot>(
+            child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('thread')
                     .doc(widget.postId)
+                    .collection('comment')
+                    .orderBy('published-time', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return LinearProgressIndicator();
-                  return PostHeader(
-                      postInfo: snapshot.data!, userId: widget.userId);
+                  return Stack(children: <Widget>[
+                    ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data!.docs
+                          .map((DocumentSnapshot commentInfo) {
+                        return CommentItem(
+                          commentInfo: commentInfo,
+                          userId: widget.userId,
+                        );
+                      }).toList(),
+                    )
+                  ]);
                 }),
           ),
           _buildTextComposer()
