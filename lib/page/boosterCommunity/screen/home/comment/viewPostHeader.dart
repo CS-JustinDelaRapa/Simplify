@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/reportPost/reportPost.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/reports/reportPost.dart';
+
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
@@ -142,8 +143,8 @@ class _PostHeaderState extends State<PostHeader> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => ReportPost(
-                                  userFirstName:
-                                      widget.postInfo.get('publisher-FirstName'),
+                                  userFirstName: widget.postInfo
+                                      .get('publisher-FirstName'),
                                   userLastName:
                                       widget.postInfo.get('publisher-LastName'),
                                   publisherUID: widget
@@ -186,20 +187,20 @@ class _PostHeaderState extends State<PostHeader> {
                   children: [
                     Wrap(
                       children: [
-                        Icon(Icons.remove_red_eye),                        
-                        SizedBox(width: 5),          
-                        Text(' ${widget.postInfo['view-count']}'),              
+                        Icon(Icons.remove_red_eye),
+                        SizedBox(width: 5),
+                        Text(' ${widget.postInfo['view-count']}'),
                       ],
-                    ),     
-                      
-                      //comment section
-                      Wrap(
+                    ),
+
+                    //comment section
+                    Wrap(
                       children: [
                         Text(' ${widget.postInfo['comment-count']}'),
-                        SizedBox(width: 5),                        
+                        SizedBox(width: 5),
                         Icon(Icons.comment_outlined),
                       ],
-                    ),                     
+                    ),
                   ],
                 ),
               ),
