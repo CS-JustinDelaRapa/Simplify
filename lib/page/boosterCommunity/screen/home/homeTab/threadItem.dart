@@ -26,7 +26,6 @@ class _ThreadItemState extends State<ThreadItem> {
 
   @override
   void initState() {
-    print(widget.myLikeList);
     super.initState();
   }
 
@@ -38,6 +37,7 @@ class _ThreadItemState extends State<ThreadItem> {
         FirebaseFirestore.instance.collection('thread').doc(widget.postInfo.id).update({"view-count": FieldValue.increment(1)});
         Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => CommentSection(
+                                    myLikeList: widget.myLikeList,
                                     postInfo: widget.postInfo,
                                     postId: widget.postInfo.id,
                                     userId: widget.userId,
@@ -257,27 +257,27 @@ class _ThreadItemState extends State<ThreadItem> {
   }
 
 //update UpVote
-handleUpVote(){
-      if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
-      FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(1)});
-      FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: true});     
-      if(widget.myLikeList == null){
-    setState(() {
-      widget.myLikeList = {widget.postInfo.id:true};
-    });
-      } else{
-      setState(() {
-        widget.myLikeList!.addEntries([
-        MapEntry(widget.postInfo.id,true)
-      ]);
-      });
-      }
-      } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
-      FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(-1)});
-      FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
-      setState(() {
-        widget.myLikeList!.remove(widget.postInfo.id);
-      });
-      }                     
-}
+// handleUpVote(){
+//       if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
+//       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).collection('comment').doc.(widget.commentIfo.id).update({"up-votes": FieldValue.increment(1)});
+//       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: true});     
+//       if(widget.myLikeList == null){
+//     setState(() {
+//       widget.myLikeList = {widget.postInfo.id:true};
+//     });
+//       } else{
+//       setState(() {
+//         widget.myLikeList!.addEntries([
+//         MapEntry(widget.postInfo.id,true)
+//       ]);
+//       });
+//       }
+//       } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
+//       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(-1)});
+//       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
+//       setState(() {
+//         widget.myLikeList!.remove(widget.postInfo.id);
+//       });
+//       }                     
+// }
 }

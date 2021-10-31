@@ -157,6 +157,7 @@ class AuthService {
         'commenter-lastName': commenterLastName,
         'commenter-icon': commenterIcon,
         'commenter-school': commenterSchool,
+        'like-count': 0,
         'published-time': DateTime.now().millisecondsSinceEpoch,
       });
       await threadCollection

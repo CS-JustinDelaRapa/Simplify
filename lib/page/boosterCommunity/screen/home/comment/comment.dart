@@ -10,11 +10,14 @@ class CommentSection extends StatefulWidget {
   final DocumentSnapshot postInfo;
   final String postId;
   final String userId;
+  final Map<String, dynamic>? myLikeList;
   const CommentSection(
       {Key? key,
       required this.postInfo,
       required this.userId,
-      required this.postId})
+      required this.postId,
+      required this.myLikeList
+      })
       : super(key: key);
 
   @override
@@ -69,7 +72,7 @@ class _CommentSectionState extends State<CommentSection> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
-                  return Center(child: CircularProgressIndicator());
+                  return Center();
                 return PostHeader(
                     postInfo: snapshot.data!, userId: widget.userId);
               }),
@@ -82,13 +85,15 @@ class _CommentSectionState extends State<CommentSection> {
                     .orderBy('published-time', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return LinearProgressIndicator();
+                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                   return Stack(children: <Widget>[
                     ListView(
                       shrinkWrap: true,
                       children: snapshot.data!.docs
                           .map((DocumentSnapshot commentInfo) {
                         return CommentItem(
+                          myLikeList: widget.myLikeList,
+                          postId: widget.postId,
                           commentInfo: commentInfo,
                           userId: widget.userId,
                         );
