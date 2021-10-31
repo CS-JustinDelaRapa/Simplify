@@ -199,4 +199,22 @@ class AuthService {
       Fluttertoast.showToast(msg: error.message.toString());
     }
   }
+
+  //delete comment
+  Future deleteComment(
+      String commentUID, String postUID, BuildContext context) async {
+    try {
+      await threadCollection
+          .doc(postUID)
+          .collection('comment')
+          .doc(commentUID)
+          .delete();
+      await threadCollection
+          .doc(postUID)
+          .update({"comment-count": FieldValue.increment(-1)});
+      Navigator.pop(context);
+    } on FirebaseException catch (error) {
+      Fluttertoast.showToast(msg: error.message.toString());
+    }
+  }
 }

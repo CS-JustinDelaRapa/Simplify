@@ -143,31 +143,38 @@ class _CommentItemState extends State<CommentItem> {
                                             // delete function
                                             showDialog(
                                                 context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    AlertDialog(
-                                                      title:
-                                                          Text('Delete Post?'),
-                                                      content: Text(
-                                                          "By continuing this post will be deleted permanently."),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child:
-                                                                Text('Cancel')),
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              // AuthService().deletePost(
-                                                              //     widget.commentInfo.id, context);
-                                                            },
-                                                            child: Text(
-                                                                'Continue'))
-                                                      ],
-                                                    ));
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        AlertDialog(
+                                                          title: Text(
+                                                              'Delete Comment?'),
+                                                          content: Text(
+                                                              "By continuing this post will be deleted permanently."),
+                                                          actions: [
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child: Text(
+                                                                    'Cancel')),
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  print(
+                                                                      'comment dleted');
+                                                                  AuthService().deleteComment(
+                                                                      widget
+                                                                          .commentInfo
+                                                                          .id,
+                                                                      widget
+                                                                          .postId,
+                                                                      context);
+                                                                },
+                                                                child: Text(
+                                                                    'Continue'))
+                                                          ],
+                                                        ));
                                           } else if (value == 1) {
                                             print('sample'); //edit function
                                             //   Navigator.of(context).push(MaterialPageRoute(
@@ -201,6 +208,7 @@ class _CommentItemState extends State<CommentItem> {
                                       ],
                                       onSelected: (value) {
                                         showDialog(
+                                            //report comment
                                             context: context,
                                             builder: (BuildContext context) =>
                                                 ReportComment(
