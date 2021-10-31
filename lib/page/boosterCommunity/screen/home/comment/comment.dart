@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/commentItem.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/viewPostHeader.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/threadItem.dart';
@@ -26,6 +27,16 @@ class CommentSection extends StatefulWidget {
 
 class _CommentSectionState extends State<CommentSection> {
   final TextEditingController _msgTextController = new TextEditingController();
+    final List<String> badWordsList = [
+      'gago',
+      'siraulo',
+      'tarantado',
+      'bobo',
+    ];
+
+    final filter = ProfanityFilter();
+    
+
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   //upload to firebase
@@ -73,8 +84,7 @@ class _CommentSectionState extends State<CommentSection> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
                   return Center();
-                return PostHeader(
-                    postInfo: snapshot.data!, userId: widget.userId);
+                return PostHeader(postInfo: snapshot.data!, userId: widget.userId);
               }),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -143,7 +153,26 @@ class _CommentSectionState extends State<CommentSection> {
               child: IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () async {
-                    AuthService().addComment(
+                    final additionalWords = ProfanityFilter.filterAdditionally(badWordsList);
+                    bool hasProfanity =  additionalWords.hasProfanity(_msgTextController.text);
+                    // bool hasProfanity = filter.hasProfanity(_msgTextController.text);
+                    if(hasProfanity){
+                        showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                            title: Text("Profanity Check"),
+                            content: Text("Seems like your comment contains inapropriate or improper words, Please consider reconstructiong your comment."), 
+                            actions: [
+                              ElevatedButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          ));
+                    } else {
+                        AuthService().addComment(
                         _msgTextController.text,
                         widget.postId,
                         _commenterFirstName,
@@ -152,6 +181,7 @@ class _CommentSectionState extends State<CommentSection> {
                         _commenterSchool);
                     FocusScope.of(context).requestFocus(FocusNode());
                     _msgTextController.text = '';
+                    }
                   }),
             ),
           ],

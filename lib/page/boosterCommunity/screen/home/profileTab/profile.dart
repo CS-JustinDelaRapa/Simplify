@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/changeUserIcon/changeUserIcon.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/threadItem.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
-// import 'package:simplify/page/boosterCommunity/model/myuser.dart';
-// import 'package:simplify/page/boosterCommunity/screen/home/changeUserIcon/changeUserIcon.dart';
-// import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -123,7 +120,9 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                     .where('publisher-Id', isEqualTo: userId)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return LinearProgressIndicator();
+                  if (!snapshot.hasData) return Center(
+                    child: CircularProgressIndicator()
+                    );
                   return Stack(
                     children: <Widget>[
                       snapshot.data!.docs.length > 0
