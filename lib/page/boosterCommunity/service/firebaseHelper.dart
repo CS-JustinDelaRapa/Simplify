@@ -94,17 +94,15 @@ class AuthService {
   }
 
 //**Data manipulation */
-  Future updateItem(
-    String title,
-    String description,
-    String postUid
-  )async{
+  Future updateItem(String title, String description, String postUid,
+      String publisherPostCategory) async {
     try {
       User? user = _auth.currentUser;
       await threadCollection.doc(postUid).update({
         'title': title,
         'description': description,
         'publisher-Id': user!.uid,
+        'post-category': publisherPostCategory,
         'published-time': DateTime.now().millisecondsSinceEpoch,
       });
     } on FirebaseException catch (error) {
@@ -120,6 +118,7 @@ class AuthService {
     String publisherFirstName,
     String publisherLastName,
     String publisherUserIcon,
+    String publisherPostCategory,
   ) async {
     try {
       User? user = _auth.currentUser;
@@ -128,14 +127,13 @@ class AuthService {
         'description': description,
         'publisher-Id': user!.uid,
         'published-time': DateTime.now().millisecondsSinceEpoch,
-        // 'up-votes': 0,
-        // 'down-votes': 0,
         'view-count': 0,
         'comment-count': 0,
         'publisher-UserIcon': publisherUserIcon,
         'publisher-FirstName': publisherFirstName,
         'publisher-LastName': publisherLastName,
         'publisher-School': publisherSchool,
+        'post-category': publisherPostCategory,
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
@@ -177,13 +175,15 @@ class AuthService {
       data['userIcon'] = userIcon;
 
       await userCollection.doc(user!.uid).update(data);
-      var querySnapshots = await threadCollection.where('publisher-Id', isEqualTo: user.uid).get();
+      var querySnapshots = await threadCollection
+          .where('publisher-Id', isEqualTo: user.uid)
+          .get();
       for (var doc in querySnapshots.docs) {
         await doc.reference.update({
           'publisher-UserIcon': userIcon,
         });
-    }
-    Navigator.pop(context);
+      }
+      Navigator.pop(context);
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
     }
