@@ -94,7 +94,10 @@ class _gpacalc extends State<gpacalc> with AutomaticKeepAliveClientMixin {
                       total += double.parse(subjectGrade[x]);
                     }
                     average = total / widget.subject;
-                    if (average < 65) {
+                    if (average < 65 || average > 100) {
+                      remarks = "Wrong Input";
+                      average = 0;
+                    } else if (average == 65) {
                       remarks = "Let’s raise this grade! ";
                     } else if (average < 75) {
                       remarks = "Let’s bring this up.";
@@ -105,7 +108,6 @@ class _gpacalc extends State<gpacalc> with AutomaticKeepAliveClientMixin {
                     } else {
                       remarks = "Excellent! Keep it up.";
                     }
-
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
