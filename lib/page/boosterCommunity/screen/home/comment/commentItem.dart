@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reports/reportComment.dart';
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
+import '../../../../../algo/globals.dart' as globals;
 
 // ignore: must_be_immutable
 class CommentItem extends StatefulWidget {
@@ -25,6 +27,8 @@ class CommentItem extends StatefulWidget {
 
 class _CommentItemState extends State<CommentItem> {
   bool loading = false;
+  bool isEditingText = false;
+  String editedText = '';
 
   @override
   void initState() {
@@ -43,32 +47,39 @@ class _CommentItemState extends State<CommentItem> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            //userIcon and like count
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 2),
                 Container(
-                    height: 40,
-                    width: 40,
+                    height: 35,
+                    width: 35,
                     child: Image.asset('assets/images/' +
                         widget.commentInfo.get('commenter-icon'))),
-                IconButton(
-                  onPressed: () {
-                    handleUpVote();
-                  },
-                  icon: Icon(Icons.school_rounded,
-                      size: 30,
-                      color: widget.myLikeList != null &&
-                              widget.myLikeList!
-                                  .containsKey(widget.commentInfo.id) &&
-                              widget.myLikeList!.containsValue(true)
-                          ? Colors.blue
-                          : Colors.black54),
+                Transform.translate(
+                  offset: Offset(0, -8),
+                  child: IconButton(
+                    onPressed: () {
+                      handleUpVote();
+                    },
+                    icon: Icon(Icons.school_rounded,
+                        size: 25,
+                        color: widget.myLikeList != null &&
+                                widget.myLikeList!
+                                    .containsKey(widget.commentInfo.id) &&
+                                widget.myLikeList!.containsValue(true)
+                            ? Colors.blue
+                            : Colors.black54),
+                  ),
                 ),
-                Text(widget.commentInfo.get('like-count').toString())
+                Transform.translate(
+                  offset: Offset(0, -15),
+                  child: Text(widget.commentInfo.get('like-count').toString()))
               ],
             ),
             Padding(padding: EdgeInsets.only(left: 10.0)),
+            //comment info card box, commenter fullname, content, timestamp, popo up button
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -81,29 +92,86 @@ class _CommentItemState extends State<CommentItem> {
                         offset: Offset(2, 2)),
                   ],
                 ),
-                child: Padding(
+                child: isEditingText? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TextFormField(
+                          autofocus: true,
+                          initialValue: widget.commentInfo.get('commentContent'),
+                          onChanged: (value){
+                            editedText = value;
+                          },
+                        ),
+                      Wrap(
+                        children: [
+                        TextButton(onPressed: (){
+                          setState(() {
+                            isEditingText = false;
+                            globals.isEditing = false;
+                          });
+                        }, child: Text('Cancel')),
+                        TextButton(onPressed: (){
+                          try {
+                            FirebaseFirestore.instance.collection('thread').doc(widget.postId).collection('comment').doc(widget.commentInfo.id).update({'commentContent': editedText});
+                            setState(() {
+                            isEditingText = false;
+                            globals.isEditing = false;
+                          });
+                          } on FirebaseException catch (error) {
+                            Fluttertoast.showToast(msg: error.message.toString());
+                          }
+                        }, child: Text('Save'))                             
+                        ],
+                      )                     
+                      ],
+                    ),
+                  ),
+                ) 
+                
+                :Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //commenter name
+                      //commenter full name and popUp button
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.commentInfo.get('commenter-firstName') +
-                                ' ' +
-                                widget.commentInfo.get('commenter-lastName'),
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(color: Colors.black),
+                              children: [
+                                //fullname
+                                TextSpan(
+                                  text: widget.commentInfo.get('commenter-firstName') + ' ' + widget.commentInfo.get('commenter-lastName')+'\n',
+                                  style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
+                                  ),
+                                //school
+                                  TextSpan(
+                                  text: widget.commentInfo.get('commenter-school')+'\n',
+                                  style: TextStyle(
+                                  fontSize: 12,),
+                                  ),
+                                  //timeStamp
+                                  TextSpan(
+                                  text: TimeManage.readTimestamp(
+                            widget.commentInfo.get('published-time')),
+                                  style: TextStyle(
+                                  fontSize: 12,),
+                                  ),
+                              ],
+                            )),
                           Spacer(),
-                          Container(
-                              child: widget.userId ==
-                                      widget.commentInfo.get('commenter-id')
-                                  ? Transform.translate(
-                                      offset: Offset(15, 0),
+                            Container(
+                                child: widget.userId ==
+                                        widget.commentInfo.get('commenter-id')
+                                    ? Transform.translate(
+                                      offset: Offset(15,-8),
                                       child: PopupMenuButton<int>(
                                         itemBuilder: (context) => [
                                           PopupMenuItem(
@@ -176,73 +244,62 @@ class _CommentItemState extends State<CommentItem> {
                                                           ],
                                                         ));
                                           } else if (value == 1) {
-                                            print('sample'); //edit function
-                                            //   Navigator.of(context).push(MaterialPageRoute(
-                                            //       builder: (context) => AddPostForm(
-                                            //             title: widget.postInfo['title'],
-                                            //             description:
-                                            //                 widget.postInfo['description'],
-                                            //             postUid: widget.postInfo.id,
-                                            //             contextFromPopUp: context,
-                                            //           )));
+                                            setState(() {
+                                              isEditingText = true;
+                                              globals.isEditing = true;
+                                              print(globals.isEditing);
+                                            });
                                           }
                                         },
                                       ),
                                     )
-                                  //when post is not from the current user
-                                  : PopupMenuButton<int>(
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          value: 1,
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0, left: 8.0),
-                                                child: Icon(Icons.report),
+                                    //when post is not from the current user
+                                    : Transform.translate(
+                                      offset: Offset(15,-8),                                      
+                                      child: PopupMenuButton<int>(
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              value: 1,
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        right: 8.0, left: 8.0),
+                                                    child: Icon(Icons.report),
+                                                  ),
+                                                  Text("Report"),
+                                                ],
                                               ),
-                                              Text("Report"),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
+                                          onSelected: (value) {
+                                            showDialog(
+                                                //report comment
+                                                context: context,
+                                                builder: (BuildContext context) =>
+                                                    ReportComment(
+                                                        commenterFirstName:
+                                                            widget.commentInfo.get(
+                                                                'commenter-firstName'),
+                                                        commenterLastName:
+                                                            widget.commentInfo.get(
+                                                                'commenter-lastName'),
+                                                        commenterUID: widget
+                                                                .commentInfo[
+                                                            'commenter-id'], //commenter id
+                                                        commentId: widget
+                                                            .commentInfo
+                                                            .id, //comment
+                                                        commentContent: widget
+                                                                .commentInfo[
+                                                            'commentContent'], //comment
+                                                        reporterUID: widget
+                                                            .userId //current user id
+                                                        ));
+                                          },
                                         ),
-                                      ],
-                                      onSelected: (value) {
-                                        showDialog(
-                                            //report comment
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                ReportComment(
-                                                    commenterFirstName:
-                                                        widget.commentInfo.get(
-                                                            'commenter-firstName'),
-                                                    commenterLastName:
-                                                        widget.commentInfo.get(
-                                                            'commenter-lastName'),
-                                                    commenterUID: widget
-                                                            .commentInfo[
-                                                        'commenter-id'], //commenter id
-                                                    commentId: widget
-                                                        .commentInfo
-                                                        .id, //comment
-                                                    commentContent: widget
-                                                            .commentInfo[
-                                                        'commentContent'], //comment
-                                                    reporterUID: widget
-                                                        .userId //current user id
-                                                    ));
-                                      },
                                     ))
                         ],
-                      ),
-                      //commenter school
-                      Text(widget.commentInfo.get('commenter-school'),
-                          style: TextStyle(fontSize: 12)),
-                      //timeStamp
-                      Text(
-                        TimeManage.readTimestamp(
-                            widget.commentInfo.get('published-time')),
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
                       ),
                       SizedBox(height: 5),
                       Text(widget.commentInfo.get('commentContent')),

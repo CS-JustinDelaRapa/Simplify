@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
+import '../../../../../algo/globals.dart' as globals;
 
 // ignore: must_be_immutable
 class AddPostForm extends StatefulWidget {
@@ -97,9 +99,28 @@ class _AddPostState extends State<AddPostForm> {
                   ),
                 )
               : TextButton(
-                  onPressed: () async {
+                  onPressed: () async { 
+                    //check if fields is not empty
                     if (_addItemFormKey.currentState!.validate()) {
-                      //if Creating a new post
+                      //check for profanity
+                    final profanityCheck = ProfanityFilter.filterAdditionally(globals.badWordsList);
+                    bool hasProfanity = profanityCheck.hasProfanity(_title+' '+_description);
+                    if(hasProfanity){
+                      showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                            title: Text("Profanity Check"),
+                            content: Text("Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."), 
+                            actions: [
+                              ElevatedButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          ));
+                    }else{
                       if (widget.postUid == null) {
                         await AuthService().addItem(
                             _title,
@@ -125,6 +146,7 @@ class _AddPostState extends State<AddPostForm> {
                       });
                       Navigator.of(_currentContext).pop();
                     }
+                  }
                   },
                   child: Text('Post',
                       style: TextStyle(

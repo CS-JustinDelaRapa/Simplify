@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/commentItem.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/comment/viewPostHeader.dart';
-import 'package:simplify/page/boosterCommunity/screen/home/homeTab/threadItem.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
+import '../../../../../algo/globals.dart' as globals;
 
 class CommentSection extends StatefulWidget {
   final DocumentSnapshot postInfo;
@@ -27,15 +27,6 @@ class CommentSection extends StatefulWidget {
 
 class _CommentSectionState extends State<CommentSection> {
   final TextEditingController _msgTextController = new TextEditingController();
-    final List<String> badWordsList = [
-      'gago',
-      'siraulo',
-      'tarantado',
-      'bobo',
-    ];
-
-    final filter = ProfanityFilter();
-    
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -112,7 +103,10 @@ class _CommentSectionState extends State<CommentSection> {
                   ]);
                 }),
           ),
-          _buildTextComposer()
+          //if global is Editing is false, return create comment
+          globals.isEditing == false? _buildTextComposer() 
+          //if true return null widget
+          :Container(child: Text('is editing is true'),)
           // StreamBuilder<DocumentSnapshot>(
           //   stream: FirebaseFirestore.instance.collection('thread').doc(widget.postId).snapshots(),
           //   builder: (context, snapshot){
@@ -153,7 +147,7 @@ class _CommentSectionState extends State<CommentSection> {
               child: IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () async {
-                    final additionalWords = ProfanityFilter.filterAdditionally(badWordsList);
+                    final additionalWords = ProfanityFilter.filterAdditionally(globals.badWordsList);
                     bool hasProfanity =  additionalWords.hasProfanity(_msgTextController.text);
                     // bool hasProfanity = filter.hasProfanity(_msgTextController.text);
                     if(hasProfanity){
