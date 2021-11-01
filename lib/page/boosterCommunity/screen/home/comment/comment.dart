@@ -17,8 +17,7 @@ class CommentSection extends StatefulWidget {
       required this.postInfo,
       required this.userId,
       required this.postId,
-      required this.myLikeList
-      })
+      required this.myLikeList})
       : super(key: key);
 
   @override
@@ -73,9 +72,9 @@ class _CommentSectionState extends State<CommentSection> {
                   .doc(widget.postId)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData)
-                  return Center();
-                return PostHeader(postInfo: snapshot.data!, userId: widget.userId);
+                if (!snapshot.hasData) return Center();
+                return PostHeader(
+                    postInfo: snapshot.data!, userId: widget.userId);
               }),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -86,7 +85,8 @@ class _CommentSectionState extends State<CommentSection> {
                     .orderBy('published-time', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                  if (!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator());
                   return Stack(children: <Widget>[
                     ListView(
                       shrinkWrap: true,
@@ -104,9 +104,12 @@ class _CommentSectionState extends State<CommentSection> {
                 }),
           ),
           //if global is Editing is false, return create comment
-          globals.isEditing == false? _buildTextComposer() 
-          //if true return null widget
-          :Container(child: Text('is editing is true'),)
+          globals.isEditing == false
+              ? _buildTextComposer()
+              //if true return null widget
+              : Container(
+                  child: Text('is editing is true'),
+                )
           // StreamBuilder<DocumentSnapshot>(
           //   stream: FirebaseFirestore.instance.collection('thread').doc(widget.postId).snapshots(),
           //   builder: (context, snapshot){
@@ -147,34 +150,38 @@ class _CommentSectionState extends State<CommentSection> {
               child: IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () async {
-                    final additionalWords = ProfanityFilter.filterAdditionally(globals.badWordsList);
-                    bool hasProfanity =  additionalWords.hasProfanity(_msgTextController.text);
+                    final additionalWords = ProfanityFilter.filterAdditionally(
+                        globals.badWordsList);
+                    additionalWords.toString().toLowerCase();
+                    bool hasProfanity =
+                        additionalWords.hasProfanity(_msgTextController.text);
                     // bool hasProfanity = filter.hasProfanity(_msgTextController.text);
-                    if(hasProfanity){
-                        showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                            title: Text("Profanity Check"),
-                            content: Text("Seems like your comment contains inapropriate or improper words, Please consider reconstructiong your comment."), 
-                            actions: [
-                              ElevatedButton(
-                                child: Text("OK"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          ));
+                    if (hasProfanity) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: Text("Profanity Check"),
+                                content: Text(
+                                    "Seems like your comment contains inapropriate or improper words, Please consider reconstructiong your comment."),
+                                actions: [
+                                  ElevatedButton(
+                                    child: Text("OK"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              ));
                     } else {
-                        AuthService().addComment(
-                        _msgTextController.text,
-                        widget.postId,
-                        _commenterFirstName,
-                        _commenterLastName,
-                        _commenterIcon,
-                        _commenterSchool);
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    _msgTextController.text = '';
+                      AuthService().addComment(
+                          _msgTextController.text,
+                          widget.postId,
+                          _commenterFirstName,
+                          _commenterLastName,
+                          _commenterIcon,
+                          _commenterSchool);
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _msgTextController.text = '';
                     }
                   }),
             ),
