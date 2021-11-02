@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'Grade_Tracker_Page.dart';
-
 class gpacalc extends StatefulWidget {
   final int subject;
   const gpacalc({Key? key, required this.subject}) : super(key: key);

@@ -131,7 +131,7 @@ class _CommentSectionState extends State<CommentSection> {
 
   Widget _buildTextComposer() {
     return IconTheme(
-      data: IconThemeData(color: Theme.of(context).accentColor),
+      data: IconThemeData(color: Theme.of(context).backgroundColor),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(

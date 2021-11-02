@@ -43,7 +43,7 @@ class _AddPostState extends State<AddPostForm> {
 
   //input holder
   late String? _postUid;
-  late String _title, _description, _category;
+  late String _title, _description; //, _category;
   late BuildContext _currentContext;
 
 //upload to firebase
@@ -60,7 +60,7 @@ class _AddPostState extends State<AddPostForm> {
     super.initState();
     _title = widget.title ?? '';
     _description = widget.description ?? '';
-    _category = widget.postCategory ?? '';
+    // _category = widget.postCategory ?? '';
     _postUid = widget.postUid ?? null;
     _currentContext = widget.contextFromPopUp ?? this.context;
     getInfo(_auth.currentUser!.uid);
@@ -99,54 +99,57 @@ class _AddPostState extends State<AddPostForm> {
                   ),
                 )
               : TextButton(
-                  onPressed: () async { 
+                  onPressed: () async {
                     //check if fields is not empty
                     if (_addItemFormKey.currentState!.validate()) {
                       //check for profanity
-                    final profanityCheck = ProfanityFilter.filterAdditionally(globals.badWordsList);
-                    bool hasProfanity = profanityCheck.hasProfanity(_title+' '+_description);
-                    if(hasProfanity){
-                      showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                            title: Text("Profanity Check"),
-                            content: Text("Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."), 
-                            actions: [
-                              ElevatedButton(
-                                child: Text("OK"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          ));
-                    }else{
-                      if (widget.postUid == null) {
-                        await AuthService().addItem(
+                      final profanityCheck = ProfanityFilter.filterAdditionally(
+                          globals.badWordsList);
+                      bool hasProfanity = profanityCheck
+                          .hasProfanity(_title + ' ' + _description);
+                      if (hasProfanity) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Profanity Check"),
+                                  content: Text(
+                                      "Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."),
+                                  actions: [
+                                    ElevatedButton(
+                                      child: Text("OK"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                ));
+                      } else {
+                        if (widget.postUid == null) {
+                          await AuthService().addItem(
+                              _title,
+                              _description,
+                              _publisherSchool,
+                              _publisherFirstName,
+                              _publisherLastName,
+                              _publisherUserIcon,
+                              _publisherPostCategory);
+                        }
+                        //if editing a new post
+                        else {
+                          await AuthService().updateItem(
                             _title,
                             _description,
-                            _publisherSchool,
-                            _publisherFirstName,
-                            _publisherLastName,
-                            _publisherUserIcon,
-                            _publisherPostCategory);
-                      }
-                      //if editing a new post
-                      else {
-                        await AuthService().updateItem(
-                          _title,
-                          _description,
-                          _postUid!,
-                          _publisherPostCategory,
-                        );
-                      }
+                            _postUid!,
+                            _publisherPostCategory,
+                          );
+                        }
 
-                      setState(() {
-                        _isProcessing = true;
-                      });
-                      Navigator.of(_currentContext).pop();
+                        setState(() {
+                          _isProcessing = true;
+                        });
+                        Navigator.of(_currentContext).pop();
+                      }
                     }
-                  }
                   },
                   child: Text('Post',
                       style: TextStyle(
@@ -179,24 +182,22 @@ class _AddPostState extends State<AddPostForm> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Expanded(
-                  child: TextFormField(
-                    initialValue: _description,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      hintText: 'Brief and clear explanation',
-                      labelText: 'Description',
-                      border: InputBorder.none,
-                    ),
-                    validator: (value) => value != null && value.isEmpty
-                        ? 'Required Description'
-                        : null,
-                    onChanged: (value) {
-                      setState(() {
-                        _description = value.trim();
-                      });
-                    },
+                child: TextFormField(
+                  initialValue: _description,
+                  // maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Brief and clear explanation',
+                    labelText: 'Description',
+                    border: InputBorder.none,
                   ),
+                  validator: (value) => value != null && value.isEmpty
+                      ? 'Required Description'
+                      : null,
+                  onChanged: (value) {
+                    setState(() {
+                      _description = value.trim();
+                    });
+                  },
                 ),
               ),
               Padding(

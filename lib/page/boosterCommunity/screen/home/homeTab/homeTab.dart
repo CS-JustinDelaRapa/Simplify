@@ -73,97 +73,111 @@ class _UserFeedState extends State<UserFeed>
             child: CircularProgressIndicator(),
           )
         : Scaffold(
-            body: Column(children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  //drop down button
-                  Container(
-                    width: size.width * 0.55,
-                    child: DropdownButtonFormField<String>(
-                      elevation: 0,
-                      hint: Text('Category sort:'),
-                      items: category.map((String val) {
-                        return DropdownMenuItem<String>(
-                          value: val,
-                          child: Text(
-                            val,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _postCategory = value!;
-                          print(_postCategory);
-                        });
-                      },
-                    ),
-                  ),
-                  //write post button
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => AddPostForm()));
-                      },
-                      child: Text('Write Post')),
-                ],
-              ),
-              Flexible(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _postCategory == 'All post/s'
-                        ? FirebaseFirestore.instance
-                            .collection('thread')
-                            .orderBy('published-time', descending: true)
-                            .snapshots()
-                        : FirebaseFirestore.instance
-                            .collection('thread')
-                            .where('post-category', isEqualTo: _postCategory)
-                            .orderBy('published-time', descending: true)
-                            .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return Center(child: CircularProgressIndicator());
-                      return Stack(
+            body: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: EdgeInsets.all(4.0),
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                    Column(children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          snapshot.data!.docs.length > 0
-                              ? ListView(
-                                  shrinkWrap: true,
-                                  children: snapshot.data!.docs
-                                      .map((DocumentSnapshot postInfo) {
-                                    return ThreadItem(
-                                        postInfo: postInfo,
-                                        userId: userId,
-                                        myLikeList: myLikeList);
-                                  }).toList(),
-                                )
-                              : Container(
-                                  child: Center(
-                                      child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.error,
-                                        color: Colors.grey[700],
-                                        size: 64,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(14.0),
-                                        child: Text(
-                                          'There is no post',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700]),
-                                          textAlign: TextAlign.center,
+                          //drop down button
+                          Container(
+                            width: size.width * 0.55,
+                            child: DropdownButtonFormField<String>(
+                              elevation: 0,
+                              hint: Text('Category sort: '),
+                              items: category.map((String val) {
+                                return DropdownMenuItem<String>(
+                                  value: val,
+                                  child: Text(
+                                    val,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _postCategory = value!;
+                                  print(_postCategory);
+                                });
+                              },
+                            ),
+                          ),
+                          //write post button
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddPostForm()));
+                              },
+                              child: Text('Write Post')),
+                        ],
+                      ),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: _postCategory == 'All post/s'
+                              ? FirebaseFirestore.instance
+                                  .collection('thread')
+                                  .orderBy('published-time', descending: true)
+                                  .snapshots()
+                              : FirebaseFirestore.instance
+                                  .collection('thread')
+                                  .where('post-category',
+                                      isEqualTo: _postCategory)
+                                  .orderBy('published-time', descending: true)
+                                  .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData)
+                              return Center(child: CircularProgressIndicator());
+                            return Stack(
+                              children: <Widget>[
+                                snapshot.data!.docs.length > 0
+                                    ? ListView(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        children: snapshot.data!.docs
+                                            .map((DocumentSnapshot postInfo) {
+                                          return ThreadItem(
+                                              postInfo: postInfo,
+                                              userId: userId,
+                                              myLikeList: myLikeList);
+                                        }).toList(),
+                                      )
+                                    : Container(
+                                        //if there's no post
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.grey[700],
+                                                size: 64,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(14.0),
+                                                child: Text(
+                                                  'There is no post',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.grey[700]),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  )),
-                                ),
-                        ],
-                      );
-                    }),
-              ),
-            ]),
+                              ],
+                            );
+                          }),
+                    ]),
+                  ])),
+                )
+              ],
+            ),
             // floatingActionButton: FloatingActionButton(
             //   onPressed: () {
             //     Navigator.of(context).push(
