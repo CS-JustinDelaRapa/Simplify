@@ -59,6 +59,7 @@ dependencies:
   rxdart: ^0.27.2
   badges: ^2.0.1
   profanity_filter: ^2.0.0
+  flutter_scroll_to_top: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/testing/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

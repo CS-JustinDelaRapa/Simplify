@@ -221,29 +221,6 @@ class _ThreadItemState extends State<ThreadItem> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          //like button
-                          // Row(
-                          //   children: [
-                          //     // upvote
-                          //     GestureDetector(
-                          //       onTap: (){
-                          //         handleUpVote();
-                          //       },
-                          //       child: Wrap(
-                          //         children: [
-                          //         Icon(Icons.upload, color:
-                          //           widget.myLikeList != null && widget.myLikeList!.containsKey(widget.postInfo.id)
-                          //           && widget.myLikeList!.containsValue(true)?
-                          //         Colors.blue
-                          //         : Colors.black
-                          //        ),
-                          //       Text(' ${widget.postInfo['up-votes']}'),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //     SizedBox(width: 5),
-                          //   ],
-                          // ),
                           Wrap(
                             children: [
                               Icon(Icons.remove_red_eye),
@@ -266,29 +243,4 @@ class _ThreadItemState extends State<ThreadItem> {
                   ]))),
     );
   }
-
-//update UpVote
-// handleUpVote(){
-//       if (widget.myLikeList == null || !widget.myLikeList!.containsKey(widget.postInfo.id)){
-//       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).collection('comment').doc.(widget.commentIfo.id).update({"up-votes": FieldValue.increment(1)});
-//       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: true});
-//       if(widget.myLikeList == null){
-//     setState(() {
-//       widget.myLikeList = {widget.postInfo.id:true};
-//     });
-//       } else{
-//       setState(() {
-//         widget.myLikeList!.addEntries([
-//         MapEntry(widget.postInfo.id,true)
-//       ]);
-//       });
-//       }
-//       } else if (widget.myLikeList != null || widget.myLikeList!.containsKey(widget.postInfo.id)){
-//       FirebaseFirestore.instance.collection("thread").doc(widget.postInfo.id).update({"up-votes": FieldValue.increment(-1)});
-//       FirebaseFirestore.instance.collection("users").doc(widget.userId).collection('myLikeList').doc(widget.userId).update({widget.postInfo.id: FieldValue.delete()});
-//       setState(() {
-//         widget.myLikeList!.remove(widget.postInfo.id);
-//       });
-//       }
-// }
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplify/page/boosterCommunity/model/myuser.dart';
-// import 'package:simplify/page/boosterCommunity/screen/signIn-Register/boosterSignIn.dart';
 import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 import 'package:simplify/page/boosterCommunity/service/wrapper.dart';
 
-//sas
 class BoosterCommunityPage extends StatefulWidget {
   BoosterCommunityPage({Key? key}) : super(key: key);
 
@@ -24,6 +22,7 @@ class _BoosterCommunityPageState extends State<BoosterCommunityPage>
       initialData: null,
       value: AuthService().user,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Wrapper(),
       ),
     );

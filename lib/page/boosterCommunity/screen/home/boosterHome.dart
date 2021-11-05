@@ -23,22 +23,28 @@ class _BoosterHomeState extends State<BoosterHome>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Support Cummunity'),
-        bottom: TabBar(
-                tabs: <Tab>[
-                  Tab(text: 'Home'),
-                  Tab(text: 'Profile'),
-                ],
-                controller: _tabController,
-              ),
-      ),
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-           UserFeed(),
-           Profile(),
-          ],
+        elevation: 0.0,
+        centerTitle: true,
+        backgroundColor: Color(0xFF57A0D3),
+        title: Text(
+          'Support Community',
+          style: TextStyle(color: Colors.white, fontSize: 23),
         ),
-      );
+        bottom: TabBar(
+          tabs: <Tab>[
+            Tab(text: 'Home'),
+            Tab(text: 'Profile'),
+          ],
+          controller: _tabController,
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          UserFeed(),
+          Profile(),
+        ],
+      ),
+    );
   }
-  }
+}

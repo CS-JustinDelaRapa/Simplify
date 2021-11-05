@@ -31,6 +31,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade300,
       body: Column(
         children: <Widget>[
           FutureBuilder<DocumentSnapshot>(
@@ -120,9 +121,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                     .where('publisher-Id', isEqualTo: userId)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Center(
-                    child: CircularProgressIndicator()
-                    );
+                  if (!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator());
                   return Stack(
                     children: <Widget>[
                       snapshot.data!.docs.length > 0

@@ -17,132 +17,139 @@ class _BoosterSignInState extends State<BoosterSignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        centerTitle: true,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Text('Sign In'),
-      ),  
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 30),
-              Center(
-                child: Text('SIMPLIFY!', style: TextStyle(fontSize: 35)),
-              ),
-              //email Address
+        resizeToAvoidBottomInset: false,
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 150),
+                Center(
+                    child: Column(
+                  children: [
+                    Text('SIMPLIFY!',
+                        style: TextStyle(
+                            fontSize: 35,
+                            letterSpacing: 2,
+                            color: Colors.white)),
+                    Text('Support Community',
+                        style: TextStyle(fontSize: 20, color: Colors.white)),
+                  ],
+                )),
+                SizedBox(
+                  height: 25,
+                ),
+                //email Address
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Email',
-                      labelText: 'Email',
-                    ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Email',
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)))),
                     validator: (title) => title != null && title.isEmpty
                         ? 'Required Email'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _email = value.trim();
                       });
                     },
                   ),
-                ),       
-              //password
+                ),
+                //password
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: TextFormField(
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Password',
-                      labelText: 'Password',
-                    ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Password',
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)))),
                     validator: (title) => title != null && title.isEmpty
                         ? 'Required password'
                         : null,
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
                         _password = value.trim();
                       });
                     },
                   ),
-                ),       
-              //register text
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RichText(
-                  text: new TextSpan(
-                      text: 'Don\'t have an account yet? ',
-                      style: TextStyle(color: Colors.grey[800], fontSize: 15),
-                      children: [
-                        new TextSpan(
-                          text: 'Register Here',
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () =>  
-                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => BoosterRegister())),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.blue[300]),
-                        )
-                      ]),
                 ),
-              ),
-        
-              //sign in button
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                child: ElevatedButton(
-              onPressed: (){
-                if(_formKey.currentState!.validate()){
-                  AuthService().signInWithEmailandPassword(_email, _password);
-                }
-              },
-              child: Text(
-                'Sign In',
-                style: TextStyle(fontSize: 15),
-              ),
+                //register text
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RichText(
+                    text: new TextSpan(
+                        text: 'Don\'t have an account yet? ',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
+                        children: [
+                          new TextSpan(
+                              text: 'Register Here',
+                              recognizer: new TapGestureRecognizer()
+                                ..onTap = () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BoosterRegister())),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 1,
+                              ))
+                        ]),
+                  ),
                 ),
-              ),
-        
-              //or separator
-              Row(children: <Widget>[
-                Expanded(child: Divider(color: Colors.blueGrey)),
-                Text("OR"),
-                Expanded(child: Divider(color: Colors.blueGrey)),
-              
-              ]
-              ),
-              //sign in with Google
-              // Padding(
-              //   padding: const EdgeInsets.all(12.0),
-              //   child: SignInButton(
-              //     Buttons.Google,
-              //     onPressed: (){}),
-              // ),
-              // //sign in with facebook
-              // Padding(
-              //   padding: const EdgeInsets.all(12.0),
-              //   child: SignInButton(
-              //     Buttons.Facebook,
-              //     onPressed: (){}),
-              // ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ElevatedButton(
-              onPressed: (){
-                AuthService().signInAnon();
-              },
-              child: Text(
-                'Sign In Anonymously',
-                style: TextStyle(fontSize: 15),
-              ),
+                //sign in button
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.white),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        AuthService()
+                            .signInWithEmailandPassword(_email, _password);
+                      }
+                    },
+                    child: Text(
+                      'Sign In',
+                      style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -33,11 +33,11 @@ class _AddPostState extends State<AddPostForm> {
   bool _isProcessing = false;
 
   final List<String> category = [
-    'Technology',
-    'Science',
+    'Computer & Technology',
+    'Science & Health',
     'Business Management',
-    'Welding',
-    'Cookery and Pastries',
+    'Mathematics & Engineering',
+    'English Literature',
     'Others'
   ];
 
@@ -84,9 +84,12 @@ class _AddPostState extends State<AddPostForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade200,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        elevation: 0.0,
         centerTitle: true,
+        backgroundColor: Color(0xFF57A0D3),
         title: Text('Write Post'),
         actions: [
           _isProcessing
@@ -157,74 +160,132 @@ class _AddPostState extends State<AddPostForm> {
                       )))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _addItemFormKey,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextFormField(
-                  initialValue: _title,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    hintText: 'An Interesting Title',
-                    labelText: 'Title',
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 16, 5, 16),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _addItemFormKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: TextFormField(
+                    initialValue: _title,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        hintText: 'An Interesting Title',
+                        labelText: 'Title',
+                        labelStyle: TextStyle(
+                            height: 3,
+                            fontSize: 14,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)))),
+                    validator: (value) => value != null && value.isEmpty
+                        ? 'Required Title'
+                        : null,
+                    onChanged: (value) {
+                      setState(() {
+                        _title = value.trim();
+                      });
+                    },
                   ),
-                  validator: (value) =>
-                      value != null && value.isEmpty ? 'Required Title' : null,
-                  onChanged: (value) {
-                    setState(() {
-                      _title = value.trim();
-                    });
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextFormField(
-                  initialValue: _description,
-                  // maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'Brief and clear explanation',
-                    labelText: 'Description',
-                    border: InputBorder.none,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: TextFormField(
+                    initialValue: _description,
+                    maxLines: 5,
+                    textAlign: TextAlign.start,
+                    decoration: InputDecoration(
+                        hintText: 'Brief and clear explanation',
+                        labelText: 'Description',
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(
+                            height: 3,
+                            fontSize: 14,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)))),
+                    validator: (value) => value != null && value.isEmpty
+                        ? 'Required Description'
+                        : null,
+                    onChanged: (value) {
+                      setState(() {
+                        _description = value.trim();
+                      });
+                    },
                   ),
-                  validator: (value) => value != null && value.isEmpty
-                      ? 'Required Description'
-                      : null,
-                  onChanged: (value) {
-                    setState(() {
-                      _description = value.trim();
-                    });
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: DropdownButtonFormField<String>(
-                  validator: (value) =>
-                      value == null ? 'Required Post Category' : null,
-                  isDense: true,
-                  hint: Text('Post Category'),
-                  isExpanded: true,
-                  items: category.map((String val) {
-                    return DropdownMenuItem<String>(
-                      value: val,
-                      child: Text(
-                        val,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _publisherPostCategory = value!;
-                    });
-                  },
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                        labelStyle: TextStyle(
+                            height: 3,
+                            fontSize: 14,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0))),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)))),
+                    validator: (value) =>
+                        value == null ? 'Required Post Category' : null,
+                    isDense: true,
+                    hint: Text('Post Category'),
+                    isExpanded: true,
+                    items: category.map((String val) {
+                      return DropdownMenuItem<String>(
+                        value: val,
+                        child: Text(
+                          val,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _publisherPostCategory = value!;
+                      });
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

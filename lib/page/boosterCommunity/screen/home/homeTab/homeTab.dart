@@ -26,11 +26,11 @@ class _UserFeedState extends State<UserFeed>
 
   final List<String> category = [
     'All post/s',
-    'Technology',
-    'Science',
+    'Computer & Technology',
+    'Science & Health',
     'Business Management',
-    'Welding',
-    'Cookery and Pastries',
+    'Mathematics & Engineering',
+    'English Literature',
     'Others'
   ];
 
@@ -73,6 +73,7 @@ class _UserFeedState extends State<UserFeed>
             child: CircularProgressIndicator(),
           )
         : Scaffold(
+            backgroundColor: Colors.blueGrey.shade300,
             body: CustomScrollView(
               slivers: [
                 SliverPadding(
@@ -80,39 +81,49 @@ class _UserFeedState extends State<UserFeed>
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     Column(children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          //drop down button
-                          Container(
-                            width: size.width * 0.55,
-                            child: DropdownButtonFormField<String>(
-                              elevation: 0,
-                              hint: Text('Category sort: '),
-                              items: category.map((String val) {
-                                return DropdownMenuItem<String>(
-                                  value: val,
-                                  child: Text(
-                                    val,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _postCategory = value!;
-                                  print(_postCategory);
-                                });
-                              },
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            //drop down button
+                            Container(
+                              width: size.width * 0.65,
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                ),
+                                elevation: 0,
+                                hint: Text('Category sort: '),
+                                items: category.map((String val) {
+                                  return DropdownMenuItem<String>(
+                                    value: val,
+                                    child: Text(
+                                      val,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _postCategory = value!;
+                                    print(_postCategory);
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                          //write post button
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => AddPostForm()));
-                              },
-                              child: Text('Write Post')),
-                        ],
+                            SizedBox(
+                              width: 5,
+                            ),
+                            //write post button
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => AddPostForm()));
+                                },
+                                child: Text('Write a post')),
+                          ],
+                        ),
                       ),
                       StreamBuilder<QuerySnapshot>(
                           stream: _postCategory == 'All post/s'
@@ -178,14 +189,6 @@ class _UserFeedState extends State<UserFeed>
                 )
               ],
             ),
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () {
-            //     Navigator.of(context).push(
-            //         MaterialPageRoute(builder: (context) => AddPostForm()));
-            //   },
-            //   tooltip: 'Increment',
-            //   child: Icon(Icons.create),
-            // ), // This trailing comma makes auto-formatting nicer for build methods.
           );
   }
 
