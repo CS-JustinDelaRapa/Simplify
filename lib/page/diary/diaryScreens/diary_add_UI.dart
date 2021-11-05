@@ -85,7 +85,7 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
       );
   Widget buildDescription() => Expanded(
         child: TextFormField(
-          maxLines: MediaQuery.of(context).size.height.toInt(),
+          maxLines: 1,
           initialValue: widget.description,
           style: TextStyle(fontSize: 18),
           decoration: InputDecoration(
