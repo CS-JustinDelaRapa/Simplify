@@ -23,7 +23,9 @@ class _HomePageState extends State<HomePage> {
     QuotesPage(),
     ListViewPage(),
     CalendarViewPage(),
-    GradeTrackerPage(),
+    GradeTrackerPage(
+      totalQuiz1: 0.0,
+    ),
     DiaryPage(),
     BoosterCommunityPage()
   ];
