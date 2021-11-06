@@ -2,15 +2,16 @@
 
 import 'package:flutter/material.dart';
 
-import 'Grade_Tracker_Page.dart';
+import '../Grade_Tracker_Page.dart';
 
-class quiz extends StatefulWidget {
-  final int totalQuiz;
-  final int percent;
-  const quiz({Key? key, required this.totalQuiz, required this.percent})
+class activity extends StatefulWidget {
+  final int activitypercent;
+  final int totalActivity;
+  const activity(
+      {Key? key, required this.activitypercent, required this.totalActivity})
       : super(key: key);
   @override
-  _quiz createState() => _quiz();
+  _activity createState() => _activity();
 }
 
 final calculateKey = GlobalKey<FormState>();
@@ -18,16 +19,16 @@ double total = 0;
 double items = 0;
 double average = 0;
 String remarks = "";
-double quizTotalPercentage = 0;
-String? quizPercentage;
+double activityTotalPercentage = 0;
+String? activityPercentage;
 
-class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
+class _activity extends State<activity> with AutomaticKeepAliveClientMixin {
   late List<String> totalScore;
   late List<String> totalItems;
   @override
   void initState() {
-    totalScore = List.generate(widget.totalQuiz, (index) => "");
-    totalItems = List.generate(widget.totalQuiz, (index) => "");
+    totalScore = List.generate(widget.totalActivity, (index) => "");
+    totalItems = List.generate(widget.totalActivity, (index) => "");
     super.initState();
   }
 
@@ -43,7 +44,7 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                 key: calculateKey,
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: widget.totalQuiz,
+                  itemCount: widget.totalActivity,
                   itemBuilder: (context, index) => Center(
                     child: Row(
                       children: [
@@ -60,7 +61,7 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                 });
                               },
                               decoration: InputDecoration(
-                                hintText: 'Quiz # ${index + 1} :',
+                                hintText: 'Activity # ${index + 1} :',
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 20.0),
                                 border: OutlineInputBorder(
@@ -154,8 +155,9 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                       total += double.parse(totalScore[x]);
                       items += double.parse(totalItems[x]);
                     }
-                    quizTotalPercentage = (total / items) * 100;
-                    average = quizTotalPercentage * (widget.percent / 100);
+                    activityTotalPercentage = (total / items) * 100;
+                    average = activityTotalPercentage *
+                        (widget.activitypercent / 100);
                     if (average == 65) {
                       remarks = "Let’s raise this grade! ";
                     } else if (average < 75) {
@@ -180,20 +182,21 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                       child: Text("OK"),
                                       onPressed: () {
                                         setState(() {
-                                          quizPercentage = average.toString();
+                                          activityPercentage =
+                                              average.toString();
                                         });
                                         Navigator.pop(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 GradeTrackerPage(
-                                              totalQuiz1:
-                                                  double.parse(quizPercentage!),
+                                              totalActivity1: double.parse(
+                                                  activityPercentage!),
                                             ),
                                           ),
                                         );
                                         setState(() {
-                                          quizTotalPercentage = 0;
+                                          activityTotalPercentage = 0;
                                           average = 0;
                                         });
                                       },
