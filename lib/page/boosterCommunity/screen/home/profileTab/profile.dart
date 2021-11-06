@@ -31,7 +31,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade300,
+      backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
           FutureBuilder<DocumentSnapshot>(
@@ -165,6 +165,9 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
             //signout button
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:  MaterialStateProperty.all<Color>(Colors.indigo.shade600),
+              ),
               onPressed: () {
                 AuthService().signOut();
               },

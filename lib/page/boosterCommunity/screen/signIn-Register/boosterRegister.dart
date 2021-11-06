@@ -30,6 +30,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
 
   @override
   Widget build(BuildContext context) {
+        final size = MediaQuery.of(context).size;
     return Container(
       //background image
       decoration: BoxDecoration(
@@ -66,17 +67,16 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       decoration: InputDecoration(
                           hintText: 'First Name',
                           filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)))),
+                          fillColor: Colors.white70,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0)))),
                       validator: (value) => value != null && value.isEmpty
                           ? 'Required First Name'
                           : null,
@@ -94,18 +94,17 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       maxLines: 1,
                       decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.white70,
                           hintText: 'Last Name',
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)))),
+                            borderSide:
+                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0)))),
                       validator: (value) => value != null && value.isEmpty
                           ? 'Required Last name'
                           : null,
@@ -124,17 +123,16 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       decoration: InputDecoration(
                           hintText: 'Email',
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.white70,
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)))),
+                            borderSide:
+                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0)))),
                       validator: (value) => value != null && value.isEmpty
                           ? 'Required Email'
                           : null,
@@ -154,17 +152,16 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       decoration: InputDecoration(
                           hintText: 'Password',
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.white70,
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)))),
+                            borderSide:
+                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0)))),
                       validator: (value) => value != null && value.isEmpty
                           ? 'Required password'
                           : null,
@@ -181,17 +178,16 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.white70,
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)))),
+                            borderSide:
+                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50.0)))),
                       validator: (value) =>
                           value == null ? 'Required School' : null,
                       isDense: true,
@@ -215,25 +211,41 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                   ),
                   //sign in button
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.white),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          AuthService().registerWithEmailandPassword(
-                              _email,
-                              _password,
-                              _firstName,
-                              _lastName,
-                              _school,
-                              context);
-                        }
-                      },
-                      child: Text('Register',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.blue,
-                          )),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50))
+                    ),                      
+                      height: 50,
+                      width: size.width,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white
+                        ),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+      )
+      )
+                      ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            AuthService().registerWithEmailandPassword(
+                                _email,
+                                _password,
+                                _firstName,
+                                _lastName,
+                                _school,
+                                context);
+                          }
+                        },
+                        child: Text('Register',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.blue,
+                            )),
+                      ),
                     ),
                   ),
                 ],

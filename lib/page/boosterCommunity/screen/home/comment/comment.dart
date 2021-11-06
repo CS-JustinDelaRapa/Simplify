@@ -60,53 +60,63 @@ class _CommentSectionState extends State<CommentSection> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.blueGrey.shade200,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xFF57A0D3),
+        backgroundColor: Colors.indigo.shade800,
         elevation: 0,
         title: Text('Support Community'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: Container(
+              decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
         child: Column(
           children: [
-            StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('thread')
-                    .doc(widget.postId)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Center();
-                  return PostHeader(
-                      postInfo: snapshot.data!, userId: widget.userId);
-                }),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('thread')
                       .doc(widget.postId)
-                      .collection('comment')
-                      .orderBy('published-time', descending: false)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(child: CircularProgressIndicator());
-                    return Stack(children: <Widget>[
-                      ListView(
-                        shrinkWrap: true,
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot commentInfo) {
-                          return CommentItem(
-                            myLikeList: widget.myLikeList,
-                            postId: widget.postId,
-                            commentInfo: commentInfo,
-                            userId: widget.userId,
-                          );
-                        }).toList(),
-                      )
-                    ]);
+                    if (!snapshot.hasData) return Center();
+                    return PostHeader(
+                        postInfo: snapshot.data!, userId: widget.userId);
                   }),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('thread')
+                        .doc(widget.postId)
+                        .collection('comment')
+                        .orderBy('published-time', descending: false)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      return Stack(children: <Widget>[
+                        ListView(
+                          shrinkWrap: true,
+                          children: snapshot.data!.docs
+                              .map((DocumentSnapshot commentInfo) {
+                            return CommentItem(
+                              myLikeList: widget.myLikeList,
+                              postId: widget.postId,
+                              commentInfo: commentInfo,
+                              userId: widget.userId,
+                            );
+                          }).toList(),
+                        )
+                      ]);
+                    }),
+              ),
             ),
             //if global is Editing is false, return create comment
             globals.isEditing == false
@@ -127,8 +137,7 @@ class _CommentSectionState extends State<CommentSection> {
       child: Container(
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(16))),
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+            ),
         child: Row(
           children: <Widget>[
             Flexible(
@@ -145,7 +154,6 @@ class _CommentSectionState extends State<CommentSection> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 2.0),
               child: IconButton(
                   icon: Icon(Icons.send),
                   color: Colors.blue,

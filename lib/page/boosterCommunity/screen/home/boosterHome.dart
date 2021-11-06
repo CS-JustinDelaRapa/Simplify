@@ -21,29 +21,39 @@ class _BoosterHomeState extends State<BoosterHome>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        backgroundColor: Color(0xFF57A0D3),
-        title: Text(
-          'Support Community',
-          style: TextStyle(color: Colors.white, fontSize: 23),
-        ),
-        bottom: TabBar(
-          tabs: <Tab>[
-            Tab(text: 'Home'),
-            Tab(text: 'Profile'),
-          ],
-          controller: _tabController,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          UserFeed(),
-          Profile(),
-        ],
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0.0,
+          centerTitle: true,
+          backgroundColor: Colors.indigo.shade600,
+          title: Text(
+            'Support Community',
+            style: TextStyle(color: Colors.white, fontSize: 23),
+          ),
+          bottom: TabBar(
+            indicatorWeight: 3.0,
+            tabs: <Tab>[
+              Tab(text: 'Home'),
+              Tab(text: 'Profile'),
+            ],
+            controller: _tabController,
+          ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            UserFeed(),
+            Profile(),
+          ],
+        ),
       ),
     );
   }
