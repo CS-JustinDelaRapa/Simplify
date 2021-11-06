@@ -72,7 +72,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           centerTitle: true,
-          backgroundColor: Color(0xFF57A0D3),
+          backgroundColor: Colors.indigo.shade800,
           elevation: 0.0,
         ),
         body: Center(

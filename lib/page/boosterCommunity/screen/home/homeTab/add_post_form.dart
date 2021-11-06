@@ -83,208 +83,217 @@ class _AddPostState extends State<AddPostForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey.shade200,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        backgroundColor: Color(0xFF57A0D3),
-        title: Text('Write Post'),
-        actions: [
-          _isProcessing
-              ? Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.orange,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0.0,
+          centerTitle: true,
+          backgroundColor: Colors.indigo.shade600,
+          title: Text('Write Post'),
+          actions: [
+            _isProcessing
+                ? Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.orange,
+                      ),
                     ),
-                  ),
-                )
-              : TextButton(
-                  onPressed: () async {
-                    //check if fields is not empty
-                    if (_addItemFormKey.currentState!.validate()) {
-                      //check for profanity
-                      final profanityCheck = ProfanityFilter.filterAdditionally(
-                          globals.badWordsList);
-                      bool hasProfanity = profanityCheck
-                          .hasProfanity(_title + ' ' + _description);
-                      if (hasProfanity) {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Profanity Check"),
-                                  content: Text(
-                                      "Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("OK"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    )
-                                  ],
-                                ));
-                      } else {
-                        if (widget.postUid == null) {
-                          await AuthService().addItem(
+                  )
+                : TextButton(
+                    onPressed: () async {
+                      //check if fields is not empty
+                      if (_addItemFormKey.currentState!.validate()) {
+                        //check for profanity
+                        final profanityCheck =
+                            ProfanityFilter.filterAdditionally(
+                                globals.badWordsList);
+                        bool hasProfanity = profanityCheck
+                            .hasProfanity(_title + ' ' + _description);
+                        if (hasProfanity) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Profanity Check"),
+                                    content: Text(
+                                        "Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  ));
+                        } else {
+                          if (widget.postUid == null) {
+                            await AuthService().addItem(
+                                _title,
+                                _description,
+                                _publisherSchool,
+                                _publisherFirstName,
+                                _publisherLastName,
+                                _publisherUserIcon,
+                                _publisherPostCategory);
+                          }
+                          //if editing a new post
+                          else {
+                            await AuthService().updateItem(
                               _title,
                               _description,
-                              _publisherSchool,
-                              _publisherFirstName,
-                              _publisherLastName,
-                              _publisherUserIcon,
-                              _publisherPostCategory);
-                        }
-                        //if editing a new post
-                        else {
-                          await AuthService().updateItem(
-                            _title,
-                            _description,
-                            _postUid!,
-                            _publisherPostCategory,
-                          );
-                        }
+                              _postUid!,
+                              _publisherPostCategory,
+                            );
+                          }
 
-                        setState(() {
-                          _isProcessing = true;
-                        });
-                        Navigator.of(_currentContext).pop();
+                          setState(() {
+                            _isProcessing = true;
+                          });
+                          Navigator.of(_currentContext).pop();
+                        }
                       }
-                    }
-                  },
-                  child: Text('Post',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )))
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 16, 5, 16),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _addItemFormKey,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
-                    initialValue: _title,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                        hintText: 'An Interesting Title',
-                        labelText: 'Title',
-                        labelStyle: TextStyle(
-                            height: 3,
-                            fontSize: 14,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0)))),
-                    validator: (value) => value != null && value.isEmpty
-                        ? 'Required Title'
-                        : null,
-                    onChanged: (value) {
-                      setState(() {
-                        _title = value.trim();
-                      });
                     },
+                    child: Text('Post',
+                        style: TextStyle(
+                          color: Colors.white,
+                        )))
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 16, 5, 16),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _addItemFormKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child: TextFormField(
+                      initialValue: _title,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          hintText: 'An Interesting Title',
+                          labelText: 'Title',
+                          labelStyle: TextStyle(
+                              height: 3,
+                              fontSize: 14,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          filled: true,
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0))),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0)))),
+                      validator: (value) => value != null && value.isEmpty
+                          ? 'Required Title'
+                          : null,
+                      onChanged: (value) {
+                        setState(() {
+                          _title = value.trim();
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: TextFormField(
-                    initialValue: _description,
-                    maxLines: 5,
-                    textAlign: TextAlign.start,
-                    decoration: InputDecoration(
-                        hintText: 'Brief and clear explanation',
-                        labelText: 'Description',
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(
-                            height: 3,
-                            fontSize: 14,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0)))),
-                    validator: (value) => value != null && value.isEmpty
-                        ? 'Required Description'
-                        : null,
-                    onChanged: (value) {
-                      setState(() {
-                        _description = value.trim();
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child: TextFormField(
+                      initialValue: _description,
+                      maxLines: 5,
+                      textAlign: TextAlign.start,
+                      decoration: InputDecoration(
+                          hintText: 'Brief and clear explanation',
+                          labelText: 'Description',
+                          alignLabelWithHint: true,
+                          labelStyle: TextStyle(
+                              height: 3,
+                              fontSize: 14,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          filled: true,
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0))),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0)))),
+                      validator: (value) => value != null && value.isEmpty
+                          ? 'Required Description'
+                          : null,
+                      onChanged: (value) {
+                        setState(() {
+                          _description = value.trim();
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            height: 3,
-                            fontSize: 14,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0)))),
-                    validator: (value) =>
-                        value == null ? 'Required Post Category' : null,
-                    isDense: true,
-                    hint: Text('Post Category'),
-                    isExpanded: true,
-                    items: category.map((String val) {
-                      return DropdownMenuItem<String>(
-                        value: val,
-                        child: Text(
-                          val,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _publisherPostCategory = value!;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                          labelStyle: TextStyle(
+                              height: 3,
+                              fontSize: 14,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          filled: true,
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0))),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0)))),
+                      validator: (value) =>
+                          value == null ? 'Required Post Category' : null,
+                      isDense: true,
+                      hint: Text('Post Category'),
+                      isExpanded: true,
+                      items: category.map((String val) {
+                        return DropdownMenuItem<String>(
+                          value: val,
+                          child: Text(
+                            val,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _publisherPostCategory = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

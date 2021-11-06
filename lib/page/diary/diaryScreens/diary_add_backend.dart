@@ -29,7 +29,9 @@ class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF57A0D3),
+          elevation: 0.0,
+          centerTitle: true,
+          backgroundColor: Colors.indigo.shade800,
           actions: [buildButton(_btnEnabled)],
         ),
         body: Form(

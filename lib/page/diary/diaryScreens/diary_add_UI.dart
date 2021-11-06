@@ -24,18 +24,27 @@ class DiaryFormWidget extends StatefulWidget {
 
 class _DiaryFormWidgetState extends State<DiaryFormWidget> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildDate(),
-              SizedBox(height: 15),
-              buildTitle(),
-              SizedBox(height: 8),
-              buildDescription(),
-            ],
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/testing/testing.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildDate(),
+                SizedBox(height: 15),
+                buildTitle(),
+                SizedBox(height: 8),
+                buildDescription(),
+              ],
+            ),
           ),
         ),
       );
@@ -44,8 +53,10 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
         children: [
           RichText(
             text: new TextSpan(
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
               children: <TextSpan>[
                 new TextSpan(
                     text: DateFormat.d().format(widget.dateCreated!),
@@ -63,7 +74,6 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
           ),
         ],
       );
-
   Widget buildTitle() => TextFormField(
         maxLines: 1,
         initialValue: widget.title,
@@ -72,9 +82,14 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
           fontSize: 20,
         ),
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 2.0),
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
           border: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(10)),
+              borderSide: BorderSide(color: Colors.white, width: 2.0),
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
           hintText: 'Title',
           hintStyle: TextStyle(color: Colors.black54),
         ),
@@ -83,15 +98,20 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
             : null,
         onChanged: widget.onChangedTitle,
       );
-  Widget buildDescription() => Expanded(
+  Widget buildDescription() => Flexible(
         child: TextFormField(
-          maxLines: 1,
+          maxLines: null,
           initialValue: widget.description,
           style: TextStyle(fontSize: 18),
           decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
               border: OutlineInputBorder(
-                  borderSide: BorderSide(width: 2, color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(10)),
+                  borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
               hintText: 'Tell us what you feel',
               hintStyle: TextStyle(color: Colors.black54)),
           validator: (description) => description != null && description.isEmpty
