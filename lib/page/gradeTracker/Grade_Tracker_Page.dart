@@ -14,6 +14,8 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
   String subject = "";
   String totalQuiz = "";
   String percent = "";
+  String? quizGrade;
+
   @override
   void initState() {
     super.initState();
@@ -21,7 +23,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
   }
 
   Future refreshState() async {
-    setState(() {});
+    setState(() {
+      quizGrade = widget.totalQuiz1.toString();
+    });
   }
 
   @override
@@ -79,7 +83,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                     ElevatedButton(
                                       child: Text("OK"),
                                       onPressed: () {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => quiz(
@@ -129,29 +133,36 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
             ),
             SizedBox(width: 5),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.2,
-              height: 45,
-              child: TextFormField(
-                  enabled: false,
-                  initialValue: totalQuiz1,
-                  onChanged: (value) {
-                    setState(() {
-                      widget.totalQuiz1 = double.parse(value);
-                    });
+                width: MediaQuery.of(context).size.width * 0.2,
+                height: 45,
+                child: TextButton(
+                  child: Text('$quizGrade'),
+                  onPressed: () {
+                    print(totalQuiz1);
+                    quizGrade = totalQuiz1.toString();
                   },
-                  keyboardType: TextInputType.number,
-                  maxLength: 2,
-                  decoration: InputDecoration(
-                    counterText: "",
-                    border: OutlineInputBorder(),
-                  )),
-            ),
+                )),
           ],
         ),
       ),
     );
   }
 }
+
+// TextFormField(
+//                   enabled: false,
+//                   onChanged: (value) {
+//                     setState(() {
+//                       widget.totalQuiz1 = double.parse(value);
+//                       quizGrade = widget.totalQuiz1.toString();
+//                       print(quizGrade);
+//                     });
+//                   },
+//                   initialValue: '$quizGrade',
+//                   maxLength: 2,
+//                   decoration: InputDecoration(
+//                     border: OutlineInputBorder(),
+//                   )),
         //  Padding(
         //       padding: const EdgeInsets.all(8.0),
         //       child: TextButton(

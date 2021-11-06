@@ -200,16 +200,13 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                     ),
                                   ],
                                 ),
-                                // SizedBox(
-                                //   width:
-                                //       MediaQuery.of(context).size.width * 0.2,
-                                // ),
-                                ElevatedButton(
-                                  child: Text("Cancel"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
+
+                                // ElevatedButton(
+                                //   child: Text("Cancel"),
+                                //   onPressed: () {
+                                //     Navigator.of(context).pop();
+                                //   },
+                                // )
                               ],
                             ));
                   }
