@@ -19,7 +19,7 @@ double items = 0;
 double average = 0;
 String remarks = "";
 double quizTotalPercentage = 0;
-String totalQuiz1 = "";
+String? quizPercentage;
 
 class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
   late List<String> totalScore;
@@ -180,7 +180,7 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                       child: Text("OK"),
                                       onPressed: () {
                                         setState(() {
-                                          totalQuiz1 = average.toString();
+                                          quizPercentage = average.toString();
                                         });
                                         Navigator.pop(
                                           context,
@@ -188,7 +188,7 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                             builder: (context) =>
                                                 GradeTrackerPage(
                                               totalQuiz1:
-                                                  double.parse(totalQuiz1),
+                                                  double.parse(quizPercentage!),
                                             ),
                                           ),
                                         );
@@ -200,13 +200,6 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                                     ),
                                   ],
                                 ),
-
-                                // ElevatedButton(
-                                //   child: Text("Cancel"),
-                                //   onPressed: () {
-                                //     Navigator.of(context).pop();
-                                //   },
-                                // )
                               ],
                             ));
                   }
