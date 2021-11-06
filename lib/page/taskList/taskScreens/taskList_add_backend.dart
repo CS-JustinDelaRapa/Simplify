@@ -55,15 +55,25 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+        final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xFF57A0D3),
+        backgroundColor: Colors.indigo.shade800,
+        title: Text('Create Task'),
+        elevation: 0.0,
         actions: [buildButton(_btnEnabled)],
       ),
-      body: Container(
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: Container(
+        height: size.height,
+        decoration: BoxDecoration(
+        image: DecorationImage(
+        image: AssetImage("assets/testing/testing.png"),
+        fit: BoxFit.cover,
+      ),
+    ),
           child: TaskFormWidget(
             title: title,
             description: description,

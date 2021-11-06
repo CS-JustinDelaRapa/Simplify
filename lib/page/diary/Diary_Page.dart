@@ -13,19 +13,11 @@ class _DiaryPageState extends State<DiaryPage>
     with AutomaticKeepAliveClientMixin {
   late List<Diary> diaryContent;
   List<Diary> deleteList = [];
+  
 
   bool allSelected = false;
   bool onLongPress = false;
   bool isLoading = false;
-
-  final _lightColors = [
-    Colors.amber.shade300,
-    Colors.lightGreen.shade300,
-    Colors.lightBlue.shade300,
-    Colors.orange.shade300,
-    Colors.pinkAccent.shade100,
-    Colors.tealAccent.shade100
-  ];
 
   @override
   void initState() {
@@ -44,15 +36,20 @@ class _DiaryPageState extends State<DiaryPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           leading: onLongPress
               ? IconButton(onPressed: cancelState, icon: Icon(Icons.cancel))
-              : Container(),
-          backgroundColor: Color(0xFF57A0D3),
+              : null,
+          backgroundColor: Colors.transparent,
           elevation: 0.0,
-          centerTitle: true,
           title: onLongPress
               ? Text(
                   'Selected Items: ' + deleteList.length.toString(),
@@ -139,11 +136,11 @@ class _DiaryPageState extends State<DiaryPage>
             });
           },
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+            padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 12),
             child: Container(
               height: 100,
               decoration: BoxDecoration(
-                color: _lightColors[index % _lightColors.length],
+                color: Colors.amber.shade300,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -153,20 +150,37 @@ class _DiaryPageState extends State<DiaryPage>
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                 child: ListTile(
-                  title: Text(
-                    diaryContent[index].title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          diaryContent[index].title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                      DateFormat.yMMMd().format(diaryContent[index].dateCreated),
+                                      style: TextStyle(fontSize: 12),),
+                    )                      
+                    ],
                   ),
                   subtitle: Text(
-                    DateFormat.yMMMd().format(diaryContent[index].dateCreated),
-                  ),
+                    diaryContent[index].description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14),),
                   trailing: deleteList.contains(diaryContent[index])
                       ? Icon(Icons.check)
                       : null,

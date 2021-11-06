@@ -17,11 +17,12 @@ class _BoosterSignInState extends State<BoosterSignIn> {
 
   @override
   Widget build(BuildContext context) {
+        final size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage("assets/testing/testing.png"),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
       child: Scaffold(
@@ -54,18 +55,19 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                   child: TextFormField(
                     decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.white70,
                         hintText: 'Email',
                         focusedBorder: OutlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
+                                BorderSide(color: Colors.transparent, width: 2.0),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
+                                BorderRadius.all(Radius.circular(50.0)
+                                )
+                                ),
                         border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: BorderSide.none,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(16.0)))),
+                                BorderRadius.all(Radius.circular(50.0)))),
                     validator: (title) => title != null && title.isEmpty
                         ? 'Required Email'
                         : null,
@@ -83,18 +85,17 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                     obscureText: true,
                     decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.white70,
                         hintText: 'Password',
                         focusedBorder: OutlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
+                                BorderSide(color: Colors.transparent, width: 2.0),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
+                                BorderRadius.all(Radius.circular(50.0))),
                         border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2.0),
+                            borderSide: BorderSide.none,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(16.0)))),
+                                BorderRadius.all(Radius.circular(50.0)))),
                     validator: (title) => title != null && title.isEmpty
                         ? 'Required password'
                         : null,
@@ -114,7 +115,7 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w400),
                         children: [
                           new TextSpan(
                               text: 'Register Here',
@@ -124,27 +125,42 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                                         builder: (context) =>
                                             BoosterRegister())),
                               style: TextStyle(
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white,
-                                letterSpacing: 1,
                               ))
                         ]),
                   ),
                 ),
                 //sign in button
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        AuthService()
-                            .signInWithEmailandPassword(_email, _password);
-                      }
-                    },
-                    child: Text(
-                      'Sign In',
-                      style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50))
+                    ),
+                    width: size.width,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white
+                        ),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50.0),
+      )
+      )
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          AuthService()
+                              .signInWithEmailandPassword(_email, _password);
+                        }
+                      },
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+                      ),
                     ),
                   ),
                 ),

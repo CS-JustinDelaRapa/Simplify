@@ -70,89 +70,140 @@ class _CalendarViewPageState extends State<CalendarViewPage> with AutomaticKeepA
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          'Calendar View',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
         ),
-        centerTitle: true,
-        backgroundColor: Color(0xFF57A0D3),
-        elevation: 0.0,
-        actions: [buildRefreshButton()],
       ),
-      body:isLoading? Center(child: CircularProgressIndicator()) 
-          :Column(
-        children: [
-               Expanded(
-                 flex: 6,
-                 child: Padding(
-                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                   child: TableCalendar(
-                    shouldFillViewport: true,
-                    firstDay: DateTime.utc(2000),
-                    focusedDay: _focusedDay,
-                    lastDay: DateTime.utc(2050),
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                               },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = selectedDay; // update `_focusedDay` here as well
-                    });
-                               },
-                    onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                    },
-                    calendarFormat: _calendarFormat,
-                   onFormatChanged: (format) {
-                               setState(() {
-                               _calendarFormat = format;
-                             });
-                           },
-                             eventLoader: (day) {
-                             return _getEventsForDay(day);
-                             },
-                               ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text(
+            'Calendar View',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          actions: [buildRefreshButton()],
+        ),
+        body:isLoading? Center(child: CircularProgressIndicator()) 
+            :Column(
+          children: [
+                 Expanded(
+                   flex: 6,
+                   child: Container(
+                     child: Padding(
+                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 20),
+                       child: Container(
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(15),
+                           boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                      offset: Offset(0, 4)),
+                ],
+                           color: Colors.white
+                         ),
+                         child: TableCalendar(
+                          calendarStyle: CalendarStyle(
+                            markersMaxCount: 1,
+                            markerDecoration: BoxDecoration(
+                              color: Colors.purpleAccent.shade400,
+                              shape: BoxShape.circle
+                            )
+                          ),
+                          shouldFillViewport: true,
+                          firstDay: DateTime.utc(2000),
+                          focusedDay: _focusedDay,
+                          lastDay: DateTime.utc(2050),
+                          selectedDayPredicate: (day) {
+                            return isSameDay(_selectedDay, day);
+                                     },
+                          onDaySelected: (selectedDay, focusedDay) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = selectedDay; // update `_focusedDay` here as well
+                          });
+                                     },
+                          onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                          },
+                          calendarFormat: _calendarFormat,
+                         onFormatChanged: (format) {
+                                     setState(() {
+                                     _calendarFormat = format;
+                                   });
+                                 },
+                                   eventLoader: (day) {
+                                   return _getEventsForDay(day);
+                                   },
+                                     ),
+                       ),
+                     ),
+                   ),
                  ),
-               ),
-            Expanded(
-              flex: 4,
-              child:_getEventsForDay(_focusedDay).isEmpty?
-                    Center(child: Text('You have no task For this day')) 
-              :ListView.builder(
-                itemCount: _getEventsForDay(_focusedDay).length,
-                itemBuilder:(context, index){
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(8,0,8,8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2.0
-                        )
+              Expanded(
+                flex: 4,
+                child:_getEventsForDay(_focusedDay).isEmpty?
+                      Center(child: Text('You have no task For this day')) 
+                :ListView.builder(
+                  itemCount: _getEventsForDay(_focusedDay).length,
+                  itemBuilder:(context, index){
+
+                  var now = DateTime.now();
+                  var diff = _getEventsForDay(_focusedDay)[index].dateSched.difference(now);
+                  late Color priorityColor;
+
+                  if(_getEventsForDay(_focusedDay)[index].isDone == true){
+                  priorityColor = Colors.grey.shade500;          
+                  }
+                  else if (diff.inMinutes < -1){
+                  priorityColor = Colors.red.shade400;
+                  }
+                  else if(diff.inHours < 3 && diff.inMinutes > 1 ){
+                  priorityColor =  Colors.orange.shade400;
+                  } 
+                  else if(diff.inHours > 3 && diff.inDays < 1){
+                  priorityColor = Colors.lightGreen.shade400;
+                  } else {
+                  priorityColor = Colors.amber.shade300;
+                  }
+
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(8,0,8,8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: priorityColor,
+                           boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                      offset: Offset(0, 4)),
+                ],
+                        ),
+                        child: ListTile(
+                        title: Text(_getEventsForDay(_focusedDay)[index].title, style: TextStyle(fontWeight: FontWeight.w500)),
+                        subtitle: Text(
+                          DateFormat('h:mm a').format(_getEventsForDay(_focusedDay)[index].dateSched)
+                        ),
+                        onTap: () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddEditTaskPage(
+                                taskContent: _getEventsForDay(_focusedDay)[index])));
+                        refreshState();
+                        }
+                        ),
                       ),
-                      child: ListTile(
-                      title: Text(_getEventsForDay(_focusedDay)[index].title),
-                      subtitle: Text(
-                        DateFormat('h:mm a').format(_getEventsForDay(_focusedDay)[index].dateSched)
-                      ),
-                      onTap: () async {
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddEditTaskPage(
-                              taskContent: _getEventsForDay(_focusedDay)[index])));
-                      refreshState();
-                      }
-                      ),
-                    ),
-                  );
-              }
-                      ),
-            ),
-        ],
+                    );
+                }
+                        ),
+              ),
+          ],
+        ),
       ),
     );
   }

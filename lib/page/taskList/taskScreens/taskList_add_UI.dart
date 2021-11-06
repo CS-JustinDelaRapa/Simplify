@@ -52,43 +52,54 @@ bool isVisible = false;
 
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    resizeToAvoidBottomInset: false,
-        body: Padding(
+  Widget build(BuildContext context) =>
+        Padding(
           padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildTimeSched(),
-              SizedBox(height: 8),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade700,
-                    ),
-                  borderRadius: BorderRadius.circular(15.0)
-                  ),
-                  child: Wrap(
-                    children: [
-                  SizedBox(height: 15),
-                  buildTitle(),
-                  buildDescription(),
-                    ],
-                  ),
-                ),
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                      offset: Offset(0, 4)),
+                ],
               ),
-            ],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildTimeSched(),
+                  SizedBox(height: 8),
+                  Flexible(
+                    child: Wrap(
+                      children: [
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: buildTitle(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: buildDescription(),
+                    ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
       );
 
   Widget buildTitle() => TextFormField(
         maxLines: 1,
         initialValue: widget.title,
         style: TextStyle(
-          fontStyle: FontStyle.italic,
-          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
         decoration: InputDecoration(
             focusedBorder: UnderlineInputBorder(
@@ -107,9 +118,9 @@ bool isVisible = false;
       );
 
   Widget buildDescription() => TextFormField(
-    maxLines: 7,
+    maxLines: null,
     initialValue: widget.description,
-    style: TextStyle(fontSize: 18),
+    style: TextStyle(fontSize: 16),
     decoration: InputDecoration(
       focusedBorder: InputBorder.none,
       border: InputBorder.none,

@@ -57,86 +57,45 @@ class _HomePageState extends State<HomePage> {
           onPageChanged: _onPageChanged,
           physics: NeverScrollableScrollPhysics(),
         ),
-        bottomNavigationBar: CurvedNavigationBar(
-          height: 60,
-          color: Color(0xFF57A0D3),
-          backgroundColor: Colors.blue.shade200,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+        ),
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          // backgroundColor: Color(0xFF34b4bc),
+          backgroundColor: Colors.indigo.shade500,
+          type: BottomNavigationBarType.fixed,          
           onTap: _onItemsTapped,
-          items: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Icon(Icons.home_rounded,
-                      color:
-                          _selectedIndex == 0 ? Colors.white : Colors.white70,
-                      size: 30),
-                ),
-              ),
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded,color: _selectedIndex == 0 ? Colors.white : Colors.indigo.shade200,size: 30,),
+              label: 'Home',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                  child: Icon(Icons.checklist_rtl_rounded,
-                      color:
-                          _selectedIndex == 1 ? Colors.white : Colors.white70,
-                      size: 30),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.checklist_rtl_rounded, color: _selectedIndex == 1 ? Colors.white : Colors.indigo.shade200,size: 30,),
+              label: 'Task List',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                  child: Icon(MdiIcons.calendar,
-                      color:
-                          _selectedIndex == 2 ? Colors.white : Colors.white70,
-                      size: 30),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.calendar, color: _selectedIndex == 2 ? Colors.white : Colors.indigo.shade200,size: 30,),
+              label: 'Calendar View',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Icon(Icons.calculate_rounded,
-                      color:
-                          _selectedIndex == 3 ? Colors.white : Colors.white70,
-                      size: 30),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calculate_rounded, color: _selectedIndex == 3 ? Colors.white : Colors.indigo.shade200,size: 30,),
+              label: 'Grade Tracker',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Icon(Icons.menu_book_rounded,
-                      color:
-                          _selectedIndex == 4 ? Colors.white : Colors.white70,
-                      size: 30),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book_rounded, color: _selectedIndex == 4 ? Colors.white : Colors.indigo.shade200,size: 30,),
+              label: 'Diary Page',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Icon(Icons.connect_without_contact_rounded,
-                      color:
-                          _selectedIndex == 5 ? Colors.white : Colors.white70,
-                      size: 35),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.connect_without_contact_rounded, color: _selectedIndex == 5 ? Colors.white : Colors.indigo.shade200, size: 30,),
+              label: 'Booster Community',
             ),
           ],
         ),
+      ),
       ),
     );
   }

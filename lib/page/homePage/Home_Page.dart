@@ -19,6 +19,8 @@ class QuotesPage extends StatefulWidget {
 class _QuotesPageState extends State<QuotesPage>
     with AutomaticKeepAliveClientMixin {
   late Task priorityTask;
+  late Color priorityColor;
+  var now = DateTime.now();
   bool isLoading = false;
   bool isDone = false;
 
@@ -31,61 +33,74 @@ class _QuotesPageState extends State<QuotesPage>
   Future refreshState() async {
     setState(() => isLoading = true);
     priorityTask = await DatabaseHelper.instance.readPriorityTask();
+    var diff = priorityTask.dateSched.difference(now);
+
+    //if task is due within 3hrs
+    if (diff.inMinutes < 1){
+      setState(() {
+        priorityColor = Colors.red.shade400;
+      });
+    }
+    else if(diff.inHours < 3 && diff.inMinutes > 1 ){
+      setState(() {
+        priorityColor =  Colors.orange.shade400;
+      });
+    } 
+    else if(diff.inHours > 3 && diff.inDays < 1){
+      setState(() {
+       priorityColor = Colors.lightGreen.shade400;
+      });
+    } else {
+      setState(() {
+       priorityColor = Colors.amber.shade200;
+      });
+    }
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: Text(
-            'Home',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-          ),
-          actions: [buildRefreshButton()],
-          centerTitle: true,
-          backgroundColor: Color(0xFF57A0D3),
-          elevation: 0.0,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
         ),
-        body: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                      child: SizedBox(
-                    height: 8,
-                  )),
-                  Flexible(
-                    flex: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
+      ),
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text(
+              'Home',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
+            actions: [buildRefreshButton()],
+            // centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
+          body: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      flex: 6,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Container(
+                          child: buildPriorityTask(),
                         ),
-                        child: buildPriorityTask(),
                       ),
                     ),
-                  ),
-                  Flexible(
-                      child: SizedBox(
-                    height: 8,
-                  ))
-                ],
-              ));
+                    Flexible(
+                        child: SizedBox(
+                      height: 8,
+                    ))
+                  ],
+                )),
+    );
   }
 
   Widget buildRefreshButton() {
@@ -99,44 +114,115 @@ class _QuotesPageState extends State<QuotesPage>
         children: [
           Expanded(
             flex: 1,
-            child: ListTile(
-              leading: priorityTask.title == 'Welcome To Simplify'
-                  ? null
-                  : IconButton(
-                      onPressed: () {
-                        updateIsDone();
-                      },
-                      icon: Icon(Icons.check_box_outline_blank, size: 30)),
-              title: GestureDetector(
-                child: Text(
-                  priorityTask.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w500,
+            child: Container(
+            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: priorityColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),              
+              child: Center(
+                child: ListTile(
+                  leading: priorityTask.title == 'Welcome To Simplify'
+                      ? null
+                      : IconButton(
+                          onPressed: () {
+                            updateIsDone();
+                          },
+                          icon:                 Stack(
+                  children: <Widget>[
+                    Positioned(
+                      left: 1.0,
+                      top: 2.0,
+                      child: Icon(Icons.check_box_outline_blank, color: Colors.black12, size: 30),
+                    ),
+                    Icon(Icons.check_box_outline_blank, size: 30),
+                  ],
+                ),
+                          ),
+                  title: GestureDetector(
+                    child: Text(
+                      priorityTask.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    onTap: priorityTask.title == 'Welcome To Simplify'
+                        ? null
+                        : () async {
+                            await Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    AddEditTaskPage(taskContent: priorityTask)));
+                            refreshState();
+                          },
+                  ),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(DateFormat.yMMMd().format(priorityTask.dateSched),),
+                      SizedBox(width: 10),
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(20),
+                      //     color: Colors.red.shade400,
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Colors.grey.withOpacity(0.5),
+                      //         spreadRadius: 2,
+                      //         blurRadius: 5,
+                      //         offset:
+                      //             Offset(0, 3), // changes position of shadow
+                      //       ),
+                      //     ],
+                      //   ), 
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      //     child: Text('Urgent', style: TextStyle(color: Colors.white)),
+                      //   )
+                      // )
+                    ],
                   ),
                 ),
-                onTap: priorityTask.title == 'Welcome To Simplify'
-                    ? null
-                    : () async {
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                AddEditTaskPage(taskContent: priorityTask)));
-                        refreshState();
-                      },
-              ),
-              subtitle: Text(
-                DateFormat.yMMMd().format(priorityTask.dateSched),
               ),
             ),
           ),
+          SizedBox(height: 20 ),
           Expanded(
-            flex: 2,
-            child: Text(
-              getQuote(priorityTask.title, priorityTask.description),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
+            flex: 4,
+            child: Container(
+            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white70,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),              
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    getQuote(priorityTask.title, priorityTask.description),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ),
           )
         ],

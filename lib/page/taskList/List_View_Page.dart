@@ -25,15 +25,6 @@ class _ListViewPageState extends State<ListViewPage>
   bool isLoading = false;
   bool onChangeIsDone = false;
 
-  final _lightColors = [
-    Colors.amber.shade300,
-    Colors.lightGreen.shade300,
-    Colors.lightBlue.shade300,
-    Colors.orange.shade300,
-    Colors.pinkAccent.shade100,
-    Colors.tealAccent.shade100
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -52,15 +43,20 @@ class _ListViewPageState extends State<ListViewPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           leading: onLongPress
               ? IconButton(onPressed: cancelState, icon: Icon(Icons.cancel))
-              : Container(),
-          backgroundColor: Color(0xFF57A0D3),
+              : null,
+          backgroundColor:Colors.transparent,
           elevation: 0.0,
-          centerTitle: true,
           title: onLongPress
               ? Text(
                   'Selected Items: ' + deleteList.length.toString(),
@@ -113,6 +109,25 @@ class _ListViewPageState extends State<ListViewPage>
   Widget buildList() => ListView.builder(
       itemCount: taskContent.length,
       itemBuilder: (context, index) {
+        var now = DateTime.now();
+        var diff = taskContent[index].dateSched.difference(now);
+        late Color priorityColor;
+
+        if(taskContent[index].isDone == true){
+        priorityColor = Colors.grey.shade500;          
+        }
+        else if (diff.inMinutes < -1){
+        priorityColor = Colors.red.shade400;
+        }
+        else if(diff.inHours < 3 && diff.inMinutes > 1 ){
+        priorityColor =  Colors.orange.shade400;
+        } 
+        else if(diff.inHours > 3 && diff.inDays < 1){
+        priorityColor = Colors.lightGreen.shade400;
+        } else {
+        priorityColor = Colors.amber.shade300;
+        }
+
         return GestureDetector(
           onTap
               //if
@@ -155,7 +170,7 @@ class _ListViewPageState extends State<ListViewPage>
             child: Container(
               height: 100,
               decoration: BoxDecoration(
-                color: _lightColors[index % _lightColors.length],
+                color: priorityColor,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -176,17 +191,38 @@ class _ListViewPageState extends State<ListViewPage>
                           icon: taskContent[index].isDone
                               ? Icon(Icons.check_box_outlined, size: 30)
                               : Icon(Icons.check_box_outline_blank, size: 30)),
-                  title: Text(
-                    taskContent[index].title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          taskContent[index].title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                      DateFormat.yMMMd().format(taskContent[index].dateSched),
+                                      style: TextStyle(fontSize: 12),),
+                    )                      
+                    ],
                   ),
                   subtitle: Text(
-                    DateFormat.yMMMd().format(taskContent[index].dateSched),
+                    taskContent[index].description,
+                    maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                   ),
                   trailing: deleteList.contains(taskContent[index])
                       ? Icon(Icons.check)
