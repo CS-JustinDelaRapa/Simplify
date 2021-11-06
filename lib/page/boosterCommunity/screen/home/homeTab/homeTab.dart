@@ -73,7 +73,7 @@ class _UserFeedState extends State<UserFeed>
             child: CircularProgressIndicator(),
           )
         : Scaffold(
-            backgroundColor: Colors.blueGrey.shade300,
+            backgroundColor: Colors.transparent,
             body: CustomScrollView(
               slivers: [
                 SliverPadding(
@@ -88,9 +88,14 @@ class _UserFeedState extends State<UserFeed>
                           children: <Widget>[
                             //drop down button
                             Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              height: 45,
                               width: size.width * 0.65,
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
+                                  border: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.white,
                                 ),
@@ -116,12 +121,18 @@ class _UserFeedState extends State<UserFeed>
                               width: 5,
                             ),
                             //write post button
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => AddPostForm()));
-                                },
-                                child: Text('Write a post')),
+                            Container(
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  
+                                ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => AddPostForm()));
+                                  },
+                                  child: Text('Write a post')),
+                            ),
                           ],
                         ),
                       ),
