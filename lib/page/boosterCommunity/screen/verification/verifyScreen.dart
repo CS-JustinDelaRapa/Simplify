@@ -38,38 +38,52 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: !sendEmail
-          ? Center(
-              child: Wrap(children: [
-                ElevatedButton(
-                    onPressed: () {
-                      user.sendEmailVerification();
-                      setState(() {
-                        sendEmail = true;
-                      });
-                    },
-                    child: Text('Send Verification')),
-                ElevatedButton(
-                    onPressed: () {
-                      auth.signOut();
-                    },
-                    child: Text('Sign out')),
-              ]),
-            )
-          : Center(
-              child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    SpinKitThreeInOut(
-                      color: Colors.blue,
-                      size: 50.0,
-                    ),
-                    SizedBox(height: 15),
-                    Center(
-                        child: Text('Please Check your email for verification'))
-                  ]),
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/testing.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text('Email Verification'),
+          backgroundColor: Colors.transparent,
+        ),
+        body: !sendEmail
+            ? Center(
+                child: Wrap(children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        user.sendEmailVerification();
+                        setState(() {
+                          sendEmail = true;
+                        });
+                      },
+                      child: Text('Send Verification')),
+                  ElevatedButton(
+                      onPressed: () {
+                        auth.signOut();
+                      },
+                      child: Text('Sign out')),
+                ]),
+              )
+            : Center(
+                child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      SpinKitThreeInOut(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
+                      SizedBox(height: 15),
+                      Center(
+                          child:
+                              Text('Please Check your email for verification'))
+                    ]),
+              ),
+      ),
     );
   }
 

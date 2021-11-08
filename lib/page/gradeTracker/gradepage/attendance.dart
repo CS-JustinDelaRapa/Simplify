@@ -45,7 +45,11 @@ class _attendance extends State<attendance> with AutomaticKeepAliveClientMixin {
       )),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: Text("Attendance Grade Calculator")),
+          appBar: AppBar(
+            title: Text("Attendance Grade Calculator"),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
           body: Column(
             children: [
               Expanded(

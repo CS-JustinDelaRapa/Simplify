@@ -38,6 +38,8 @@ final List<String> badWordsList = [
   'idiot',
 
   // TAGALOG
+  'tanginamo',
+  'putanginamo',
   'hudas',
   'putang ina',
   'lintik',
@@ -76,4 +78,5 @@ final List<String> badWordsList = [
   'titi',
   'burat',
 ];
+
 bool isEditing = false;

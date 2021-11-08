@@ -42,7 +42,11 @@ class _exam extends State<exam> with AutomaticKeepAliveClientMixin {
       )),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: Text("Exam Grade Calculator")),
+          appBar: AppBar(
+            title: Text("Exam Grade Calculator"),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
           body: Column(
             children: [
               Expanded(

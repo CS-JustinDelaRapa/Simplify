@@ -43,7 +43,11 @@ class _activity extends State<activity> with AutomaticKeepAliveClientMixin {
       )),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: Text("Activity Grade Calculator")),
+          appBar: AppBar(
+            title: Text("Activity Grade Calculator"),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
           body: Column(
             children: [
               Expanded(

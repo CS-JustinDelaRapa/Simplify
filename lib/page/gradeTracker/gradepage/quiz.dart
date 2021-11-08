@@ -45,7 +45,11 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
       )),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: Text("Quiz Grade Calculator")),
+          appBar: AppBar(
+            title: Text("Quiz Grade Calculator"),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
           body: Column(
             children: [
               Expanded(

@@ -32,8 +32,7 @@ class _BoosterHomeState extends State<BoosterHome>
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           elevation: 0.0,
-          centerTitle: true,
-          backgroundColor: Colors.indigo.shade600,
+          backgroundColor: Colors.transparent,
           title: Text(
             'Support Community',
             style: TextStyle(color: Colors.white, fontSize: 23),
