@@ -51,7 +51,7 @@ class AuthService {
         'first-name': firstName,
         'last-name': lastName,
         'school': school,
-        'userIcon': '001-panda.png',
+        'userIcon': '001.png',
       });
       Navigator.pop(context);
       return _userfromFirebase(user);
