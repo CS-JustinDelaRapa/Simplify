@@ -775,11 +775,34 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                           ),
                                         ],
                                       ));
+                            } else if (quizGrade == "Show" ||
+                                attendanceGrade == "Show" ||
+                                examGrade == "Show" ||
+                                activityGrade == "Show") {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: Text(
+                                            "You must click the Show button before calculate your Grades!"),
+                                        actions: [
+                                          Row(
+                                            children: [
+                                              ElevatedButton(
+                                                child: Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ));
                             } else {
                               totalGrade = double.parse(quizGrade!) +
-                                  double.parse(activityGrade!) +
                                   double.parse(attendanceGrade!) +
-                                  double.parse(examGrade!);
+                                  double.parse(examGrade!) +
+                                  double.parse(activityGrade!);
                               if (totalGrade == 65) {
                                 remarks = "Let’s raise this grade! ";
                               } else if (totalGrade < 75) {
@@ -832,14 +855,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           ),
                           onPressed: () async {
                             setState(() {
-                              quizGrade = "0";
-                              quizPercentage = "0";
-                              activityGrade = "0";
-                              activityPercentage = "0";
-                              examGrade = "0";
-                              examPercentage = "0";
-                              attendanceGrade = "0";
-                              attendancePercentage = "0";
+                              quizGrade = "Show";
+                              quizPercentage = "Show";
+                              activityGrade = "Show";
+                              activityPercentage = "Show";
+                              examGrade = "Show";
+                              examPercentage = "Show";
+                              attendanceGrade = "Show";
+                              attendancePercentage = "Show";
                             });
                           }),
                     ),
