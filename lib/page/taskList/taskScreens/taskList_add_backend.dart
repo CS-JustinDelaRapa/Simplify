@@ -104,7 +104,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Task shouldn't be within 30 minutes"),
+                        title: Text("Task shouldn't be within 30 minutes!"),
                         actions: [
                           TextButton(
                             child: Text("OK"),
@@ -150,7 +150,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Task is too soon'),
+                    actionsAlignment: MainAxisAlignment.center,
+                    title: Text('Task is too soon!'),
                     actions: [
                       TextButton(
                         child: Text("OK"),
