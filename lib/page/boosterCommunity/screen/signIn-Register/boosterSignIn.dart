@@ -17,7 +17,7 @@ class _BoosterSignInState extends State<BoosterSignIn> {
 
   @override
   Widget build(BuildContext context) {
-        final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -37,12 +37,12 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                 Center(
                     child: Column(
                   children: [
-                    Text('SIMPLIFY!',
+                    Text('Simplify!',
                         style: TextStyle(
                             fontSize: 35,
-                            letterSpacing: 2,
+                            letterSpacing: 4,
                             color: Colors.white)),
-                    Text('Support Community',
+                    Text('Booster Community',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                   ],
                 )),
@@ -58,12 +58,10 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                         fillColor: Colors.white70,
                         hintText: 'Email',
                         focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderSide: BorderSide(
+                                color: Colors.transparent, width: 2.0),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(50.0)
-                                )
-                                ),
+                                BorderRadius.all(Radius.circular(50.0))),
                         border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius:
@@ -88,8 +86,8 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                         fillColor: Colors.white70,
                         hintText: 'Password',
                         focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.transparent, width: 2.0),
+                            borderSide: BorderSide(
+                                color: Colors.transparent, width: 2.0),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(50.0))),
                         border: OutlineInputBorder(
@@ -136,21 +134,18 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(50))
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
                     width: size.width,
                     height: 50,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white
-                        ),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50.0),
-      )
-      )
-                      ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ))),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           AuthService()
@@ -159,7 +154,8 @@ class _BoosterSignInState extends State<BoosterSignIn> {
                       },
                       child: Text(
                         'Sign In',
-                        style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.blueAccent),
                       ),
                     ),
                   ),

@@ -68,9 +68,16 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text(
-            'Grade Tracker',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.calculate_rounded),
+              SizedBox(width: 5,),
+              Text(
+                'Grade Tracker',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -90,10 +97,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: TextButton(
+                            //quiz button
                             child: Text('Quiz'),
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.black87),
@@ -114,6 +125,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                             title: Text("How Many Quiz?"),
                                             actions: [
                                               TextFormField(
+                                                autofocus: true,
                                                 keyboardType:
                                                     TextInputType.number,
                                                 maxLength: 2,
@@ -223,10 +235,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           width: MediaQuery.of(context).size.width * 0.2,
                           height: 45,
                           child: TextButton(
+                            //show button quiz
                             child: Text('$quizGrade'),
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.black87),
@@ -255,10 +271,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: TextButton(
+                            //activity button
                             child: Text('Activity'),
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.black87),
@@ -279,6 +299,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                             title: Text("How Many Activity?"),
                                             actions: [
                                               TextFormField(
+                                                autofocus: true,
                                                 keyboardType:
                                                     TextInputType.number,
                                                 maxLength: 2,
@@ -389,6 +410,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           height: 45,
                           child: TextButton(
                             style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
                                 foregroundColor:
@@ -420,10 +444,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: TextButton(
+                            //attendance button
                             child: Text('Attendance'),
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.black87),
@@ -444,6 +472,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                             title: Text("How Many Attendance?"),
                                             actions: [
                                               TextFormField(
+                                                autofocus: true,
                                                 keyboardType:
                                                     TextInputType.number,
                                                 maxLength: 2,
@@ -550,6 +579,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           height: 45,
                           child: TextButton(
                             style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
                                 foregroundColor:
@@ -582,10 +614,14 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: TextButton(
+                            //exam button
                             child: Text('Exam'),
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.black87),
@@ -606,6 +642,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                             title: Text("How Many Exam?"),
                                             actions: [
                                               TextFormField(
+                                                autofocus: true,
                                                 keyboardType:
                                                     TextInputType.number,
                                                 maxLength: 2,
@@ -712,6 +749,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           height: 45,
                           child: TextButton(
                             style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white70),
                                 padding: MaterialStateProperty.all<EdgeInsets>(
                                     EdgeInsets.all(10)),
                                 foregroundColor:
@@ -759,10 +799,12 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title: Text(
-                                            "Your Total Percentage Must Be 100%"),
+                                        title:
+                                            Text("Invalid total percentage!"),
                                         actions: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               ElevatedButton(
                                                 child: Text("OK"),
@@ -783,9 +825,11 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                   builder: (BuildContext context) =>
                                       AlertDialog(
                                         title: Text(
-                                            "You must click the Show button before calculate your Grades!"),
+                                            "Click show button to calculate grade."),
                                         actions: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               ElevatedButton(
                                                 child: Text("OK"),
@@ -803,15 +847,16 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                   double.parse(examGrade!) +
                                   double.parse(activityGrade!);
                               if (totalGrade == 65) {
-                                remarks = "Let’s raise this grade! ";
+                                remarks =
+                                    "You are failing, let’s bring this up!";
                               } else if (totalGrade < 75) {
-                                remarks = "Let’s bring this up.";
+                                remarks = "You're almost there!";
                               } else if (totalGrade == 75 || totalGrade <= 79) {
-                                remarks = "Perhaps try to do still better? ";
+                                remarks = "Nice! You can do better.";
                               } else if (totalGrade >= 80 || totalGrade <= 89) {
-                                remarks = "Good work. Keep at it. ";
+                                remarks = "Hooray, awesome effort!";
                               } else {
-                                remarks = "Excellent! Keep it up.";
+                                remarks = "Superb, good work!";
                               }
                               showDialog(
                                   context: context,
@@ -819,9 +864,11 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                       AlertDialog(
                                         title: Text("Average: " +
                                             totalGrade.toString()),
-                                        content: Text("Remarks: " + remarks),
+                                        content: Text(remarks),
                                         actions: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               ElevatedButton(
                                                 child: Text("OK"),
