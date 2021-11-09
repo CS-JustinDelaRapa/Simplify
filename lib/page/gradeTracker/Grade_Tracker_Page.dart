@@ -744,9 +744,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           backgroundColor: Colors.teal,
                           onSurface: Colors.grey,
                           textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontStyle: FontStyle.italic),
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
                         ),
                         onPressed: () async {
                           if (calculateKey.currentState!.validate()) {
@@ -848,9 +848,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                             backgroundColor: Colors.teal,
                             onSurface: Colors.grey,
                             textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontStyle: FontStyle.italic),
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
                           ),
                           onPressed: () async {
                             setState(() {

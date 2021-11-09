@@ -55,7 +55,7 @@ class _ListViewPageState extends State<ListViewPage>
           leading: onLongPress
               ? IconButton(onPressed: cancelState, icon: Icon(Icons.cancel))
               : null,
-          backgroundColor:Colors.transparent,
+          backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: onLongPress
               ? Text(
@@ -67,7 +67,8 @@ class _ListViewPageState extends State<ListViewPage>
                   style: TextStyle(color: Colors.white, fontSize: 23),
                 ),
           actions: <Widget>[
-            onLongPress ? trailingAppbar() : buildRefreshButton()
+            onLongPress ? trailingAppbar() : buildTimeLegend(),
+            buildRefreshButton(),
           ],
         ),
         body: Container(
@@ -105,6 +106,183 @@ class _ListViewPageState extends State<ListViewPage>
 //** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions *///** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions */
   Widget buildRefreshButton() =>
       IconButton(onPressed: refreshState, icon: Icon(Icons.refresh_rounded));
+
+  Widget buildTimeLegend() => IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: Text("Task Colors: "),
+                    content: Container(
+                      height: 270,
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            //green text
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.lightGreen.shade400,
+                                      shape: BoxShape.circle),
+                                  child: Text(' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text('The task is due in 3 days or more',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            //yellow text
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.amber.shade300,
+                                      shape: BoxShape.circle),
+                                  child: Text(
+                                    ' ',
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text(
+                                    '\tThe task is due in less than a day',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            //orange text
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange.shade400,
+                                      shape: BoxShape.circle),
+                                  child: Text(' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text(
+                                    '\tThe task is due in less than 3 hours',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.red.shade400,
+                                      shape: BoxShape.circle),
+                                  child: Text(' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text('Unfinished task(s)',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            //grey color
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade500,
+                                      shape: BoxShape.circle),
+                                  child: Text(' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text('Finished task(s)',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ));
+        },
+        icon: Icon(Icons.info_outline_rounded, color: Colors.white),
+        iconSize: 24,
+      );
+
 //listTiles
   Widget buildList() => ListView.builder(
       itemCount: taskContent.length,
@@ -113,19 +291,16 @@ class _ListViewPageState extends State<ListViewPage>
         var diff = taskContent[index].dateSched.difference(now);
         late Color priorityColor;
 
-        if(taskContent[index].isDone == true){
-        priorityColor = Colors.grey.shade500;          
-        }
-        else if (diff.inMinutes < -1){
-        priorityColor = Colors.red.shade400;
-        }
-        else if(diff.inHours < 3 && diff.inMinutes > 1 ){
-        priorityColor =  Colors.orange.shade400;
-        } 
-        else if(diff.inHours > 3 && diff.inDays < 1){
-        priorityColor = Colors.lightGreen.shade400;
+        if (taskContent[index].isDone == true) {
+          priorityColor = Colors.grey.shade500;
+        } else if (diff.inMinutes < -1) {
+          priorityColor = Colors.red.shade400;
+        } else if (diff.inHours < 3 && diff.inMinutes > 1) {
+          priorityColor = Colors.orange.shade400;
+        } else if (diff.inHours > 3 && diff.inDays < 1) {
+          priorityColor = Colors.amber.shade300;
         } else {
-        priorityColor = Colors.amber.shade300;
+          priorityColor = Colors.lightGreen.shade400;
         }
 
         return GestureDetector(
@@ -207,22 +382,24 @@ class _ListViewPageState extends State<ListViewPage>
                         ),
                       ),
                       Spacer(),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                      DateFormat.yMMMd().format(taskContent[index].dateSched),
-                                      style: TextStyle(fontSize: 12),),
-                    )                      
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          DateFormat.yMMMd()
+                              .format(taskContent[index].dateSched),
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      )
                     ],
                   ),
                   subtitle: Text(
                     taskContent[index].description,
                     maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   trailing: deleteList.contains(taskContent[index])
                       ? Icon(Icons.check)

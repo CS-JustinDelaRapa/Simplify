@@ -36,23 +36,21 @@ class _QuotesPageState extends State<QuotesPage>
     var diff = priorityTask.dateSched.difference(now);
     now = DateTime.now();
     //if task is due within 3hrs
-    if (diff.inMinutes < 1){
+    if (diff.inMinutes < 1) {
       setState(() {
         priorityColor = Colors.red.shade400;
       });
-    }
-    else if(diff.inHours < 3 && diff.inMinutes > 1 ){
+    } else if (diff.inHours < 3 && diff.inMinutes > 1) {
       setState(() {
-        priorityColor =  Colors.orange.shade400;
+        priorityColor = Colors.orange.shade400;
       });
-    } 
-    else if(diff.inHours > 3 && diff.inDays < 1){
+    } else if (diff.inHours > 3 && diff.inDays < 1) {
       setState(() {
-       priorityColor = Colors.lightGreen.shade400;
+        priorityColor = Colors.amber.shade300;
       });
     } else {
       setState(() {
-       priorityColor = Colors.amber.shade200;
+        priorityColor = Colors.lightGreen.shade400;
       });
     }
     setState(() => isLoading = false);
@@ -121,38 +119,38 @@ class _QuotesPageState extends State<QuotesPage>
           Expanded(
             flex: 1,
             child: Container(
-            decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: priorityColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),              
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: priorityColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
               child: Center(
                 child: ListTile(
-                  leading: priorityTask.title == 'Welcome To Simplify'
+                  leading: priorityTask.title == 'Welcome To Simplify!'
                       ? null
                       : IconButton(
                           onPressed: () {
                             updateIsDone();
                           },
-                          icon:                 Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: 1.0,
-                      top: 2.0,
-                      child: Icon(Icons.check_box_outline_blank, color: Colors.black12, size: 30),
-                    ),
-                    Icon(Icons.check_box_outline_blank, size: 30),
-                  ],
-                ),
+                          icon: Stack(
+                            children: <Widget>[
+                              Positioned(
+                                left: 1.0,
+                                top: 2.0,
+                                child: Icon(Icons.check_box_outline_blank,
+                                    color: Colors.black12, size: 30),
+                              ),
+                              Icon(Icons.check_box_outline_blank, size: 30),
+                            ],
                           ),
+                        ),
                   title: GestureDetector(
                     child: Text(
                       priorityTask.title,
@@ -167,15 +165,17 @@ class _QuotesPageState extends State<QuotesPage>
                         ? null
                         : () async {
                             await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    AddEditTaskPage(taskContent: priorityTask)));
+                                builder: (context) => AddEditTaskPage(
+                                    taskContent: priorityTask)));
                             refreshState();
                           },
                   ),
                   subtitle: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(DateFormat.yMMMd().format(priorityTask.dateSched),),
+                      Text(
+                        DateFormat.yMMMd().format(priorityTask.dateSched),
+                      ),
                       SizedBox(width: 10),
                     ],
                   ),
@@ -183,23 +183,22 @@ class _QuotesPageState extends State<QuotesPage>
               ),
             ),
           ),
-          SizedBox(height: 20 ),
+          SizedBox(height: 20),
           Expanded(
             flex: 4,
             child: Container(
-            decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white70,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),              
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white70,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
