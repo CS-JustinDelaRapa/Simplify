@@ -36,7 +36,7 @@ class _QuotesPageState extends State<QuotesPage>
     var diff = priorityTask.dateSched.difference(now);
     now = DateTime.now();
     //if task is due within 3hrs
-    if (diff.inMinutes < 1) {
+    if (diff.inMinutes <= 0) {
       setState(() {
         priorityColor = Colors.red.shade400;
       });
