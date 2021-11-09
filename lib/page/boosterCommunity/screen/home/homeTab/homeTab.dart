@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +54,14 @@ class _UserFeedState extends State<UserFeed>
 
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (futureDone == true) {
+
+        if (myLikeList == null){
+          print('MyLikeList == Null');
+        }
         setState(() {
           counting = false;
+          timer.cancel();
         });
-        timer.cancel();
       }
     });
   }

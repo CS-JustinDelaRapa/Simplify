@@ -173,11 +173,14 @@ class AuthService {
       Map<String, Object> data = new HashMap();
       data['userIcon'] = userIcon;
 
+      //update User profile Icon
       await userCollection.doc(user!.uid).update(data);
-      var querySnapshots = await threadCollection
+
+      //update all post Icon
+      var threadUpdate = await threadCollection
           .where('publisher-Id', isEqualTo: user.uid)
           .get();
-      for (var doc in querySnapshots.docs) {
+      for (var doc in threadUpdate.docs) {
         await doc.reference.update({
           'publisher-UserIcon': userIcon,
         });

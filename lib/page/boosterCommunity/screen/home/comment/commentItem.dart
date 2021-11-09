@@ -61,7 +61,7 @@ class _CommentItemState extends State<CommentItem> {
                   offset: Offset(0, -8),
                   child: IconButton(
                     onPressed: () {
-                      // handleUpVote();
+                      handleUpVote();
                     },
                     icon: Icon(Icons.school_rounded,
                         size: 25,
@@ -346,48 +346,75 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-//   handleUpVote() {
-//     if (widget.myLikeList == null ||
-//         !widget.myLikeList!.containsKey(widget.commentInfo.id)) {
-//       FirebaseFirestore.instance
-//           .collection("thread")
-//           .doc(widget.postId)
-//           .collection('comment')
-//           .doc(widget.commentInfo.id)
-//           .update({"like-count": FieldValue.increment(1)});
-//       FirebaseFirestore.instance
-//           .collection("users")
-//           .doc(widget.userId)
-//           .collection('myLikeList')
-//           .doc(widget.userId)
-//           .update({widget.commentInfo.id: true});
-//       if (widget.myLikeList == null) {
-//         setState(() {
-//           widget.myLikeList = {widget.commentInfo.id: true};
-//         });
-//       } else {
-//         setState(() {
-//           widget.myLikeList!
-//               .addEntries([MapEntry(widget.commentInfo.id, true)]);
-//         });
-//       }
-//     } else if (widget.myLikeList != null ||
-//         widget.myLikeList!.containsKey(widget.commentInfo.id)) {
-//       FirebaseFirestore.instance
-//           .collection("thread")
-//           .doc(widget.postId)
-//           .collection('comment')
-//           .doc(widget.commentInfo.id)
-//           .update({"like-count": FieldValue.increment(-1)});
-//       FirebaseFirestore.instance
-//           .collection("users")
-//           .doc(widget.userId)
-//           .collection('myLikeList')
-//           .doc(widget.userId)
-//           .update({widget.commentInfo.id: FieldValue.delete()});
-//       setState(() {
-//         widget.myLikeList!.remove(widget.commentInfo.id);
-//       });
-//     }
-//   }
+  handleUpVote() async{
+    if(widget.myLikeList == null){
+      setState(() {
+          widget.myLikeList = {widget.commentInfo.id: true};
+        });
+        try {
+           FirebaseFirestore.instance
+          .collection("thread")
+          .doc(widget.postId)
+          .collection('comment')
+          .doc(widget.commentInfo.id)
+          .update({"like-count": FieldValue.increment(1)}); 
+          
+                FirebaseFirestore.instance
+          .collection("users")
+          .doc(widget.userId)
+          .collection('myLikeList')
+          .doc(widget.userId)
+          .set({widget.commentInfo.id: true});
+          } on FirebaseException catch (e) {
+            Fluttertoast.showToast(msg: e.message.toString());
+          }
+    }
+    else if (!widget.myLikeList!.containsKey(widget.commentInfo.id)) {
+     print('else if 1');
+        setState(() {
+          widget.myLikeList!
+              .addEntries([MapEntry(widget.commentInfo.id, true)]);
+        });  
+          try {
+           FirebaseFirestore.instance
+          .collection("thread")
+          .doc(widget.postId)
+          .collection('comment')
+          .doc(widget.commentInfo.id)
+          .update({"like-count": FieldValue.increment(1)}); 
+          
+                FirebaseFirestore.instance
+          .collection("users")
+          .doc(widget.userId)
+          .collection('myLikeList')
+          .doc(widget.userId)
+          .update({widget.commentInfo.id: true});
+          } on FirebaseException catch (e) {
+            Fluttertoast.showToast(msg: e.message.toString());
+          }
+    } else if ( widget.myLikeList!.containsKey(widget.commentInfo.id)) {
+      print('else if 2');
+                setState(() {
+        widget.myLikeList!.remove(widget.commentInfo.id);
+      });
+          try {
+          await FirebaseFirestore.instance
+          .collection("thread")
+          .doc(widget.postId)
+          .collection('comment')
+          .doc(widget.commentInfo.id)
+          .update({"like-count": FieldValue.increment(-1)}); 
+
+                FirebaseFirestore.instance
+          .collection("users")
+          .doc(widget.userId)
+          .collection('myLikeList')
+          .doc(widget.userId)
+          .update({widget.commentInfo.id: FieldValue.delete()});
+          } on FirebaseException catch (e) {
+            Fluttertoast.showToast(msg: e.message.toString());
+          }
+
+    }
+  }
 }

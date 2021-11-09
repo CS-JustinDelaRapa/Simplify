@@ -12,7 +12,7 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
   final String userId;
-  Map<String, dynamic>? myLikeList;
+  final Map<String, dynamic>? myLikeList;
   ThreadItem(
       {Key? key, this.myLikeList, required this.postInfo, required this.userId})
       : super(key: key);

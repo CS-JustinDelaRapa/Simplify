@@ -34,7 +34,7 @@ class _QuotesPageState extends State<QuotesPage>
     setState(() => isLoading = true);
     priorityTask = await DatabaseHelper.instance.readPriorityTask();
     var diff = priorityTask.dateSched.difference(now);
-
+    now = DateTime.now();
     //if task is due within 3hrs
     if (diff.inMinutes < 1){
       setState(() {
@@ -71,9 +71,15 @@ class _QuotesPageState extends State<QuotesPage>
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(
-              'Home',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.home_rounded),
+                Text(
+                  'Home',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                ),
+              ],
             ),
             actions: [buildRefreshButton()],
             // centerTitle: true,
@@ -157,7 +163,7 @@ class _QuotesPageState extends State<QuotesPage>
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTap: priorityTask.title == 'Welcome To Simplify'
+                    onTap: priorityTask.title == 'Welcome To Simplify!'
                         ? null
                         : () async {
                             await Navigator.of(context).push(MaterialPageRoute(
@@ -171,25 +177,6 @@ class _QuotesPageState extends State<QuotesPage>
                     children: [
                       Text(DateFormat.yMMMd().format(priorityTask.dateSched),),
                       SizedBox(width: 10),
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(20),
-                      //     color: Colors.red.shade400,
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //         color: Colors.grey.withOpacity(0.5),
-                      //         spreadRadius: 2,
-                      //         blurRadius: 5,
-                      //         offset:
-                      //             Offset(0, 3), // changes position of shadow
-                      //       ),
-                      //     ],
-                      //   ), 
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                      //     child: Text('Urgent', style: TextStyle(color: Colors.white)),
-                      //   )
-                      // )
                     ],
                   ),
                 ),
