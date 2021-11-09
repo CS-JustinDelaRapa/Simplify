@@ -40,7 +40,7 @@ class _QuotesPageState extends State<QuotesPage>
       setState(() {
         priorityColor = Colors.red.shade400;
       });
-    } else if (diff.inHours < 3 && diff.inMinutes > 1) {
+    } else if (diff.inHours < 3 && diff.inMinutes > 0) {
       setState(() {
         priorityColor = Colors.orange.shade400;
       });
@@ -121,9 +121,9 @@ class _QuotesPageState extends State<QuotesPage>
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: priorityTask.title == 'Welcome To Simplify!'?
-                Colors.white70
-                : priorityColor,
+                color: priorityTask.title == 'Welcome To Simplify!'
+                    ? Colors.white70
+                    : priorityColor,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -137,7 +137,7 @@ class _QuotesPageState extends State<QuotesPage>
                 child: ListTile(
                   leading: priorityTask.title == 'Welcome To Simplify!'
                       ? null
-                      :  IconButton(
+                      : IconButton(
                           onPressed: () {
                             updateIsDone();
                           },

@@ -59,29 +59,33 @@ class _ListViewPageState extends State<ListViewPage>
           elevation: 0.0,
           title: onLongPress
               ? Text(
-                  deleteList.length == 1?
-                     deleteList.length.toString() + ' Selected Item'
-                     :deleteList.length == 0? 'Select an Item'
-                     :deleteList.length.toString() + ' Selected Items',
+                  deleteList.length == 1
+                      ? deleteList.length.toString() + ' Selected Item'
+                      : deleteList.length == 0
+                          ? 'Select an Item'
+                          : deleteList.length.toString() + ' Selected Items',
                   style: TextStyle(color: Colors.white, fontSize: 23),
                 )
               : Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(Icons.checklist_rtl_rounded),
-                Text(
-                  ' To-Do List',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.checklist_rtl_rounded),
+                    Text(
+                      ' To-Do List',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           actions: <Widget>[
-            onLongPress ? trailingAppbar() : Row(
-              children: [
-                buildTimeLegend(),
-                buildRefreshButton(),
-              ],
-            ),
+            onLongPress
+                ? trailingAppbar()
+                : Row(
+                    children: [
+                      buildTimeLegend(),
+                      buildRefreshButton(),
+                    ],
+                  ),
           ],
         ),
         body: Container(
@@ -308,7 +312,7 @@ class _ListViewPageState extends State<ListViewPage>
           priorityColor = Colors.grey.shade500;
         } else if (diff.inMinutes < -1) {
           priorityColor = Colors.red.shade400;
-        } else if (diff.inHours < 3 && diff.inMinutes > 1) {
+        } else if (diff.inHours < 3 && diff.inMinutes > 0) {
           priorityColor = Colors.orange.shade400;
         } else if (diff.inHours > 3 && diff.inDays < 1) {
           priorityColor = Colors.amber.shade300;
@@ -435,37 +439,44 @@ class _ListViewPageState extends State<ListViewPage>
                 : IconButton(
                     onPressed: selectAll,
                     icon: Icon(Icons.checklist_rtl_rounded))),
-        deleteList.length == 0? SizedBox()
-        :IconButton(onPressed: (){
-              showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(
-                        deleteList.length == 1? 'Delete ' + deleteList.length.toString()+ ' item?'
-                        :deleteList.length == 0? 'sample'
-                        :'Delete ' + deleteList.length.toString()+ ' items?'
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              deleteItems();
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                          )
-                        ],
-                      );
-                  }
-              );      
-        }
-        , icon: Icon(Icons.delete))
+        deleteList.length == 0
+            ? SizedBox()
+            : IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(deleteList.length == 1
+                              ? 'Delete ' +
+                                  deleteList.length.toString() +
+                                  ' item?'
+                              : deleteList.length == 0
+                                  ? 'sample'
+                                  : 'Delete ' +
+                                      deleteList.length.toString() +
+                                      ' items?'),
+                          actions: [
+                            TextButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                deleteItems();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                            )
+                          ],
+                        );
+                      });
+                },
+                icon: Icon(Icons.delete))
       ],
     );
   }

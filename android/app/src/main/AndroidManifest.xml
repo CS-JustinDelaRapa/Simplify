@@ -5,7 +5,7 @@
       <uses-permission android:name="android.permission.VIBRATE" />
       <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
-        android:label="simplify"
+        android:label="Simplify!"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
