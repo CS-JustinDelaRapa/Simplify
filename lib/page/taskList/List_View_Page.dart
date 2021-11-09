@@ -310,7 +310,7 @@ class _ListViewPageState extends State<ListViewPage>
 
         if (taskContent[index].isDone == true) {
           priorityColor = Colors.grey.shade500;
-        } else if (diff.inMicroseconds< -1) {
+        } else if (diff.inMicroseconds <= 0) {
           priorityColor = Colors.red.shade400;
         } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
           priorityColor = Colors.orange.shade400;
