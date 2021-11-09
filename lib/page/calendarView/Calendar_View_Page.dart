@@ -195,10 +195,10 @@ class _CalendarViewPageState extends State<CalendarViewPage>
                               if (_getEventsForDay(_focusedDay)[index].isDone ==
                                   true) {
                                 priorityColor = Colors.grey.shade500;
-                              } else if (diff.inMinutes < -1) {
+                              } else if (diff.inMicroseconds < -1) {
                                 priorityColor = Colors.red.shade400;
                               } else if (diff.inHours < 3 &&
-                                  diff.inMinutes > 0) {
+                                  diff.inMicroseconds > 0) {
                                 priorityColor = Colors.orange.shade400;
                               } else if (diff.inHours > 3 && diff.inDays < 1) {
                                 priorityColor = Colors.amber.shade300;
