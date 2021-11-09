@@ -33,9 +33,17 @@ class _BoosterHomeState extends State<BoosterHome>
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          title: Text(
-            'Support Community',
-            style: TextStyle(color: Colors.white, fontSize: 23),
+          title: Row(
+            children: [
+              Icon(Icons.connect_without_contact_rounded),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                'Booster Community',
+                style: TextStyle(color: Colors.white, fontSize: 23),
+              ),
+            ],
           ),
           bottom: TabBar(
             indicatorWeight: 3.0,
