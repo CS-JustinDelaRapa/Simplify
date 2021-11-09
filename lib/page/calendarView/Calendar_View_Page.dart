@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/task.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
@@ -80,10 +81,16 @@ class _CalendarViewPageState extends State<CalendarViewPage> with AutomaticKeepA
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text(
-            'Calendar View',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-          ),
+          title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(MdiIcons.calendar),
+                Text(
+                  ' Calendar',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           actions: [buildRefreshButton()],
@@ -148,7 +155,27 @@ class _CalendarViewPageState extends State<CalendarViewPage> with AutomaticKeepA
               Expanded(
                 flex: 4,
                 child:_getEventsForDay(_focusedDay).isEmpty?
-                      Center(child: Text('You have no task For this day')) 
+                      Center(child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('You have no task for this day'),
+                          SizedBox(height: 5),
+                          FloatingActionButton(
+                            shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.zero
+              ),
+                            heroTag: null,
+                            backgroundColor: Colors.indigo.shade500,
+                            child: Icon(Icons.add),
+                            onPressed: () async {
+                            await Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => AddEditTaskPage()),
+                            );
+                            refreshState();
+                            },
+                ),
+                        ],
+                      )) 
                 :ListView.builder(
                   itemCount: _getEventsForDay(_focusedDay).length,
                   itemBuilder:(context, index){
@@ -167,9 +194,9 @@ class _CalendarViewPageState extends State<CalendarViewPage> with AutomaticKeepA
                   priorityColor =  Colors.orange.shade400;
                   } 
                   else if(diff.inHours > 3 && diff.inDays < 1){
-                  priorityColor = Colors.lightGreen.shade400;
-                  } else {
                   priorityColor = Colors.amber.shade300;
+                  } else {
+                  priorityColor = Colors.lightGreen.shade400;
                   }
 
                     return Padding(

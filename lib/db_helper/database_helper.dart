@@ -163,7 +163,7 @@ CREATE TABLE $tableTask(
           isDone: false,
           description: '',
           isSmartAlert: false,
-          title: 'Welcome To Simplify');
+          title: 'Welcome To Simplify!');
       return defaultTask;
     }
   }

@@ -74,7 +74,7 @@ class _QuotesPageState extends State<QuotesPage>
               children: [
                 Icon(Icons.home_rounded),
                 Text(
-                  'Home',
+                  ' Home',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
               ],
@@ -121,7 +121,9 @@ class _QuotesPageState extends State<QuotesPage>
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: priorityColor,
+                color: priorityTask.title == 'Welcome To Simplify!'?
+                Colors.white70
+                : priorityColor,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -135,7 +137,7 @@ class _QuotesPageState extends State<QuotesPage>
                 child: ListTile(
                   leading: priorityTask.title == 'Welcome To Simplify!'
                       ? null
-                      : IconButton(
+                      :  IconButton(
                           onPressed: () {
                             updateIsDone();
                           },
