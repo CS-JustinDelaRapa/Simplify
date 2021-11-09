@@ -83,7 +83,7 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
                       AuthService().updateUserIcon(userIconn, context);
                     },
                     child: Icon(
-                      Icons.close,
+                      Icons.check,
                       size: 32,
                       color: Colors.white,
                     ),

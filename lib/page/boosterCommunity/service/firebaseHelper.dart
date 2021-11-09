@@ -53,6 +53,10 @@ class AuthService {
         'school': school,
         'userIcon': '001.png',
       });
+
+      await userCollection.doc(user.uid).collection('myLikeList').doc(user.uid).set(
+        {'postId': 'value'}
+        );
       Navigator.pop(context);
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {
@@ -148,7 +152,7 @@ class AuthService {
     try {
       User? user = _auth.currentUser;
 
-      await threadCollection.doc(postUid).collection('comment').doc().set({
+      await FirebaseFirestore.instance.collection('comment').doc().set({
         'commentContent': commentContent,
         'commenter-id': user!.uid,
         'commenter-firstName': commenterFirstName,
@@ -157,6 +161,7 @@ class AuthService {
         'commenter-school': commenterSchool,
         'like-count': 0,
         'published-time': DateTime.now().millisecondsSinceEpoch,
+        'postUid': postUid
       });
       await threadCollection
           .doc(postUid)
@@ -185,6 +190,16 @@ class AuthService {
           'publisher-UserIcon': userIcon,
         });
       }
+
+      //update all comment Icon
+            var commentUpdate = await FirebaseFirestore.instance.collection('comment')
+          .where('commenter-id', isEqualTo: user.uid)
+          .get();
+      for (var doc in commentUpdate.docs) {
+        await doc.reference.update({
+          'commenter-icon': userIcon,
+        });
+      }
       Navigator.pop(context);
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
@@ -205,8 +220,7 @@ class AuthService {
   Future deleteComment(
       String commentUID, String postUID, BuildContext context) async {
     try {
-      await threadCollection
-          .doc(postUID)
+      await FirebaseFirestore.instance
           .collection('comment')
           .doc(commentUID)
           .delete();

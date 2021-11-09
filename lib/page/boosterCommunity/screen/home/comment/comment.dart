@@ -93,10 +93,8 @@ class _CommentSectionState extends State<CommentSection> {
                 padding: const EdgeInsets.all(8.0),
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('thread')
-                        .doc(widget.postId)
                         .collection('comment')
-                        .orderBy('published-time', descending: false)
+                        .where('postUid', isEqualTo: widget.postId)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData)
@@ -122,9 +120,7 @@ class _CommentSectionState extends State<CommentSection> {
             globals.isEditing == false
                 ? _buildTextComposer()
                 //if true return null widget
-                : Container(
-                    child: Text('is editing is true'),
-                  )
+                : Container()
           ],
         ),
       ),
