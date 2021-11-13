@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 final List<String> badWordsList = [
   'fucking',
   'dick',
@@ -80,3 +83,5 @@ final List<String> badWordsList = [
 ];
 
 bool isEditing = false;
+
+DateTime? globalPriorityTime;

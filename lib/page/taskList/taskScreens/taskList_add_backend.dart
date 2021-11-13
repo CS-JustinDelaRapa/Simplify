@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/db_helper/database_helper.dart';
@@ -12,7 +15,8 @@ FlutterLocalNotificationsPlugin notificationPlugin =
 
 class AddEditTaskPage extends StatefulWidget {
   final Task? taskContent;
-  const AddEditTaskPage({Key? key, this.taskContent}) : super(key: key);
+  final DateTime? calendarDate;
+  const AddEditTaskPage({Key? key, this.taskContent, this.calendarDate}) : super(key: key);
 
   @override
   _AddEditTaskPageState createState() => _AddEditTaskPageState();
@@ -47,7 +51,11 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     isSmartAlert = widget.taskContent?.isSmartAlert ?? false;
     title = widget.taskContent?.title ?? '';
     description = widget.taskContent?.description ?? '';
-    dateSched = widget.taskContent?.dateSched ?? DateTime.now();
+    if (widget.calendarDate == null){
+      dateSched = widget.taskContent?.dateSched ?? DateTime.now();
+    } else {
+      dateSched = widget.calendarDate!;
+    }
     isDone = widget.taskContent?.isDone ?? false;
   }
 
@@ -237,6 +245,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           "Kapuso",
           importance: Importance.high,
           enableVibration: true,
+          vibrationPattern: Int64List(40),
           playSound: true,
           sound: RawResourceAndroidNotificationSound('cantina_band'),
         )),
@@ -259,6 +268,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           "Kabarkada",
           importance: Importance.high,
           enableVibration: true,
+          vibrationPattern: Int64List(40)
         )),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,

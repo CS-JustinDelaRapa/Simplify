@@ -47,195 +47,200 @@ class _exam extends State<exam> with AutomaticKeepAliveClientMixin {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Form(
-                  key: calculateKey,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.totalExam,
-                    itemBuilder: (context, index) => Center(
-                      child: Column(
-                        children: [
-                          Text('Quiz ${index + 1} :',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  height: 50,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        totalScore[index] = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white70,
-                                      errorStyle: TextStyle(height: 0),
-                                      hintText: 'Score',
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 20.0),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.lightBlueAccent,
-                                            width: 1.0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.lightBlueAccent,
-                                            width: 2.0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
-                                      ),
-                                    ),
-                                    validator: (value) =>
-                                        value != null && value.isEmpty
-                                            ? ''
-                                            : null,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  height: 50,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        totalItems[index] = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white70,
-                                      errorStyle: TextStyle(height: 0),
-                                      hintText: 'Total Items',
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 20.0),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1.0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 2.0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(32.0)),
+          body: Center(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Form(
+                    key: calculateKey,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.totalExam,
+                      itemBuilder: (context, index) => Center(
+                        child: Column(
+                          children: [
+                            Text('Exam ${index + 1} :',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18)),
+                            Center(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            totalScore[index] = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.white70,
+                                          errorStyle: TextStyle(height: 0),
+                                          hintText: 'Score',
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 20.0),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.lightBlueAccent,
+                                                width: 1.0),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.lightBlueAccent,
+                                                width: 2.0),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                        ),
+                                        validator: (value) =>
+                                            value != null && value.isEmpty
+                                                ? ''
+                                                : null,
                                       ),
                                     ),
-                                    validator: (value) =>
-                                        value != null && value.isEmpty
-                                            ? ''
-                                            : null,
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            totalItems[index] = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.white70,
+                                          errorStyle: TextStyle(height: 0),
+                                          hintText: 'Total Items',
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 20.0),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1.0),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 2.0),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0)),
+                                          ),
+                                        ),
+                                        validator: (value) =>
+                                            value != null && value.isEmpty
+                                                ? ''
+                                                : null,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextButton(
-                    child: Text('Calculate'),
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      backgroundColor: Colors.teal,
-                      onSurface: Colors.grey,
-                      textStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextButton(
+                      child: Text('Calculate'),
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.teal,
+                        onSurface: Colors.grey,
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    onPressed: () async {
-                      if (calculateKey.currentState!.validate()) {
-                        for (int x = 0; x < totalScore.length; x++) {
-                          total += double.parse(totalScore[x]);
-                          items += double.parse(totalItems[x]);
-                        }
-                        double temp = items / 2;
-                        examTotalPercentage = (total / items) * 100;
-                        average =
-                            examTotalPercentage * (widget.exampercent / 100);
-                        if (total >= temp) {
-                          remarks = "Great job, keep going!";
-                        } else {
-                          remarks = "You are failing, better luck next time!";
-                        }
+                      onPressed: () async {
+                        if (calculateKey.currentState!.validate()) {
+                          for (int x = 0; x < totalScore.length; x++) {
+                            total += double.parse(totalScore[x]);
+                            items += double.parse(totalItems[x]);
+                          }
+                          double temp = items / 2;
+                          examTotalPercentage = (total / items) * 100;
+                          average =
+                              examTotalPercentage * (widget.exampercent / 100);
+                          if (total >= temp) {
+                            remarks = "Great job, keep going!";
+                          } else {
+                            remarks = "You are failing, better luck next time!";
+                          }
 
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Average: " + average.toString()),
-                                  content: Text(remarks),
-                                  actions: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          child: Text("OK"),
-                                          onPressed: () {
-                                            setState(() {
-                                              examPercentage =
-                                                  average.toString();
-                                            });
-                                            Navigator.pop(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GradeTrackerPage(
-                                                  totalExam1: double.parse(
-                                                      examPercentage!),
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title:
+                                        Text("Average: " + average.toString()),
+                                    content: Text(remarks),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                            child: Text("OK"),
+                                            onPressed: () {
+                                              setState(() {
+                                                examPercentage =
+                                                    average.toString();
+                                              });
+                                              Navigator.pop(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GradeTrackerPage(
+                                                    totalExam1: double.parse(
+                                                        examPercentage!),
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                            setState(() {
-                                              examTotalPercentage = 0;
-                                              average = 0;
-                                              temp = 0;
-                                              total = 0;
-                                              items = 0;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ));
-                      }
-                    }),
-              ),
-            ],
+                                              );
+                                              setState(() {
+                                                examTotalPercentage = 0;
+                                                average = 0;
+                                                temp = 0;
+                                                total = 0;
+                                                items = 0;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ));
+                        }
+                      }),
+                ),
+              ],
+            ),
           )),
     );
   }

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/task.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 FlutterLocalNotificationsPlugin notificationPluginList =
     FlutterLocalNotificationsPlugin();
@@ -18,6 +19,7 @@ class ListViewPage extends StatefulWidget {
 class _ListViewPageState extends State<ListViewPage>
     with AutomaticKeepAliveClientMixin {
   late List<Task> taskContent;
+  late DateTime priorityTime;
   List<Task> deleteList = [];
 
   bool allSelected = false;
@@ -35,7 +37,15 @@ class _ListViewPageState extends State<ListViewPage>
   Future refreshState() async {
     setState(() => isLoading = true);
     this.taskContent = await DatabaseHelper.instance.readAllTask();
+    if(this.taskContent.length == 0){
+      priorityTime = DateTime.now();
+    } else {
+      priorityTime = this.taskContent[0].dateSched;
+    }
+    print('To-Do List: '+priorityTime.toString());
     setState(() => isLoading = false);
+
+    print(priorityTime);
   }
 
   //Main UI diary
@@ -97,7 +107,12 @@ class _ListViewPageState extends State<ListViewPage>
                         'No Task Content',
                         style: TextStyle(fontSize: 20),
                       )
-                    : buildList(),
+                    : TimerBuilder.scheduled(
+                      [priorityTime],
+                      builder: (context) {
+                        return buildList();
+                      }
+                    ),
           ),
         ),
         floatingActionButton: onLongPress

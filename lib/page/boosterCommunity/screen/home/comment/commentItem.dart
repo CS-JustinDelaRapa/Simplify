@@ -369,7 +369,6 @@ class _CommentItemState extends State<CommentItem> {
           }
     }
     else if (!widget.myLikeList!.containsKey(widget.commentInfo.id)) {
-     print('else if 1');
         setState(() {
           widget.myLikeList!
               .addEntries([MapEntry(widget.commentInfo.id, true)]);
