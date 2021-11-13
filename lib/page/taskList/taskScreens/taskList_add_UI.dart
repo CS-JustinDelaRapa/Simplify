@@ -150,7 +150,8 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
                 TextButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-                      DatePicker.showDateTimePicker(context,
+                      DatePicker.showDateTimePicker(
+                          context,
                           currentTime: widget.dateSched,
                           onConfirm: widget.onChangeDateSched,
                           locale: LocaleType.en);
