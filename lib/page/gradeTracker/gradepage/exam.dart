@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../Grade_Tracker_Page.dart';
@@ -29,6 +31,11 @@ class _exam extends State<exam> with AutomaticKeepAliveClientMixin {
     totalScore = List.generate(widget.totalExam, (index) => "");
     totalItems = List.generate(widget.totalExam, (index) => "");
     super.initState();
+  }
+
+  double roundDouble(double value, int places) {
+    num mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
   }
 
   @override
@@ -186,9 +193,12 @@ class _exam extends State<exam> with AutomaticKeepAliveClientMixin {
                             items += double.parse(totalItems[x]);
                           }
                           double temp = items / 2;
-                          examTotalPercentage = (total / items) * 100;
-                          average =
-                              examTotalPercentage * (widget.exampercent / 100);
+                          examTotalPercentage =
+                              roundDouble((total / items) * 100, 2);
+                          average = roundDouble(
+                              examTotalPercentage * (widget.exampercent / 100),
+                              2);
+
                           if (total >= temp) {
                             remarks = "Great job, keep going!";
                           } else {
@@ -198,8 +208,8 @@ class _exam extends State<exam> with AutomaticKeepAliveClientMixin {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
-                                    title:
-                                        Text("Average: " + average.toString()),
+                                    title: Text("Average: " +
+                                        average.toStringAsFixed(2)),
                                     content: Text(remarks),
                                     actions: [
                                       Row(

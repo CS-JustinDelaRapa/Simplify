@@ -41,6 +41,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
   String attendancepercent = "";
   String? examGrade;
   String exampercent = "";
+
   @override
   void initState() {
     super.initState();
@@ -72,7 +73,9 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.calculate_rounded),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 'Grade Tracker',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
@@ -863,7 +866,7 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                   builder: (BuildContext context) =>
                                       AlertDialog(
                                         title: Text("Average: " +
-                                            totalGrade.toString()),
+                                            totalGrade.toStringAsFixed(2)),
                                         content: Text(remarks),
                                         actions: [
                                           Row(
