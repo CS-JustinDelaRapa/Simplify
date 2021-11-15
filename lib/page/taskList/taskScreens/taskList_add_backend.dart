@@ -16,7 +16,8 @@ FlutterLocalNotificationsPlugin notificationPlugin =
 class AddEditTaskPage extends StatefulWidget {
   final Task? taskContent;
   final DateTime? calendarDate;
-  const AddEditTaskPage({Key? key, this.taskContent, this.calendarDate}) : super(key: key);
+  const AddEditTaskPage({Key? key, this.taskContent, this.calendarDate})
+      : super(key: key);
 
   @override
   _AddEditTaskPageState createState() => _AddEditTaskPageState();
@@ -51,7 +52,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     isSmartAlert = widget.taskContent?.isSmartAlert ?? false;
     title = widget.taskContent?.title ?? '';
     description = widget.taskContent?.description ?? '';
-    if (widget.calendarDate == null){
+    if (widget.calendarDate == null) {
       dateSched = widget.taskContent?.dateSched ?? DateTime.now();
     } else {
       dateSched = widget.calendarDate!;
@@ -63,7 +64,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-        final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -75,13 +76,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       body: Form(
         key: _formKey,
         child: Container(
-        height: size.height,
-        decoration: BoxDecoration(
-        image: DecorationImage(
-        image: AssetImage("assets/testing/testing.png"),
-        fit: BoxFit.cover,
-      ),
-    ),
+          height: size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/testing/testing.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
           child: TaskFormWidget(
             title: title,
             description: description,
@@ -262,14 +263,10 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         "",
         tz.TZDateTime.from(newDate, tz.local),
         NotificationDetails(
-            android: AndroidNotificationDetails(
-          "Chanel5",
-          "TV5",
-          "Kabarkada",
-          importance: Importance.high,
-          enableVibration: true,
-          vibrationPattern: Int64List(40)
-        )),
+            android: AndroidNotificationDetails("Chanel5", "TV5", "Kabarkada",
+                importance: Importance.high,
+                enableVibration: true,
+                vibrationPattern: Int64List(40))),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
@@ -277,7 +274,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 }
 
 void initializeSetting() async {
-  var initializeAndroid = AndroidInitializationSettings('sample_logo');
+  var initializeAndroid = AndroidInitializationSettings('notification_icon');
   var initializeSetting = InitializationSettings(android: initializeAndroid);
   notificationPlugin.initialize(initializeSetting);
 }
