@@ -7,7 +7,6 @@ import 'package:simplify/page/boosterCommunity/screen/home/homeTab/threadItem.da
 
 class UserFeed extends StatefulWidget {
   const UserFeed({Key? key}) : super(key: key);
-
   @override
   _UserFeedState createState() => _UserFeedState();
 }
@@ -51,7 +50,6 @@ class _UserFeedState extends State<UserFeed>
       myLikeList = value.data();
       futureDone = true;
     });
-
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (futureDone == true) {
 

@@ -233,7 +233,15 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     displayNotification(idAdd, task);
   }
 
+
   Future<void> displayNotification(int id, Task task) async {
+        var vibrationPattern = new Int64List(4);
+    vibrationPattern[0] = 1000;
+    vibrationPattern[1] = 1000;
+    vibrationPattern[2] = 1000;
+    vibrationPattern[3] = 1000;
+    vibrationPattern[4] = 1000;
+    vibrationPattern[5] = 1000;    
     notificationPlugin.zonedSchedule(
         id,
         task.title,
@@ -246,7 +254,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
           "Kapuso",
           importance: Importance.high,
           enableVibration: true,
-          vibrationPattern: Int64List(40),
+          vibrationPattern: vibrationPattern,
           playSound: true,
           sound: RawResourceAndroidNotificationSound('cantina_band'),
         )),
@@ -266,7 +274,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
             android: AndroidNotificationDetails("Chanel5", "TV5", "Kabarkada",
                 importance: Importance.high,
                 enableVibration: true,
-                vibrationPattern: Int64List(40))),
+                )
+                ),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
@@ -274,7 +283,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 }
 
 void initializeSetting() async {
-  var initializeAndroid = AndroidInitializationSettings('notification_icon');
+  var initializeAndroid = AndroidInitializationSettings('sample_logo');
   var initializeSetting = InitializationSettings(android: initializeAndroid);
   notificationPlugin.initialize(initializeSetting);
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +18,37 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
       FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String userId;
+  late Timer timer;
+  bool counting = true;
+
+  Map<String, dynamic>? myLikeList;
+  bool futureDone = false;
 
   @override
   void initState() {
     userId = _auth.currentUser!.uid.toString();
+    var likeListRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('myLikeList')
+        .doc(userId);
+    super.initState();
+    likeListRef.get().then((value) {
+      myLikeList = value.data();
+      futureDone = true;
+    });
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (futureDone == true) {
+
+        if (myLikeList == null){
+          print('MyLikeList == Null');
+        }
+        setState(() {
+          counting = false;
+          timer.cancel();
+        });
+      }
+    });
     super.initState();
   }
 
@@ -30,7 +59,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
+    return counting? 
+    Center(
+            child: CircularProgressIndicator(),
+          )
+    :Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
@@ -131,7 +164,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               children: snapshot.data!.docs
                                   .map((DocumentSnapshot postInfo) {
                                 return ThreadItem(
-                                    postInfo: postInfo, userId: userId);
+                                    postInfo: postInfo, userId: userId, myLikeList: myLikeList);
                               }).toList(),
                             )
                           : Container(
