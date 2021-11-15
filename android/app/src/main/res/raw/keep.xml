@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    keep = 'iphonex.mp3'
-    keep = 'jazz_and_whistle.mp3'
-    keep = 'cantina_band.mp3'
-    />
