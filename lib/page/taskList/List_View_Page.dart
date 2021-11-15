@@ -169,7 +169,7 @@ class _ListViewPageState extends State<ListViewPage>
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 8,
-                                child: Text('The task is due in 3 days or more',
+                                child: Text('The task is due in 2 days or more',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),

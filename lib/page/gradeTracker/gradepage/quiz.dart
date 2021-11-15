@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../Grade_Tracker_Page.dart';
@@ -32,6 +34,11 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
     totalScore = List.generate(widget.totalQuiz, (index) => "");
     totalItems = List.generate(widget.totalQuiz, (index) => "");
     super.initState();
+  }
+
+  double roundDouble(double value, int places) {
+    num mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
   }
 
   @override
@@ -188,9 +195,12 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                           }
                           double temp = items / 2;
 
-                          quizTotalPercentage = (total / items) * 100;
-                          average =
-                              quizTotalPercentage * (widget.quizpercent / 100);
+                          quizTotalPercentage =
+                              roundDouble((total / items) * 100, 2);
+                          average = roundDouble(
+                              quizTotalPercentage * (widget.quizpercent / 100),
+                              2);
+
                           // change remark
                           if (total >= temp) {
                             remarks = "Great job, keep going!";
@@ -200,8 +210,8 @@ class _quiz extends State<quiz> with AutomaticKeepAliveClientMixin {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
-                                    title:
-                                        Text("Average: " + average.toString()),
+                                    title: Text("Average: " +
+                                        average.toStringAsFixed(2)),
                                     content: Text(remarks),
                                     actions: [
                                       Row(

@@ -19,6 +19,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
       _firstName = '',
       _school = '';
 //comment
+  String _confirmPassword = '';
   final List<String> schools = [
     'Don Honorio Ventura State University',
     'Our Lady Of Fatima University',
@@ -162,9 +163,21 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                               borderSide: BorderSide.none,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50.0)))),
-                      validator: (value) => value != null && value.isEmpty
-                          ? 'Required password'
-                          : null,
+                      validator: (value) {
+                        if (value!.trim().isEmpty) {
+                          return 'Required a Password';
+                        }
+                        if (value.trim().length < 8) {
+                          return 'Password must be at least 8 characters in length';
+                        }
+                        if (!value.trim().contains(RegExp(r"[A-Z]")) ||
+                            !value.trim().contains(RegExp(r"[0-9]"))) {
+                          return 'Password must have a Upper Case and a Number ';
+                        }
+
+                        // Return null if the entered password is valid
+                        return null;
+                      },
                       onChanged: (value) {
                         setState(() {
                           _password = value.trim();
@@ -172,6 +185,26 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       },
                     ),
                   ),
+                  // Row(
+                  //   children: [
+                  //     TextFormField(
+                  //       decoration:
+                  //           InputDecoration(labelText: 'Confirm Password'),
+                  //       obscureText: true,
+                  //       validator: (value) {
+                  //         if (value!.isEmpty) {
+                  //           return 'This field is required';
+                  //         }
+
+                  //         if (value != _password) {
+                  //           return 'Confimation password does not match the entered password';
+                  //         }
+                  //         return null;
+                  //       },
+                  //       onChanged: (value) => _confirmPassword = value,
+                  //     ),
+                  //   ],
+                  // ),
                   //school
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
