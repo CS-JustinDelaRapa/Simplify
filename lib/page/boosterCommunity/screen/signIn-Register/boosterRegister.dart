@@ -54,13 +54,12 @@ class _BoosterRegisterState extends State<BoosterRegister> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 10),
                   Center(
                     child: Text('Register',
                         style: TextStyle(fontSize: 35, color: Colors.white)),
                   ),
                   //First Name
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                     child: TextFormField(
@@ -185,26 +184,37 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                       },
                     ),
                   ),
-                  // Row(
-                  //   children: [
-                  //     TextFormField(
-                  //       decoration:
-                  //           InputDecoration(labelText: 'Confirm Password'),
-                  //       obscureText: true,
-                  //       validator: (value) {
-                  //         if (value!.isEmpty) {
-                  //           return 'This field is required';
-                  //         }
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child: TextFormField(
+                      maxLines: 1,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          hintText: 'Confirm Password',
+                          filled: true,
+                          fillColor: Colors.white70,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.transparent, width: 2.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50.0))),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50.0)))),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'This field is required';
+                        }
 
-                  //         if (value != _password) {
-                  //           return 'Confimation password does not match the entered password';
-                  //         }
-                  //         return null;
-                  //       },
-                  //       onChanged: (value) => _confirmPassword = value,
-                  //     ),
-                  //   ],
-                  // ),
+                        if (value != _password) {
+                          return 'Confimation password does not match';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => _confirmPassword = value,
+                    ),
+                  ),
                   //school
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
