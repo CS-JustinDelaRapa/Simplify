@@ -26,20 +26,19 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
+    super.initState();
     userId = _auth.currentUser!.uid.toString();
     var likeListRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('myLikeList')
         .doc(userId);
-    super.initState();
     likeListRef.get().then((value) {
       myLikeList = value.data();
       futureDone = true;
     });
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (futureDone == true) {
-
         if (myLikeList == null){
           print('MyLikeList == Null');
         }
@@ -49,7 +48,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
         });
       }
     });
-    super.initState();
   }
 
   Future refreshState() async {
