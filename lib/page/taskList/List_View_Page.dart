@@ -37,15 +37,12 @@ class _ListViewPageState extends State<ListViewPage>
   Future refreshState() async {
     setState(() => isLoading = true);
     this.taskContent = await DatabaseHelper.instance.readAllTask();
-    if(this.taskContent.length == 0){
+    if (this.taskContent.length == 0) {
       priorityTime = DateTime.now();
     } else {
       priorityTime = this.taskContent[0].dateSched;
     }
-    print('To-Do List: '+priorityTime.toString());
     setState(() => isLoading = false);
-
-    print(priorityTime);
   }
 
   //Main UI diary
@@ -107,12 +104,10 @@ class _ListViewPageState extends State<ListViewPage>
                         'No Task Content',
                         style: TextStyle(fontSize: 20),
                       )
-                    : TimerBuilder.scheduled(
-                      [priorityTime],
-                      builder: (context) {
+                    : TimerBuilder.scheduled([priorityTime],
+                        builder: (context) {
                         return buildList();
-                      }
-                    ),
+                      }),
           ),
         ),
         floatingActionButton: onLongPress
@@ -146,8 +141,10 @@ class _ListViewPageState extends State<ListViewPage>
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Task Colors: "),
                     content: Container(
-                      height: 270,
+                      height: 350,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Row(
                             //green text
@@ -169,7 +166,8 @@ class _ListViewPageState extends State<ListViewPage>
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 8,
-                                child: Text('The task is due in 2 days or more',
+                                child: Text(
+                                    'The task(s) is due in 2 days or more',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -198,7 +196,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    '\tThe task is due in less than a day',
+                                    '\tThe task(s) is due in less than a day',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -228,7 +226,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    '\tThe task is due in less than 3 hours',
+                                    '\tThe task(s) is due in less than 3 hours',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -291,6 +289,24 @@ class _ListViewPageState extends State<ListViewPage>
                               ),
                             ],
                           ),
+                          SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Text("Smart Alert",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w700)),
+                              ),
+                              Expanded(
+                                flex: 6,
+                                child: Text(
+                                    "Notifies the user 30 minutes prior to the users' set alarm",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),

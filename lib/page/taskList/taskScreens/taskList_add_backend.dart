@@ -1,6 +1,4 @@
-import 'dart:ffi';
 import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/db_helper/database_helper.dart';
@@ -233,15 +231,14 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     displayNotification(idAdd, task);
   }
 
-
   Future<void> displayNotification(int id, Task task) async {
-        var vibrationPattern = new Int64List(4);
+    var vibrationPattern = new Int64List(6);
     vibrationPattern[0] = 1000;
     vibrationPattern[1] = 1000;
     vibrationPattern[2] = 1000;
     vibrationPattern[3] = 1000;
     vibrationPattern[4] = 1000;
-    vibrationPattern[5] = 1000;    
+    vibrationPattern[5] = 1000;
     notificationPlugin.zonedSchedule(
         id,
         task.title,
@@ -271,11 +268,13 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
         "",
         tz.TZDateTime.from(newDate, tz.local),
         NotificationDetails(
-            android: AndroidNotificationDetails("Chanel5", "TV5", "Kabarkada",
-                importance: Importance.high,
-                enableVibration: true,
-                )
-                ),
+            android: AndroidNotificationDetails(
+          "Chanel5",
+          "TV5",
+          "Kabarkada",
+          importance: Importance.high,
+          enableVibration: true,
+        )),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);

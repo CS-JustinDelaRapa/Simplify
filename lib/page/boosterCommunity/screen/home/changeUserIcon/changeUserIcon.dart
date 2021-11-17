@@ -103,7 +103,6 @@ class _ChangeUserIconState extends State<ChangeUserIcon> {
           onTap: () {
             setState(() {
               userIconn = userIconPath;
-              print(userIconn);
             });
           },
           child: Container(

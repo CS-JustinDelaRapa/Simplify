@@ -6,6 +6,7 @@ import 'gradepage/activity.dart';
 import 'gradepage/attendance.dart';
 import 'gradepage/exam.dart';
 
+// ignore: must_be_immutable
 class GradeTrackerPage extends StatefulWidget {
   double? totalQuiz1;
   double? totalActivity1;

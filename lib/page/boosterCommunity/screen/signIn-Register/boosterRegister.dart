@@ -18,7 +18,7 @@ class _BoosterRegisterState extends State<BoosterRegister> {
       _lastName = '',
       _firstName = '',
       _school = '';
-//comment
+  // ignore: unused_field
   String _confirmPassword = '';
   final List<String> schools = [
     'Don Honorio Ventura State University',

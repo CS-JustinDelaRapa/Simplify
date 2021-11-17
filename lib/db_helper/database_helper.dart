@@ -51,32 +51,8 @@ CREATE TABLE $tableTask(
   ${TblTaskField.isDone} BOOLEAN NOT NULL
   )
 ''');
-
-// CREATE TABLE $tblGradeTracker (
-//   ${TblGradeTrackerField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-//   ${TblGradeTrackerField.folder} TEXT NOT NULL,
-//   ${TblGradeTrackerField.subject} TEXT NOT NULL,
-//   ${TblGradeTrackerField.subjectGrade} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.quizGrade} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.quizTotalScore} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.quizTotalItem} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.quizPercentage} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.activityGrade} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.activityTotalScore} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.activityTotalItem} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.activityPercentage} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.attendanceGrade} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.attendanceTotalScore} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.attendanceTotalMeeting} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.attendancePercentage} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.examGrade} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.examTotalScore} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.examTotalItem} FLOAT NOT NUll,
-//   ${TblGradeTrackerField.examPercentage} FLOAT NOT NUll,
-//   )
   }
 
-//edits
 //Future class will return a Diary object || (Diary diaryCreate) will make an instance of our Diary object
   Future createDiary(Diary diaryCreate) async {
     final reference = await instance.database;
@@ -142,19 +118,15 @@ CREATE TABLE $tableTask(
         orderBy: '${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
 
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
-  }  
+  }
 
   Future<Task> readPriorityTask() async {
     final reference = await instance.database;
-    // final specificID = await reference.rawQuery('SELECT * FROM $tableTask WHERE ${TblTaskField.isDone} = FALSE ORDER BY ${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
-    
     final specificID = await reference.query(tableTask,
         // columns: TblTaskField.taskFieldNames,
         where: 'NOT ${TblTaskField.isDone}',
-        orderBy: '${TblTaskField.dateSched} ASC'
-        );
+        orderBy: '${TblTaskField.dateSched} ASC');
     if (specificID.isNotEmpty) {
-      print('Success');
       return Task.fromJson(specificID.first);
     } else {
       final Task defaultTask;

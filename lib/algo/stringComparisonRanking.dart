@@ -20,7 +20,6 @@ String getQuote(String title, String description) {
     //career
     'Promotion Qualification Job Jobs Hunting Interviews Interview Career Profession Occupation Work Works Field Business Line Internship Graduate Vocation Future  Graduation Employment Pursuit Path Craft Missions Service Posting Office Company Degree Accountancy Engineering Marketing Advertising Programmer Hiring Industry Passionate Entrepreneurship Administration Managers Nursing Bachelor Masters Doctorate Journey Interests Passion Vitae Parttime Entry level tenure professional streak lifetime stint season majors rookie comeback coaching outing illustrious stints brief briefing résumé lifework victories appearances proudest moment lifelong dream retiring scoring undistinguished superstardom postseason aspired famer aspirant graduating highlight reel tenures winningest doubters storied fame league meteoric rise rising professionally professions consummate retire spanned stellar gifted hobby checkered mentored seasons notched excelled prolific retired specialty specialization specialism progress progression procession advance advancement winning earned successful fortune success debut team completing outstanding impressive earning started credited experience experienced accomplished apprenticeship derail corporation stardom avocation collegian endeavors traveler mentor mentorship pursuits itinerant retirement wayfarer wayfaring byway voyage travail accomplishment trophy trophies accomplishments prance rank ranks aspirations dreams gallop excursion outflank expedition hobbies traversal towpath caravan canter cursus itinerary ambitions ambition route thoroughfare thruway jaunt reign talents talent highwayman tourism tram peregrine autobiography hackney cruise circumnavigation ridgeway pathless retires carriageway carousel tinker trance switchback notching pacer pathway snowshoe itinerate librarianship diploma vagabond peregrination freshman forties  bests prodigy protégé superstar aptitude biography triumphs filmography adulthood greatness pinnacle skill skills renaissance franchise musher contraflow Roadless horseback stockman hypertravel horsemanship peregrinate crew outride roadwork swansong rideable journeywork trekker underachiever métier colligate roadworthy ridden traineeship overachiever equestrianism overcall luggage scenic equestrian sales average mirabilis alma mater literacy bloomer resource management calling appointment collaboration delegation employability incumbency opportunity portfolio sustenance architect architecture workload prospects prospect economist butcher carpenter cashier businessman businesswoman businessperson secretary lawyer police receptionist politician photographer teacher surgeon neurosurgeon multinational freelance leadership stakeholder efflorescence apotheosis aspire prime resign investment caliber ',
   ];
-
   //**List of Quotes */
   List<String> dailyTask = [
     '"Your future is found in your daily routine. Successful people do daily what others do occasionally" \n-Paula White',
@@ -32,7 +31,17 @@ String getQuote(String title, String description) {
     '"Your time is limited, so don’t waste it living someone else’s life. Don’t be trapped by dogma – which is living with the results of other people’s thinking." \n-Steve Jobs',
     '"Your future is created by what you do today, not tomorrow" \n-Robert Kiyosaki',
     '"Every morning starts a new page in your story. Make it a great one today" \n-Doe Zantamata',
-    '"We are what we repeatedly do. Excellence, then, is not an act, but a habit" \n-Aristotle'
+    '"We are what we repeatedly do. Excellence, then, is not an act, but a habit" \n-Aristotle',
+    '"There are two types of people who will tell you that you cannot make a difference in this world; those who are afraid to try and those who are afraid you will succeed." \n- Ray Goforth',
+    '"Character cannot be developed in ease and quiet. Only through experience of trial and suffering can the soul be strengthened, ambition inspired, and success achieved." \n- Helen Keller',
+    '“People who are crazy enough to think they can change the world, are the ones who do.” \n- Rob Siltanen',
+    '“Move out of your comfort zone. You can only grow if you are willing to feel awkward and uncomfortable when you try something new.” \n- Brian Tracy',
+    '“We must be willing to let go of the life we planned so as to have the life that is waiting for us.” \n– Joseph Campbell',
+    '“For every reason it’s not possible, there are hundreds of people who have faced the same circumstances and succeeded.”  \n– Jack Canfield',
+    '“If you are working on something that you really care about, you don’t have to be pushed. The vision pulls you.” \n– Steve Job',
+    '“Successful people do what unsuccessful people are not willing to do. Don’t wish it were easier; wish you were better.” \n-Jim Rohn',
+    '“What you get by achieving your goals is not as important as what you become by achieving your goals.” \n-Zig Ziglar',
+    '“You don\'t always need a plan. Sometimes you just need to breathe, trust, let go and see what happens.” \n-Mandy Hale',
     // '"Do something every day that brings you closer to your goals" \n-Odyssey',
     // '"No alarm clock needed, my passion wakes me" \n-Eric Thomas',
     // '"Make each day a masterpiece" \n-John Wooden'
@@ -105,25 +114,13 @@ String getQuote(String title, String description) {
     '"It\'s not what you achieve, it\'s what you overcome. That\'s what defines your career" \n-Carlton Fisk',
     '"The best way to predict the future is to create it." \n-Abraham Lincoln'
   ];
-  List<String> general = [
-    '"There are two types of people who will tell you that you cannot make a difference in this world; those who are afraid to try and those who are afraid you will succeed." \n- Ray Goforth',
-    '"Character cannot be developed in ease and quiet. Only through experience of trial and suffering can the soul be strengthened, ambition inspired, and success achieved." \n- Helen Keller',
-    '“People who are crazy enough to think they can change the world, are the ones who do.” \n- Rob Siltanen',
-    '“Move out of your comfort zone. You can only grow if you are willing to feel awkward and uncomfortable when you try something new.” \n- Brian Tracy',
-    '“We must be willing to let go of the life we planned so as to have the life that is waiting for us.” \n– Joseph Campbell',
-    '“For every reason it’s not possible, there are hundreds of people who have faced the same circumstances and succeeded.”  \n– Jack Canfield',
-    '“If you are working on something that you really care about, you don’t have to be pushed. The vision pulls you.” \n– Steve Job',
-    '“Successful people do what unsuccessful people are not willing to do. Don’t wish it were easier; wish you were better.” \n-Jim Rohn',
-    '“What you get by achieving your goals is not as important as what you become by achieving your goals.” \n-Zig Ziglar',
-    '“You don\'t always need a plan. Sometimes you just need to breathe, trust, let go and see what happens.” \n-Mandy Hale',
-  ];
 
   //**variable Holders */
   List<String> splitWords = [];
   var quotesWordsOccurence = List.generate(keyWords.length, (index) => 0);
 
   //concatenate both string
-  String searchTextRaw = title+ ' ' + description;
+  String searchTextRaw = title + ' ' + description;
   String searchText = searchTextRaw.trim();
 
   //split serchText into individual words, removing extraCharacters
@@ -133,7 +130,8 @@ String getQuote(String title, String description) {
 //Search all string from the keyWord list
   for (int i = 0; i < splitWords.length; i++) {
     for (int j = 0; j < keyWords.length; j++) {
-      RegExp exp = new RegExp("\\b" + splitWords[i] + "\\b", caseSensitive: false);
+      RegExp exp =
+          new RegExp("\\b" + splitWords[i] + "\\b", caseSensitive: false);
       bool containe = exp.hasMatch(keyWords[j]);
       if (containe) {
         quotesWordsOccurence[j] += 1;
@@ -144,8 +142,6 @@ String getQuote(String title, String description) {
 //Rank and index holder of most index with the same words
   int highestOccurence = 0;
   int highestOccurenceIndex = 0;
-  print(quotesWordsOccurence);
-  print(highestOccurenceIndex);
 
 //Search highest Occurance
   for (int k = 0; k < quotesWordsOccurence.length; k++) {
@@ -185,8 +181,6 @@ String getQuote(String title, String description) {
     case 5:
       quote = career[randomIndex];
       break;
-    default:
-      quote = general[randomIndex];
   }
   return quote;
 }

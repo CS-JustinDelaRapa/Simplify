@@ -22,9 +22,7 @@ class _HomePageState extends State<HomePage> {
     QuotesPage(),
     ListViewPage(),
     CalendarViewPage(),
-    GradeTrackerPage(
-      totalQuiz1: 0.0,
-    ),
+    GradeTrackerPage(),
     DiaryPage(),
     BoosterCommunityPage()
   ];
@@ -57,45 +55,75 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: _onPageChanged,
         physics: NeverScrollableScrollPhysics(),
       ),
-    bottomNavigationBar: Container(
-      decoration: BoxDecoration(
-        color: Colors.blue,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+        ),
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          // backgroundColor: Color(0xFF34b4bc),
+          backgroundColor: Colors.indigo.shade500,
+          type: BottomNavigationBarType.fixed,
+          onTap: _onItemsTapped,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home_rounded,
+                color:
+                    _selectedIndex == 0 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.checklist_rtl_rounded,
+                color:
+                    _selectedIndex == 1 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Task List',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.calendar,
+                color:
+                    _selectedIndex == 2 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Calendar View',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.calculate_rounded,
+                color:
+                    _selectedIndex == 3 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Grade Tracker',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.menu_book_rounded,
+                color:
+                    _selectedIndex == 4 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Diary Page',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.connect_without_contact_rounded,
+                color:
+                    _selectedIndex == 5 ? Colors.white : Colors.indigo.shade200,
+                size: 30,
+              ),
+              label: 'Booster Community',
+            ),
+          ],
+        ),
       ),
-      child: BottomNavigationBar(
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        // backgroundColor: Color(0xFF34b4bc),
-        backgroundColor: Colors.indigo.shade500,
-        type: BottomNavigationBarType.fixed,          
-        onTap: _onItemsTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded,color: _selectedIndex == 0 ? Colors.white : Colors.indigo.shade200,size: 30,),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.checklist_rtl_rounded, color: _selectedIndex == 1 ? Colors.white : Colors.indigo.shade200,size: 30,),
-            label: 'Task List',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.calendar, color: _selectedIndex == 2 ? Colors.white : Colors.indigo.shade200,size: 30,),
-            label: 'Calendar View',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calculate_rounded, color: _selectedIndex == 3 ? Colors.white : Colors.indigo.shade200,size: 30,),
-            label: 'Grade Tracker',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_rounded, color: _selectedIndex == 4 ? Colors.white : Colors.indigo.shade200,size: 30,),
-            label: 'Diary Page',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.connect_without_contact_rounded, color: _selectedIndex == 5 ? Colors.white : Colors.indigo.shade200, size: 30,),
-            label: 'Booster Community',
-          ),
-        ],
-      ),
-    ),
     );
   }
 }
