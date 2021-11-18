@@ -196,7 +196,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    '\tThe task(s) is due in less than or equal to 2 days',
+                                    '\tThe task(s) is due in less than 2 days',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -410,7 +410,9 @@ class _ListViewPageState extends State<ListViewPage>
                               taskContent: taskContent[index])));
                       refreshState();
                     },
-          onLongPress: () async {
+          onLongPress:  
+          !onLongPress?
+          () async {
             onLongPress = true;
             setState(() {
               deleteList.add(taskContent[index]);
@@ -420,7 +422,8 @@ class _ListViewPageState extends State<ListViewPage>
                 allSelected = false;
               }
             });
-          },
+          }
+          :(){},
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
             child: Container(

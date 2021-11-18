@@ -132,7 +132,9 @@ class _DiaryPageState extends State<DiaryPage>
                               diaryContent: diaryContent[index])));
                       refreshState();
                     },
-          onLongPress: () async {
+          onLongPress: 
+          !onLongPress?
+          () async {
             onLongPress = true;
             setState(() {
               deleteList.add(diaryContent[index]);
@@ -142,7 +144,8 @@ class _DiaryPageState extends State<DiaryPage>
                 allSelected = false;
               }
             });
-          },
+          }
+          :(){},
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 12),
             child: Container(
