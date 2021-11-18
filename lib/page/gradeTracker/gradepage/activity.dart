@@ -133,6 +133,7 @@ class _activity extends State<activity> with AutomaticKeepAliveClientMixin {
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Colors.white70,
+                                      errorStyle: TextStyle(height: 0),
                                       hintText: 'Total Items',
                                       contentPadding: EdgeInsets.symmetric(
                                           vertical: 10.0, horizontal: 20.0),

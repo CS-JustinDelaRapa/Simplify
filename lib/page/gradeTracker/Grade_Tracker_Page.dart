@@ -858,10 +858,10 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                                   double.parse(attendanceGrade!) +
                                   double.parse(examGrade!) +
                                   double.parse(activityGrade!);
-                              if (totalGrade == 65) {
+                              if (totalGrade <= 65) {
                                 remarks =
                                     "You are failing, let’s bring this up!";
-                              } else if (totalGrade < 75) {
+                              } else if (totalGrade < 75 || totalGrade > 65) {
                                 remarks = "You're almost there!";
                               } else if (totalGrade == 75 || totalGrade <= 79) {
                                 remarks = "Nice! You can do better.";
