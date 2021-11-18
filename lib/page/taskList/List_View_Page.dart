@@ -141,7 +141,7 @@ class _ListViewPageState extends State<ListViewPage>
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Task Colors: "),
                     content: Container(
-                      height: 350,
+                      height: 405,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +206,7 @@ class _ListViewPageState extends State<ListViewPage>
                             height: 10,
                           ),
                           Row(
-                            //orange text
+                            //pink text
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
@@ -214,7 +214,7 @@ class _ListViewPageState extends State<ListViewPage>
                                 child: Container(
                                   margin: EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
-                                      color: Colors.orange.shade400,
+                                      color: Colors.pink.shade200,
                                       shape: BoxShape.circle),
                                   child: Text(' ',
                                       style: TextStyle(
@@ -236,6 +236,36 @@ class _ListViewPageState extends State<ListViewPage>
                             height: 10,
                           ),
                           Row(
+                            //purple text
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.purple.shade300,
+                                      shape: BoxShape.circle),
+                                  child: Text(' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 8,
+                                child: Text('\tOngoing task(s)',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            //red color
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
@@ -291,6 +321,7 @@ class _ListViewPageState extends State<ListViewPage>
                           ),
                           SizedBox(height: 12),
                           Row(
+                            //smart alert test
                             children: [
                               Expanded(
                                 flex: 4,
@@ -341,10 +372,12 @@ class _ListViewPageState extends State<ListViewPage>
 
         if (taskContent[index].isDone == true) {
           priorityColor = Colors.grey.shade500;
-        } else if (diff.inMicroseconds <= 0) {
+        } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+          priorityColor = Colors.purple.shade300;
+        } else if (diff.inDays <= -1.1) {
           priorityColor = Colors.red.shade400;
         } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-          priorityColor = Colors.orange.shade400;
+          priorityColor = Colors.pink.shade200;
         } else if (diff.inHours > 3 && diff.inDays < 1) {
           priorityColor = Colors.amber.shade300;
         } else {

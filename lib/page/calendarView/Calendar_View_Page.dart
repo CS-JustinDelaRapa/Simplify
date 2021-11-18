@@ -203,11 +203,14 @@ class _CalendarViewPageState extends State<CalendarViewPage>
                                         .isDone ==
                                     true) {
                                   priorityColor = Colors.grey.shade500;
-                                } else if (diff.inMicroseconds <= 0) {
+                                } else if (diff.inMicroseconds <= 0 &&
+                                    diff.inDays >= -1) {
+                                  priorityColor = Colors.purple.shade300;
+                                } else if (diff.inDays <= -1.1) {
                                   priorityColor = Colors.red.shade400;
                                 } else if (diff.inHours < 3 &&
                                     diff.inMicroseconds > 0) {
-                                  priorityColor = Colors.orange.shade400;
+                                  priorityColor = Colors.pink.shade200;
                                 } else if (diff.inHours > 3 &&
                                     diff.inDays < 1) {
                                   priorityColor = Colors.amber.shade300;

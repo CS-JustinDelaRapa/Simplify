@@ -37,15 +37,15 @@ class _QuotesPageState extends State<QuotesPage>
     var diff = priorityTask.dateSched.difference(now);
     now = DateTime.now();
     //if task is due within 3hrs
-        if (diff.inMicroseconds <= 0) {
-          priorityColor = Colors.red.shade400;
-        } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-          priorityColor = Colors.orange.shade400;
-        } else if (diff.inHours > 3 && diff.inDays < 1) {
-          priorityColor = Colors.amber.shade300;
-        } else {
-          priorityColor = Colors.lightGreen.shade400;
-        }
+    if (diff.inMicroseconds <= 0) {
+      priorityColor = Colors.red.shade400;
+    } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+      priorityColor = Colors.orange.shade400;
+    } else if (diff.inHours > 3 && diff.inDays < 1) {
+      priorityColor = Colors.amber.shade300;
+    } else {
+      priorityColor = Colors.lightGreen.shade400;
+    }
     setState(() => isLoading = false);
   }
 
@@ -79,29 +79,27 @@ class _QuotesPageState extends State<QuotesPage>
           ),
           body: isLoading
               ? Center(child: CircularProgressIndicator())
-              : TimerBuilder.scheduled(
-                [priorityTask.dateSched],
-                builder: (context) {
+              : TimerBuilder.scheduled([priorityTask.dateSched],
+                  builder: (context) {
                   return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 6,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Container(
-                              child: buildPriorityTask(),
-                            ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                            child: buildPriorityTask(),
                           ),
                         ),
-                        Flexible(
-                            child: SizedBox(
-                          height: 8,
-                        ))
-                      ],
-                    );
-                }
-              )),
+                      ),
+                      Flexible(
+                          child: SizedBox(
+                        height: 8,
+                      ))
+                    ],
+                  );
+                })),
     );
   }
 
@@ -110,17 +108,19 @@ class _QuotesPageState extends State<QuotesPage>
   }
 
   Widget buildPriorityTask() {
-        now = DateTime.now();
-        var diff = priorityTask.dateSched.difference(now);
-        if (diff.inMicroseconds <= 0) {
-          priorityColor = Colors.red.shade400;
-        } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-          priorityColor = Colors.orange.shade400;
-        } else if (diff.inHours > 3 && diff.inDays < 1) {
-          priorityColor = Colors.amber.shade300;
-        } else {
-          priorityColor = Colors.lightGreen.shade400;
-        }
+    now = DateTime.now();
+    var diff = priorityTask.dateSched.difference(now);
+    if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+      priorityColor = Colors.purple.shade300;
+    } else if (diff.inDays <= -1.1) {
+      priorityColor = Colors.red.shade400;
+    } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+      priorityColor = Colors.pink.shade200;
+    } else if (diff.inHours > 3 && diff.inDays < 1) {
+      priorityColor = Colors.amber.shade300;
+    } else {
+      priorityColor = Colors.lightGreen.shade400;
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
