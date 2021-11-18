@@ -157,8 +157,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    actionsAlignment: MainAxisAlignment.center,
-                    title: Text('Task is too soon!'),
+                    title: Text(
+                        'Task is too soon! Set your task 3 minutes before the current time.'),
                     actions: [
                       TextButton(
                         child: Text("OK"),
@@ -264,7 +264,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     DateTime newDate = task.dateSched.subtract(Duration(minutes: 30));
     notificationPlugin.zonedSchedule(
         id,
-        "Incoming task within 30 minutes (" + task.title + ")",
+        "Incoming task within 30 minutes (" + task.title + ").",
         "",
         tz.TZDateTime.from(newDate, tz.local),
         NotificationDetails(

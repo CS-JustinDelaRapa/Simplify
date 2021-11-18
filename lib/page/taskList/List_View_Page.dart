@@ -167,7 +167,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    'The task(s) is due in 2 days or more',
+                                    'The task(s) is due in more than 2 days',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -185,7 +185,7 @@ class _ListViewPageState extends State<ListViewPage>
                                 child: Container(
                                   margin: EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
-                                      color: Colors.amber.shade300,
+                                      color: Colors.purple.shade300,
                                       shape: BoxShape.circle),
                                   child: Text(
                                     ' ',
@@ -196,7 +196,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    '\tThe task(s) is due in less than a day',
+                                    '\tThe task(s) is due in less than or equal to 2 days',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -244,7 +244,7 @@ class _ListViewPageState extends State<ListViewPage>
                                 child: Container(
                                   margin: EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
-                                      color: Colors.purple.shade300,
+                                      color: Colors.amber.shade300,
                                       shape: BoxShape.circle),
                                   child: Text(' ',
                                       style: TextStyle(
@@ -373,13 +373,13 @@ class _ListViewPageState extends State<ListViewPage>
         if (taskContent[index].isDone == true) {
           priorityColor = Colors.grey.shade500;
         } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
-          priorityColor = Colors.purple.shade300;
+          priorityColor = Colors.amber.shade300;
         } else if (diff.inDays <= -1.1) {
           priorityColor = Colors.red.shade400;
+        } else if (diff.inHours >= 3 && diff.inDays <= 1) {
+          priorityColor = Colors.purple.shade300;
         } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
           priorityColor = Colors.pink.shade200;
-        } else if (diff.inHours > 3 && diff.inDays < 1) {
-          priorityColor = Colors.amber.shade300;
         } else {
           priorityColor = Colors.lightGreen.shade400;
         }

@@ -213,6 +213,8 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           onChanged: (value) {
                             setState(() {
                               quizpercent = value;
+                              quizGrade = 'Show';
+                              quizPercentage = 'Show';
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -387,6 +389,8 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           onChanged: (value) {
                             setState(() {
                               activitypercent = value;
+                              activityGrade = 'Show';
+                              activityPercentage = 'Show';
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -556,6 +560,8 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           onChanged: (value) {
                             setState(() {
                               attendancepercent = value;
+                              attendanceGrade = 'Show';
+                              attendancePercentage = 'Show';
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -726,6 +732,8 @@ class _GradeTrackerPage extends State<GradeTrackerPage> {
                           onChanged: (value) {
                             setState(() {
                               exampercent = value;
+                              examGrade = 'Show';
+                              examPercentage = 'Show';
                             });
                           },
                           keyboardType: TextInputType.number,

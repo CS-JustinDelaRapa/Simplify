@@ -111,13 +111,13 @@ class _QuotesPageState extends State<QuotesPage>
     now = DateTime.now();
     var diff = priorityTask.dateSched.difference(now);
     if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
-      priorityColor = Colors.purple.shade300;
+      priorityColor = Colors.amber.shade300;
     } else if (diff.inDays <= -1.1) {
       priorityColor = Colors.red.shade400;
+    } else if (diff.inHours >= 3 && diff.inDays <= 1) {
+      priorityColor = Colors.purple.shade300;
     } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
       priorityColor = Colors.pink.shade200;
-    } else if (diff.inHours > 3 && diff.inDays < 1) {
-      priorityColor = Colors.amber.shade300;
     } else {
       priorityColor = Colors.lightGreen.shade400;
     }
