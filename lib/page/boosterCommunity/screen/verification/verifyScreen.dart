@@ -53,7 +53,42 @@ class _VerifyScreenState extends State<VerifyScreen> {
         ),
         body: !sendEmail
             ? Center(
-                child: Wrap(children: [
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                ElevatedButton(
+                    onPressed: () {
+                      user.sendEmailVerification();
+                      setState(() {
+                        sendEmail = true;
+                      });
+                    },
+                    child: Text('Send Verification')),
+                ElevatedButton(
+                    onPressed: () {
+                      auth.signOut();
+                    },
+                    child: Text('Use Another Email')),
+              ]),
+            )
+            : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          SpinKitThreeInOut(
+                            color: Colors.blue,
+                            size: 50.0,
+                          ),
+                          SizedBox(height: 15),
+                          Center(
+                              child:
+                                  Text('Please Check your email for verification'))
+                        ]),
+                  ),
+                  SizedBox(height: 5),
                   ElevatedButton(
                       onPressed: () {
                         user.sendEmailVerification();
@@ -61,28 +96,14 @@ class _VerifyScreenState extends State<VerifyScreen> {
                           sendEmail = true;
                         });
                       },
-                      child: Text('Send Verification')),
-                  ElevatedButton(
-                      onPressed: () {
-                        auth.signOut();
-                      },
-                      child: Text('Sign out')),
-                ]),
-              )
-            : Center(
-                child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      SpinKitThreeInOut(
-                        color: Colors.blue,
-                        size: 50.0,
-                      ),
-                      SizedBox(height: 15),
-                      Center(
-                          child:
-                              Text('Please Check your email for verification'))
-                    ]),
-              ),
+                      child: Text('Send Verification again')),
+                      ElevatedButton(
+                    onPressed: () {
+                      auth.signOut();
+                    },
+                    child: Text('Use Another Email')),
+              ],
+            ),
       ),
     );
   }
