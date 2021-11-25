@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/task.dart';
+import 'package:simplify/page/taskList/calendarView/calendarView.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
 import 'package:timer_builder/timer_builder.dart';
 
@@ -26,6 +28,7 @@ class _ListViewPageState extends State<ListViewPage>
   bool onLongPress = false;
   bool isLoading = false;
   bool onChangeIsDone = false;
+  bool isCalendarClicked = false;
 
   @override
   void initState() {
@@ -76,12 +79,20 @@ class _ListViewPageState extends State<ListViewPage>
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.checklist_rtl_rounded),
-                    Text(
-                      ' To-Do List',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                    ),
+                    isCalendarClicked
+                        ? Icon(MdiIcons.calendar)
+                        : Icon(Icons.checklist_rtl_rounded),
+                    isCalendarClicked
+                        ? Text(
+                            ' Calendar View ',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          )
+                        : Text(
+                            ' To-Do List',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          ),
                   ],
                 ),
           actions: <Widget>[
@@ -89,28 +100,31 @@ class _ListViewPageState extends State<ListViewPage>
                 ? trailingAppbar()
                 : Row(
                     children: [
+                      isCalendarClicked ? calendarView() : todoListView(),
                       buildTimeLegend(),
                       buildRefreshButton(),
                     ],
                   ),
           ],
         ),
-        body: Container(
-          child: Center(
-            child: isLoading
-                ? CircularProgressIndicator()
-                : taskContent.isEmpty
-                    ? Text(
-                        'No Task Content',
-                        style: TextStyle(fontSize: 20),
-                      )
-                    : TimerBuilder.scheduled([priorityTime],
-                        builder: (context) {
-                        return buildList();
-                      }),
-          ),
-        ),
-        floatingActionButton: onLongPress
+        body: isCalendarClicked
+            ? CalendarView()
+            : Container(
+                child: Center(
+                  child: isLoading
+                      ? CircularProgressIndicator()
+                      : taskContent.isEmpty
+                          ? Text(
+                              'No Task Content',
+                              style: TextStyle(fontSize: 20),
+                            )
+                          : TimerBuilder.scheduled([priorityTime],
+                              builder: (context) {
+                              return buildList();
+                            }),
+                ),
+              ),
+        floatingActionButton: onLongPress || isCalendarClicked
             ? Container()
             : FloatingActionButton(
                 heroTag: null,
@@ -134,6 +148,27 @@ class _ListViewPageState extends State<ListViewPage>
   Widget buildRefreshButton() =>
       IconButton(onPressed: refreshState, icon: Icon(Icons.refresh_rounded));
 
+//todoList view icon
+  Widget todoListView() => IconButton(
+        onPressed: () {
+          setState(() {
+            isCalendarClicked = true;
+          });
+        },
+        icon: Icon(MdiIcons.calendar),
+      );
+
+//calendar view icon
+  Widget calendarView() => IconButton(
+        onPressed: () {
+          setState(() {
+            isCalendarClicked = false;
+          });
+        },
+        icon: Icon(Icons.checklist_rtl_rounded),
+      );
+
+//task color legends
   Widget buildTimeLegend() => IconButton(
         onPressed: () {
           showDialog(
@@ -410,20 +445,19 @@ class _ListViewPageState extends State<ListViewPage>
                               taskContent: taskContent[index])));
                       refreshState();
                     },
-          onLongPress:  
-          !onLongPress?
-          () async {
-            onLongPress = true;
-            setState(() {
-              deleteList.add(taskContent[index]);
-              if (deleteList.length == taskContent.length) {
-                allSelected = true;
-              } else {
-                allSelected = false;
-              }
-            });
-          }
-          :(){},
+          onLongPress: !onLongPress
+              ? () async {
+                  onLongPress = true;
+                  setState(() {
+                    deleteList.add(taskContent[index]);
+                    if (deleteList.length == taskContent.length) {
+                      allSelected = true;
+                    } else {
+                      allSelected = false;
+                    }
+                  });
+                }
+              : () {},
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
             child: Container(
@@ -616,7 +650,6 @@ class _ListViewPageState extends State<ListViewPage>
     refreshState();
   }
 
-  //persisting diary
   @override
   bool get wantKeepAlive => true;
 }

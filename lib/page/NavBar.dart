@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _screens = [
     QuotesPage(),
     ListViewPage(),
-    CalendarViewPage(),
+    ProgressReportPage(),
     GradeTrackerPage(),
     DiaryPage(),
     BoosterCommunityPage()
@@ -87,12 +87,12 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                MdiIcons.calendar,
+                Icons.circle_notifications,
                 color:
                     _selectedIndex == 2 ? Colors.white : Colors.indigo.shade200,
                 size: 30,
               ),
-              label: 'Calendar View',
+              label: 'Progress Report',
             ),
             BottomNavigationBarItem(
               icon: Icon(
