@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+import 'package:simplify/page/progressReport/Progress_Report_Page.dart';
 import 'boosterCommunity/Booster_Community_Page.dart';
 import 'diary/Diary_Page.dart';
 import 'gradeTracker/Grade_Tracker_Page.dart';
-import 'calendarView/Calendar_View_Page.dart';
 import 'homePage/Home_Page.dart';
 import 'taskList/List_View_Page.dart';
 import 'package:simplify/db_helper/database_helper.dart';
