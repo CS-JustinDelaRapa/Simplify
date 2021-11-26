@@ -48,6 +48,41 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 //   //   });
 //   });
 // }
+  var time = TimeOfDay.fromDateTime(DateTime.now());
+  DateTime date = DateTime.now();
+  String _addLeadingZeroIfNeeded(int value) {
+    if (value < 10) return '0$value';
+
+    return value.toString();
+  }
+
+  //Time
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        time = picked;
+      });
+    }
+  }
+
+//Date
+  Future<void> selectDatePicker(BuildContext context1) async {
+    final DateTime? pickedd = await showDatePicker(
+        context: context1,
+        initialDate: date,
+        firstDate: DateTime(1940),
+        lastDate: DateTime(2030));
+    if (pickedd != null && pickedd != date) {
+      setState(() {
+        date = pickedd;
+        print(date.toString());
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Container(
@@ -142,27 +177,56 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
           Flexible(
             flex: 3,
             child: Row(
-              children: [
-                Icon(
-                  Icons.alarm,
-                  size: 30,
-                ),
-                TextButton(
+              children: <Widget>[
+                IconButton(
+                    icon: const Icon(Icons.alarm),
+                    iconSize: 40,
                     onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      DatePicker.showDateTimePicker(
-                          context,
-                          currentTime: widget.dateSched,
-                          onConfirm: widget.onChangeDateSched,
-                          locale: LocaleType.en);
-                    },
-                    child: Container(
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                          child: dateTimeShow()),
-                    )),
+                      selectTime(context);
+                      print(time);
+                    }),
+                Text(
+                  "Time: ${_addLeadingZeroIfNeeded(time.hourOfPeriod)}:${_addLeadingZeroIfNeeded(time.minute)}",
+                  style: const TextStyle(fontSize: 25),
+                ),
+                Column(
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.calendar_today),
+                        onPressed: () {
+                          selectDatePicker(context);
+                        }),
+                    Text(
+                      "Date: ${_addLeadingZeroIfNeeded(date.month)}:${_addLeadingZeroIfNeeded(date.day)}:${_addLeadingZeroIfNeeded(date.year)}",
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                  ],
+                ),
               ],
             ),
+
+            // child: Row(
+            //   children: [
+            //     Icon(
+            //       Icons.alarm,
+            //       size: 30,
+            //     ),
+            //     TextButton(
+            //         onPressed: () {
+            //           FocusScope.of(context).unfocus();
+            //           DatePicker.showDateTimePicker(
+            //               context,
+            //               currentTime: widget.dateSched,
+            //               onConfirm: widget.onChangeDateSched,
+            //               locale: LocaleType.en);
+            //         },
+            //         child: Container(
+            //           child: Padding(
+            //               padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+            //               child: dateTimeShow()),
+            //         )),
+            //   ],
+            // ),
           ),
           Flexible(
             flex: 2,
