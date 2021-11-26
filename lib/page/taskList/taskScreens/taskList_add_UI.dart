@@ -37,7 +37,6 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 
 //creating KeyboardVisibility instance
 // var keyboardVisibilityController = KeyboardVisibilityController();
-
 // @override
 // void initState() {
 //   super.initState();
@@ -50,11 +49,6 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 // }
   var time = TimeOfDay.fromDateTime(DateTime.now());
   DateTime date = DateTime.now();
-  String _addLeadingZeroIfNeeded(int value) {
-    if (value < 10) return '0$value';
-
-    return value.toString();
-  }
 
   //Time
   Future<void> selectTime(BuildContext context) async {
@@ -171,102 +165,114 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
         ),
       );
 
-  Widget buildTimeSched() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Widget buildTimeSched() => Column(
         children: [
-          Flexible(
-            flex: 3,
-            child: Row(
-              children: <Widget>[
-                IconButton(
-                    icon: const Icon(Icons.alarm),
-                    iconSize: 40,
-                    onPressed: () {
-                      selectTime(context);
-                      print(time);
-                    }),
-                Text(
-                  "Time: ${_addLeadingZeroIfNeeded(time.hourOfPeriod)}:${_addLeadingZeroIfNeeded(time.minute)}",
-                  style: const TextStyle(fontSize: 25),
-                ),
-                Column(
-                  children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Flexible(
+                flex: 7,
+                child: Row(
+                  children: <Widget>[
                     IconButton(
-                        icon: const Icon(Icons.calendar_today),
+                        icon: const Icon(Icons.alarm),
+                        iconSize: 25,
                         onPressed: () {
-                          selectDatePicker(context);
+                          selectTime(context);
+                          print(time);
                         }),
                     Text(
-                      "Date: ${_addLeadingZeroIfNeeded(date.month)}:${_addLeadingZeroIfNeeded(date.day)}:${_addLeadingZeroIfNeeded(date.year)}",
-                      style: const TextStyle(fontSize: 25),
+                      "${time.format(context)}",
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
-              ],
-            ),
-
-            // child: Row(
-            //   children: [
-            //     Icon(
-            //       Icons.alarm,
-            //       size: 30,
-            //     ),
-            //     TextButton(
-            //         onPressed: () {
-            //           FocusScope.of(context).unfocus();
-            //           DatePicker.showDateTimePicker(
-            //               context,
-            //               currentTime: widget.dateSched,
-            //               onConfirm: widget.onChangeDateSched,
-            //               locale: LocaleType.en);
-            //         },
-            //         child: Container(
-            //           child: Padding(
-            //               padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-            //               child: dateTimeShow()),
-            //         )),
-            //   ],
-            // ),
-          ),
-          Flexible(
-            flex: 2,
-            child: Text(
-              'Smart Alert',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
               ),
-            ),
+              Flexible(
+                flex: 3,
+                child: Text(
+                  'Smart Alert',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Switch(
+                value: widget.switchValue!,
+                onChanged: widget.onChangedSwitch,
+              ),
+            ],
           ),
-          Switch(
-            value: widget.switchValue!,
-            onChanged: widget.onChangedSwitch,
-          ),
+          Row(
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                          iconSize: 25,
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () {
+                            selectDatePicker(context);
+                          }),
+                      Text(
+                        "${DateFormat('M/d/y, EEE').format(date)}",
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          )
         ],
       );
 
+  // child: Row(
+  //   children: [
+  //     Icon(
+  //       Icons.alarm,
+  //       size: 30,
+  //     ),
+  //     TextButton(
+  //         onPressed: () {
+  //           FocusScope.of(context).unfocus();
+  //           DatePicker.showDateTimePicker(
+  //               context,
+  //               currentTime: widget.dateSched,
+  //               onConfirm: widget.onChangeDateSched,
+  //               locale: LocaleType.en);
+  //         },
+  //         child: Container(
+  //           child: Padding(
+  //               padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+  //               child: dateTimeShow()),
+  //         )),
+  //   ],
+  // ),
 //ButtonText Text child formatted display text
-  Widget dateTimeShow() => RichText(
-        text: new TextSpan(
-          style:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
-          children: [
-            new TextSpan(
-              text: DateFormat('h:mm a').format(widget.dateSched!),
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            WidgetSpan(
-              child: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey[800],
-              ),
-            ),
-            new TextSpan(
-                text: '\n' + DateFormat('d MMM y').format(widget.dateSched!),
-                style: TextStyle(fontSize: 15, color: Colors.grey[700])),
-          ],
-        ),
-      );
+  // Widget dateTimeShow() => RichText(
+  //       text: new TextSpan(
+  //         style:
+  //             TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+  //         children: [
+  //           new TextSpan(
+  //             text: DateFormat('h:mm a').format(widget.dateSched!),
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //             ),
+  //           ),
+  //           WidgetSpan(
+  //             child: Icon(
+  //               Icons.arrow_drop_down,
+  //               color: Colors.grey[800],
+  //             ),
+  //           ),
+  //           new TextSpan(
+  //               text: '\n' + DateFormat('d MMM y').format(widget.dateSched!),
+  //               style: TextStyle(fontSize: 15, color: Colors.grey[700])),
+  //         ],
+  //       ),
+  //     );
 }
