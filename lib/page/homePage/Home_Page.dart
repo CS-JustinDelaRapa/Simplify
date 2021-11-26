@@ -1,17 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simplify/algo/stringComparisonRanking.dart';
 import 'package:simplify/db_helper/database_helper.dart';
+import 'package:simplify/main.dart';
 import 'package:simplify/model/task.dart';
 import 'package:simplify/page/taskList/List_View_Page.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class QuotesPage extends StatefulWidget {
-  QuotesPage({
-    Key? key,
-  }) : super(key: key);
+  final Stream<bool> stream;
+  QuotesPage({Key? key, required this.stream }) : super(key: key);
 
   @override
   _QuotesPageState createState() => _QuotesPageState();
@@ -28,6 +30,11 @@ class _QuotesPageState extends State<QuotesPage>
   @override
   void initState() {
     super.initState();
+    widget.stream.listen((isRefresh) {
+      if(isRefresh){
+        refreshState();
+      }
+    });
     refreshState();
   }
 
@@ -72,7 +79,6 @@ class _QuotesPageState extends State<QuotesPage>
                 ),
               ],
             ),
-            actions: [buildRefreshButton()],
             // centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0.0,
@@ -101,10 +107,6 @@ class _QuotesPageState extends State<QuotesPage>
                   );
                 })),
     );
-  }
-
-  Widget buildRefreshButton() {
-    return IconButton(onPressed: refreshState, icon: Icon(Icons.refresh));
   }
 
   Widget buildPriorityTask() {
@@ -149,6 +151,8 @@ class _QuotesPageState extends State<QuotesPage>
                       : IconButton(
                           onPressed: () {
                             updateIsDone();
+                            listController.add(true);
+                            calendarController.add(true);                            
                           },
                           icon: Stack(
                             children: <Widget>[

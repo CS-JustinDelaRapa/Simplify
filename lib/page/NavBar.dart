@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:simplify/page/progressReport/Progress_Report_Page.dart';
 import 'boosterCommunity/Booster_Community_Page.dart';
@@ -8,22 +10,19 @@ import 'taskList/List_View_Page.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  final StreamController<bool> listController;
+    final StreamController<bool> homeController;
+      final StreamController<bool> calendarController;
+  HomePage({Key? key, required this.listController, required this.homeController, required this.calendarController }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
   PageController _pageController = PageController();
-  List<Widget> _screens = [
-    QuotesPage(),
-    ListViewPage(),
-    ProgressReportPage(),
-    GradeTrackerPage(),
-    DiaryPage(),
-    BoosterCommunityPage()
-  ];
+  late List<Widget> _screens;
 
   int _selectedIndex = 0;
   void _onPageChanged(int index) {
@@ -40,6 +39,19 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     DatabaseHelper.instance.closeConnection();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _screens = [
+    QuotesPage(stream: widget.homeController.stream),
+    ListViewPage(stream: widget.listController.stream, calendarStream: widget.calendarController.stream),
+    ProgressReportPage(),
+    GradeTrackerPage(),
+    DiaryPage(),
+    BoosterCommunityPage()
+  ];
+    super.initState();
   }
 
 //bottom curve nav bar

@@ -10,8 +10,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class CalendarView extends StatefulWidget {
+  final Stream<bool> stream;
   CalendarView({
     Key? key,
+    required this.stream
   }) : super(key: key);
 
   @override
@@ -37,6 +39,14 @@ class _CalendarViewState extends State<CalendarView>
   @override
   void initState() {
     super.initState();
+    try {
+      widget.stream.listen((isRefresh) {
+      if(isRefresh){
+        refreshState();
+      }
+    });
+    } catch (e) {
+    }
     refreshState();
   }
 
@@ -259,9 +269,6 @@ class _CalendarViewState extends State<CalendarView>
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
   }
-
-  Widget buildRefreshButton() =>
-      IconButton(onPressed: refreshState, icon: Icon(Icons.refresh_rounded));
 
   @override
   bool get wantKeepAlive => true;

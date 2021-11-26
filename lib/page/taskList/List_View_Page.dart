@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:simplify/db_helper/database_helper.dart';
+import 'package:simplify/main.dart';
 import 'package:simplify/model/task.dart';
 import 'package:simplify/page/taskList/calendarView/calendarView.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
@@ -12,7 +13,9 @@ FlutterLocalNotificationsPlugin notificationPluginList =
     FlutterLocalNotificationsPlugin();
 
 class ListViewPage extends StatefulWidget {
-  ListViewPage({Key? key}) : super(key: key);
+  final Stream<bool> stream;
+  final Stream<bool> calendarStream;
+  ListViewPage({Key? key, required this.stream, required this.calendarStream }) : super(key: key);
 
   @override
   _ListViewPageState createState() => _ListViewPageState();
@@ -20,6 +23,7 @@ class ListViewPage extends StatefulWidget {
 
 class _ListViewPageState extends State<ListViewPage>
     with AutomaticKeepAliveClientMixin {
+
   late List<Task> taskContent;
   late DateTime priorityTime;
   List<Task> deleteList = [];
@@ -33,6 +37,11 @@ class _ListViewPageState extends State<ListViewPage>
   @override
   void initState() {
     super.initState();
+    widget.stream.listen((isRefresh) {
+      if(isRefresh){
+        refreshState();
+      }
+    });
     initializeSetting();
     refreshState();
   }
@@ -102,13 +111,12 @@ class _ListViewPageState extends State<ListViewPage>
                     children: [
                       isCalendarClicked ? calendarView() : todoListView(),
                       buildTimeLegend(),
-                      buildRefreshButton(),
                     ],
                   ),
           ],
         ),
         body: isCalendarClicked
-            ? CalendarView()
+            ? CalendarView(stream: widget.calendarStream)
             : Container(
                 child: Center(
                   child: isLoading
@@ -145,8 +153,6 @@ class _ListViewPageState extends State<ListViewPage>
   }
 
 //** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions *///** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions */
-  Widget buildRefreshButton() =>
-      IconButton(onPressed: refreshState, icon: Icon(Icons.refresh_rounded));
 
 //todoList view icon
   Widget todoListView() => IconButton(
@@ -480,6 +486,8 @@ class _ListViewPageState extends State<ListViewPage>
                       : IconButton(
                           onPressed: () {
                             updateIsDone(index);
+                            calendarController.add(true);
+                            homeController.add(true);                            
                           },
                           icon: taskContent[index].isDone
                               ? Icon(Icons.check_box_outlined, size: 30)
@@ -569,6 +577,8 @@ class _ListViewPageState extends State<ListViewPage>
                               child: Text("OK"),
                               onPressed: () {
                                 deleteItems();
+                                calendarController.add(true);
+                                homeController.add(true);                                
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                               },
