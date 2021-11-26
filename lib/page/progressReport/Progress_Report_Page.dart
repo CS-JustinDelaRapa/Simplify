@@ -1,12 +1,9 @@
-import 'dart:collection';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/task.dart';
-import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:timer_builder/timer_builder.dart';
+import 'package:simplify/page/progressReport/progressReportScreens/indicators.dart';
+import 'package:simplify/page/progressReport/progressReportScreens/progressReportSections.dart';
 
 class ProgressReportPage extends StatefulWidget {
   ProgressReportPage({
@@ -20,13 +17,26 @@ class ProgressReportPage extends StatefulWidget {
 //coment
 class _ProgressReportPageState extends State<ProgressReportPage>
     with AutomaticKeepAliveClientMixin {
+  late List<Task> taskContent;
+  bool isLoading = false;
+  late int doneTask;
+
   @override
   void initState() {
     super.initState();
+    refreshState();
+    // getDoneTask();
+  }
+
+  Future refreshState() async {
+    setState(() => isLoading = true);
+    this.taskContent = await DatabaseHelper.instance.readAllTask();
+    setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    int touchedIndex;
     super.build(context);
     return Container(
       decoration: BoxDecoration(
@@ -36,30 +46,63 @@ class _ProgressReportPageState extends State<ProgressReportPage>
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.circle_notifications),
-              Text(
-                ' Progress Report',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
           backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: [],
-        ),
-        body: Center(child: Text('Progress Report')),
-      ),
+          appBar: AppBar(
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.circle_notifications),
+                Text(
+                  ' Progress Report',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: [],
+          ),
+          body: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: PieChart(
+                          PieChartData(
+                            pieTouchData: PieTouchData(),
+                            borderData: FlBorderData(show: false),
+                            sectionsSpace: 0,
+                            centerSpaceRadius: 0,
+                            sections: getSections(100),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: IndicatorsWidget(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
     );
   }
 
-  int getHashCode(DateTime key) {
-    return key.day * 1000000 + key.month * 10000 + key.year;
-  }
+  // Future getDoneTask() async {
+  //   for (var i = 0; i < taskContent.length; i++) {
+  //     if (taskContent[i].isDone == true) {
+  //       setState(() {
+  //         doneTask++;
+  //       });
+  //     }
+  //   }
+  //   return null;
+  // }
 
   @override
   bool get wantKeepAlive => true;
