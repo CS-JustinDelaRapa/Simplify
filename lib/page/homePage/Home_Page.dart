@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -87,24 +88,17 @@ class _QuotesPageState extends State<QuotesPage>
               ? Center(child: CircularProgressIndicator())
               : TimerBuilder.scheduled([priorityTask.dateSched],
                   builder: (context) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        flex: 6,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            child: buildPriorityTask(),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                          child: SizedBox(
-                        height: 8,
-                      ))
-                    ],
-                  );
+                    return Swiper(
+                      itemWidth: MediaQuery.of(context).size.width -2,
+                      pagination: SwiperPagination(),
+                      itemCount: 3,
+                      itemBuilder: (context, index){
+                        return Stack(
+                          children: 
+                          [buildPriorityTask()
+                          ]);
+                      },
+                    );
                 })),
     );
   }
@@ -123,7 +117,15 @@ class _QuotesPageState extends State<QuotesPage>
     } else {
       priorityColor = Colors.lightGreen.shade400;
     }
-    return Padding(
+                      return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                            child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
@@ -218,6 +220,7 @@ class _QuotesPageState extends State<QuotesPage>
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
+                    // 'sample quote',
                     getQuote(priorityTask.title, priorityTask.description),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
@@ -228,7 +231,16 @@ class _QuotesPageState extends State<QuotesPage>
           )
         ],
       ),
-    );
+    )
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                          child: SizedBox(
+                        height: 8,
+                      ))
+                    ],
+                  );
   }
 
   Future updateIsDone() async {

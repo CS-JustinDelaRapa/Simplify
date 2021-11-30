@@ -120,6 +120,15 @@ CREATE TABLE $tableTask(
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
+    Future<List<Task>> readAllTaskToday() async {
+    final reference = await instance.database;
+
+    final fromTable = await reference.query(tableTask,
+        orderBy: '${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
+
+    return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
+  }
+
   Future<Task> readPriorityTask() async {
     final reference = await instance.database;
     final specificID = await reference.query(tableTask,

@@ -35,18 +35,6 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 //conditional variable for build tags
   bool isVisible = false;
 
-//creating KeyboardVisibility instance
-// var keyboardVisibilityController = KeyboardVisibilityController();
-// @override
-// void initState() {
-//   super.initState();
-//   //detect if Keyboard is active or not
-//   // keyboardVisibilityController.onChange.listen((bool visible) {
-//   //   setState(() {
-//   //     isVisible = visible;
-//   //   });
-//   });
-// }
   var time = TimeOfDay.fromDateTime(DateTime.now());
   DateTime date = DateTime.now();
 
@@ -54,13 +42,15 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
   Future<void> selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: TimeOfDay.fromDateTime(widget.dateSched!)
     );
     if (picked != null) {
       setState(() {
         time = picked;
       });
     }
+    DateTime newTime = new DateTime(date.year,date.month,date.day, time.hour, time.minute);
+    widget.onChangeDateSched(newTime); 
   }
 
 //Date
@@ -73,9 +63,10 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
     if (pickedd != null && pickedd != date) {
       setState(() {
         date = pickedd;
-        print(date.toString());
       });
     }
+    DateTime newTime = new DateTime(date.year,date.month,date.day, time.hour, time.minute);
+    widget.onChangeDateSched(newTime);
   }
 
   @override
@@ -179,10 +170,9 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
                         iconSize: 25,
                         onPressed: () {
                           selectTime(context);
-                          print(time);
                         }),
                     Text(
-                      "${time.format(context)}",
+                      "${DateFormat('hh: mm a').format(widget.dateSched!)}",
                       style: const TextStyle(fontSize: 18),
                     ),
                   ],
@@ -228,51 +218,4 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
           )
         ],
       );
-
-  // child: Row(
-  //   children: [
-  //     Icon(
-  //       Icons.alarm,
-  //       size: 30,
-  //     ),
-  //     TextButton(
-  //         onPressed: () {
-  //           FocusScope.of(context).unfocus();
-  //           DatePicker.showDateTimePicker(
-  //               context,
-  //               currentTime: widget.dateSched,
-  //               onConfirm: widget.onChangeDateSched,
-  //               locale: LocaleType.en);
-  //         },
-  //         child: Container(
-  //           child: Padding(
-  //               padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-  //               child: dateTimeShow()),
-  //         )),
-  //   ],
-  // ),
-//ButtonText Text child formatted display text
-  // Widget dateTimeShow() => RichText(
-  //       text: new TextSpan(
-  //         style:
-  //             TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
-  //         children: [
-  //           new TextSpan(
-  //             text: DateFormat('h:mm a').format(widget.dateSched!),
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //             ),
-  //           ),
-  //           WidgetSpan(
-  //             child: Icon(
-  //               Icons.arrow_drop_down,
-  //               color: Colors.grey[800],
-  //             ),
-  //           ),
-  //           new TextSpan(
-  //               text: '\n' + DateFormat('d MMM y').format(widget.dateSched!),
-  //               style: TextStyle(fontSize: 15, color: Colors.grey[700])),
-  //         ],
-  //       ),
-  //     );
 }
