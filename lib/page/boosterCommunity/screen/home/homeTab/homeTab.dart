@@ -52,8 +52,7 @@ class _UserFeedState extends State<UserFeed>
     });
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (futureDone == true) {
-
-        if (myLikeList == null){
+        if (myLikeList == null) {
           print('MyLikeList == Null');
         }
         setState(() {
@@ -90,8 +89,7 @@ class _UserFeedState extends State<UserFeed>
                             //drop down button
                             Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)
-                              ),
+                                  borderRadius: BorderRadius.circular(15)),
                               height: 45,
                               width: size.width * 0.65,
                               child: DropdownButtonFormField<String>(
@@ -125,12 +123,12 @@ class _UserFeedState extends State<UserFeed>
                             Container(
                               height: 45,
                               child: ElevatedButton(
-                                style: ButtonStyle(
-                                  
-                                ),
+                                  style: ButtonStyle(),
                                   onPressed: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => AddPostForm()));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddPostForm()));
                                   },
                                   child: Text('Write a post')),
                             ),
@@ -141,12 +139,14 @@ class _UserFeedState extends State<UserFeed>
                           stream: _postCategory == 'All post/s'
                               ? FirebaseFirestore.instance
                                   .collection('thread')
+                                  .where('isFreeze', isEqualTo: false)
                                   .orderBy('published-time', descending: true)
                                   .snapshots()
                               : FirebaseFirestore.instance
                                   .collection('thread')
                                   .where('post-category',
                                       isEqualTo: _postCategory)
+                                  .where('isFreeze', isEqualTo: false)
                                   .orderBy('published-time', descending: true)
                                   .snapshots(),
                           builder: (context, snapshot) {

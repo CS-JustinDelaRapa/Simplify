@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 
 class ReportPost extends StatefulWidget {
   final String postContent;
@@ -10,6 +11,7 @@ class ReportPost extends StatefulWidget {
   final String publisherUID;
   final String userFirstName;
   final String userLastName;
+  final bool isFreeze;
   const ReportPost({
     Key? key,
     required this.postContent,
@@ -19,6 +21,7 @@ class ReportPost extends StatefulWidget {
     required this.postTitle,
     required this.userFirstName,
     required this.userLastName,
+    required this.isFreeze,
   }) : super(key: key);
 
   @override
@@ -39,11 +42,17 @@ class _ReportPostState extends State<ReportPost> {
           new Text(
               "Post Author: ${widget.userFirstName} ${widget.userLastName}\n\nPlease choose why do you want to report the post\n"),
           _blockButton('Possible Spam Post.'),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           _blockButton('Inappropriate Post'),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           _blockButton('Not relative about subject'),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           _blockButton('Impersonation.')
         ],
       ),
@@ -59,16 +68,15 @@ class _ReportPostState extends State<ReportPost> {
   Widget _blockButton(String buttonText) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          style: BorderStyle.solid
-        )
-      ), 
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(style: BorderStyle.solid)),
       child: ElevatedButton(
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(0.0),
-      backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent,),
-  ),
+          backgroundColor: MaterialStateProperty.all<Color>(
+            Colors.transparent,
+          ),
+        ),
         onPressed: () => _sendReport(buttonText), //_reportUser(buttonText),
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0, bottom: 12),
@@ -94,6 +102,7 @@ class _ReportPostState extends State<ReportPost> {
       'reporterUId': widget.reporterUID,
       'report-reason': reportReason,
     });
+    await threadCollection.doc(widget.postID).update({'isFreeze': true});
     Navigator.of(context).pop();
   }
 

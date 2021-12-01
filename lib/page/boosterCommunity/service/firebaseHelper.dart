@@ -54,9 +54,11 @@ class AuthService {
         'userIcon': '001.png',
       });
 
-      await userCollection.doc(user.uid).collection('myLikeList').doc(user.uid).set(
-        {'postId': 'value'}
-        );
+      await userCollection
+          .doc(user.uid)
+          .collection('myLikeList')
+          .doc(user.uid)
+          .set({'postId': 'value'});
       Navigator.pop(context);
       return _userfromFirebase(user);
     } on FirebaseAuthException catch (error) {
@@ -136,6 +138,7 @@ class AuthService {
         'publisher-LastName': publisherLastName,
         'publisher-School': publisherSchool,
         'post-category': publisherPostCategory,
+        'isFreeze': false,
       });
     } on FirebaseException catch (error) {
       Fluttertoast.showToast(msg: error.message.toString());
@@ -192,7 +195,8 @@ class AuthService {
       }
 
       //update all comment Icon
-            var commentUpdate = await FirebaseFirestore.instance.collection('comment')
+      var commentUpdate = await FirebaseFirestore.instance
+          .collection('comment')
           .where('commenter-id', isEqualTo: user.uid)
           .get();
       for (var doc in commentUpdate.docs) {

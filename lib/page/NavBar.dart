@@ -11,16 +11,20 @@ import 'package:simplify/db_helper/database_helper.dart';
 
 class HomePage extends StatefulWidget {
   final StreamController<bool> listController;
-    final StreamController<bool> homeController;
-      final StreamController<bool> calendarController;
-  HomePage({Key? key, required this.listController, required this.homeController, required this.calendarController }) : super(key: key);
+  final StreamController<bool> homeController;
+  final StreamController<bool> calendarController;
+  HomePage(
+      {Key? key,
+      required this.listController,
+      required this.homeController,
+      required this.calendarController})
+      : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   PageController _pageController = PageController();
   late List<Widget> _screens;
 
@@ -44,13 +48,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _screens = [
-    QuotesPage(stream: widget.homeController.stream),
-    ListViewPage(stream: widget.listController.stream, calendarStream: widget.calendarController.stream),
-    ProgressReportPage(),
-    GradeTrackerPage(),
-    DiaryPage(),
-    BoosterCommunityPage()
-  ];
+      QuotesPage(stream: widget.homeController.stream),
+      ListViewPage(
+          stream: widget.listController.stream,
+          calendarStream: widget.calendarController.stream),
+      ProgressReportPage(),
+      GradeTrackerPage(),
+      DiaryPage(),
+      BoosterCommunityPage()
+    ];
     super.initState();
   }
 
@@ -97,7 +103,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.circle_notifications,
+                Icons.task_alt_rounded,
                 color:
                     _selectedIndex == 2 ? Colors.white : Colors.indigo.shade200,
                 size: 30,

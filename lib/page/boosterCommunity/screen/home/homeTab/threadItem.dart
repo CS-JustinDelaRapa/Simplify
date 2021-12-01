@@ -53,7 +53,9 @@ class _ThreadItemState extends State<ThreadItem> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: widget.postInfo.get('isFreeze') == true
+                    ? Colors.red[200]
+                    : Colors.grey[50],
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -190,8 +192,8 @@ class _ThreadItemState extends State<ThreadItem> {
                                             postContent: widget.postInfo[
                                                 'description'], //post content
                                             reporterUID:
-                                                widget.userId //current user id
-                                            ));
+                                                widget.userId, //current user id
+                                            isFreeze: true));
                               },
                             ),
                     ),
@@ -207,8 +209,33 @@ class _ThreadItemState extends State<ThreadItem> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                          child: Text(widget.postInfo.get('title'),
-                              style: TextStyle(fontWeight: FontWeight.w500)),
+                          child: widget.postInfo.get('isFreeze') == true
+                              ? Row(
+                                  children: [
+                                    Text(widget.postInfo.get('title'),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500)),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.black87,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text('FREEZED POST'),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(widget.postInfo.get('title'),
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w500)),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),

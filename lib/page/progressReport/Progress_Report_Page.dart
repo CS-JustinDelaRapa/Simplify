@@ -2,8 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/task.dart';
-import 'package:simplify/page/progressReport/progressReportScreens/indicators.dart';
-import 'package:simplify/page/progressReport/progressReportScreens/progressReportSections.dart';
 
 class ProgressReportPage extends StatefulWidget {
   ProgressReportPage({
@@ -19,24 +17,41 @@ class _ProgressReportPageState extends State<ProgressReportPage>
     with AutomaticKeepAliveClientMixin {
   late List<Task> taskContent;
   bool isLoading = false;
-  late int doneTask;
+  double doneTask = 0;
+  double totalTask = 0;
+  double unfinishedPercentage = 0;
+  double finishedPercentage = 0;
 
   @override
   void initState() {
     super.initState();
     refreshState();
-    // getDoneTask();
   }
 
   Future refreshState() async {
     setState(() => isLoading = true);
+    doneTask = 0;
+    totalTask = 0;
     this.taskContent = await DatabaseHelper.instance.readAllTask();
+    totalTask = double.parse(taskContent.length.toString());
+    getDoneTask();
     setState(() => isLoading = false);
+  }
+
+  Future getDoneTask() async {
+    for (var i = 0; i < taskContent.length; i++) {
+      if (taskContent[i].isDone == true) {
+        setState(() {
+          doneTask++;
+        });
+      }
+    }
+    finishedPercentage = doneTask / totalTask * 100;
+    unfinishedPercentage = 100 - finishedPercentage;
   }
 
   @override
   Widget build(BuildContext context) {
-    int touchedIndex;
     super.build(context);
     return Container(
       decoration: BoxDecoration(
@@ -51,7 +66,7 @@ class _ProgressReportPageState extends State<ProgressReportPage>
             title: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(Icons.circle_notifications),
+                Icon(Icons.task_alt_rounded),
                 Text(
                   ' Progress Report',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
@@ -60,7 +75,7 @@ class _ProgressReportPageState extends State<ProgressReportPage>
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            actions: [],
+            actions: [refreshButton()],
           ),
           body: isLoading
               ? Center(child: CircularProgressIndicator())
@@ -70,22 +85,87 @@ class _ProgressReportPageState extends State<ProgressReportPage>
                       Expanded(
                         child: PieChart(
                           PieChartData(
-                            pieTouchData: PieTouchData(),
-                            borderData: FlBorderData(show: false),
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 0,
-                            sections: getSections(100),
+                            sectionsSpace: 10,
+                            centerSpaceRadius: 30,
+                            sections: <PieChartSectionData>[
+                              PieChartSectionData(
+                                  color: Colors.black,
+                                  value: doneTask,
+                                  title: finishedPercentage.toStringAsFixed(2) +
+                                      "%",
+                                  radius: 150,
+                                  titleStyle: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )),
+                              PieChartSectionData(
+                                  color: Colors.white,
+                                  value: totalTask - doneTask,
+                                  title:
+                                      unfinishedPercentage.toStringAsFixed(2) +
+                                          "%",
+                                  radius: 150,
+                                  titleStyle: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )),
+                            ],
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: IndicatorsWidget(),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: <Widget>[
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text('Finished task',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text('Unfinished task',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87)),
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -93,16 +173,8 @@ class _ProgressReportPageState extends State<ProgressReportPage>
     );
   }
 
-  // Future getDoneTask() async {
-  //   for (var i = 0; i < taskContent.length; i++) {
-  //     if (taskContent[i].isDone == true) {
-  //       setState(() {
-  //         doneTask++;
-  //       });
-  //     }
-  //   }
-  //   return null;
-  // }
+  Widget refreshButton() =>
+      IconButton(onPressed: refreshState, icon: Icon(Icons.refresh_rounded));
 
   @override
   bool get wantKeepAlive => true;

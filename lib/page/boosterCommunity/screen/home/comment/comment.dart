@@ -64,15 +64,16 @@ class _CommentSectionState extends State<CommentSection> {
         centerTitle: true,
         backgroundColor: Colors.indigo.shade800,
         elevation: 0,
-        title: Text('Support Community'),
+        title: Text('Booster Community',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
       ),
       body: Container(
-              decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/testing/testing.png"),
-          fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/testing/testing.png"),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
         child: Column(
           children: [
             Padding(
@@ -132,8 +133,8 @@ class _CommentSectionState extends State<CommentSection> {
       data: IconThemeData(color: Theme.of(context).backgroundColor),
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            ),
+          color: Colors.white,
+        ),
         child: Row(
           children: <Widget>[
             Flexible(

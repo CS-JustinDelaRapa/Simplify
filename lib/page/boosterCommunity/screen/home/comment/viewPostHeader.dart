@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/homeTab/add_post_form.dart';
+import 'package:simplify/page/boosterCommunity/screen/home/homeTab/homeTab.dart';
 import 'package:simplify/page/boosterCommunity/screen/home/reports/reportPost.dart';
 
 import 'package:simplify/page/boosterCommunity/service/convertTimeStamp.dart';
@@ -106,6 +107,11 @@ class _PostHeaderState extends State<PostHeader> {
                                             onPressed: () {
                                               AuthService().deletePost(
                                                   widget.postInfo.id, context);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UserFeed()));
                                             },
                                             child: Text('Continue'))
                                       ],
@@ -154,7 +160,8 @@ class _PostHeaderState extends State<PostHeader> {
                                       widget.postInfo['title'], //post title
                                   postContent: widget
                                       .postInfo['description'], //post content
-                                  reporterUID: widget.userId //current user id
+                                  reporterUID: widget.userId,
+                                  isFreeze: true //current user id
                                   ));
                         },
                       ),
