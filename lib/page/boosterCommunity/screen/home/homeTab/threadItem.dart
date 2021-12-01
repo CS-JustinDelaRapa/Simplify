@@ -212,23 +212,29 @@ class _ThreadItemState extends State<ThreadItem> {
                           child: widget.postInfo.get('isFreeze') == true
                               ? Row(
                                   children: [
-                                    Text(widget.postInfo.get('title'),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500)),
+                                    Expanded(
+                                      flex: 16,
+                                      child: Text(widget.postInfo.get('title'),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500)),
+                                    ),
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.black87,
+                                    Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black87,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text('FREEZED POST'),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text('FREEZED POST'),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -248,6 +254,7 @@ class _ThreadItemState extends State<ThreadItem> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          //view count
                           Wrap(
                             children: [
                               Icon(Icons.remove_red_eye),
@@ -255,7 +262,6 @@ class _ThreadItemState extends State<ThreadItem> {
                               Text(' ${widget.postInfo['view-count']}'),
                             ],
                           ),
-
                           //comment section
                           Wrap(
                             children: [
