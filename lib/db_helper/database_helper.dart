@@ -116,7 +116,7 @@ CREATE TABLE $tableTask(
 
     final fromTable = await reference.query(tableTask,
         orderBy: '${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
-
+        
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
