@@ -122,32 +122,41 @@ CREATE TABLE $tableTask(
 
     Future<List<Task>> readAllTaskToday() async {
     final reference = await instance.database;
-
     final fromTable = await reference.query(tableTask,
-        orderBy: '${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
+        where: 'NOT ${TblTaskField.isDone}',
+        orderBy: '${TblTaskField.dateSched} ASC');
+    
+    // for(int x = 0; x < fromTable.length; x++){
+    //   var taskDate = DateTime.parse(fromTable[x][TblTaskField.dateSched] as String);
+    //   print(DateTime.parse(fromTable[x][TblTaskField.dateSched] as String));
+
+    //   if(DateTime.now() != taskDate){
+    //     fromTable.removeAt(x);
+    //   }
+    // }
 
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
-  Future<Task> readPriorityTask() async {
-    final reference = await instance.database;
-    final specificID = await reference.query(tableTask,
-        // columns: TblTaskField.taskFieldNames,
-        where: 'NOT ${TblTaskField.isDone}',
-        orderBy: '${TblTaskField.dateSched} ASC');
-    if (specificID.isNotEmpty) {
-      return Task.fromJson(specificID.first);
-    } else {
-      final Task defaultTask;
-      defaultTask = Task(
-          dateSched: DateTime.now(),
-          isDone: false,
-          description: '',
-          isSmartAlert: false,
-          title: 'Welcome To Simplify!');
-      return defaultTask;
-    }
-  }
+  // Future<Task> readPriorityTask() async {
+  //   final reference = await instance.database;
+  //   final specificID = await reference.query(tableTask,
+  //       // columns: TblTaskField.taskFieldNames,
+  //       where: 'NOT ${TblTaskField.isDone}',
+  //       orderBy: '${TblTaskField.dateSched} ASC');
+  //   if (specificID.isNotEmpty) {
+  //     return Task.fromJson(specificID.first);
+  //   } else {
+  //     final Task defaultTask;
+  //     defaultTask = Task(
+  //         dateSched: DateTime.now(),
+  //         isDone: false,
+  //         description: '',
+  //         isSmartAlert: false,
+  //         title: 'Welcome To Simplify!');
+  //     return defaultTask;
+  //   }
+  // }
 
   Future<Task> readTask(int searchKey) async {
     final reference = await instance.database;

@@ -48,23 +48,20 @@ class _QuotesPageState extends State<QuotesPage>
 
   Future refreshState() async {
     setState(() => isLoading = true);
-    priorityTask = await DatabaseHelper.instance.readAllTask();
-    // if(priorityTask.isEmpty){
-    //   priorityTask = [defaultTask];
-    //   priorityColor = List.generate(priorityTask.length, (index) => Colors.white);
-    // }else{
-      int length = priorityTask.length;
-      priorityColor = List.generate(priorityTask.length, (index) => Colors.white);
-      for(int x = 0; x < length; x++){
-        if(priorityTask[x].isDone == true){
-          priorityTask.removeAt(x);
-          priorityColor.removeAt(x);
-          length--;
-        }
-      } if(priorityTask.isEmpty){
+    priorityTask = await DatabaseHelper.instance.readAllTaskToday();
+  
+      if(priorityTask.isEmpty){
         priorityTask = [defaultTask];
         priorityColor = [Colors.white];
       }else{
+        int length = priorityTask.length;
+        for (int x = 0; x < length; x++){
+          if(priorityTask[x].dateSched.day != DateTime.now().day){
+            priorityTask.removeAt(x);
+            length--;
+          }
+        }
+        priorityColor = List.generate(priorityTask.length, (index) => Colors.white);
         for(int x = 0; x < priorityTask.length; x++){
           var diff = priorityTask[x].dateSched.difference(now);
           now = DateTime.now();
@@ -80,7 +77,6 @@ class _QuotesPageState extends State<QuotesPage>
           }
         }
       }
-    // }
     setState(() => isLoading = false);
   }
 
@@ -113,7 +109,7 @@ class _QuotesPageState extends State<QuotesPage>
           ),
           body: isLoading
               ? Center(child: CircularProgressIndicator())
-              : TimerBuilder.scheduled([
+              :TimerBuilder.scheduled([
                 priorityTask[0].dateSched
                 ],
                   builder: (context) {
