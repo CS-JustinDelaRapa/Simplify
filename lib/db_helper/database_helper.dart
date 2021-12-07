@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:simplify/model/task.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -116,25 +117,20 @@ CREATE TABLE $tableTask(
 
     final fromTable = await reference.query(tableTask,
         orderBy: '${TblTaskField.isDone} ASC, ${TblTaskField.dateSched} ASC');
-        
+
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
-    Future<List<Task>> readAllTaskToday() async {
+  Future<List<Task>> readAllTaskToday() async {
+    final DateTime now = DateTime.now();
+    String Date = DateFormat('yyyy-MM-dd').format(now);
+
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
-        where: 'NOT ${TblTaskField.isDone}',
+        where:
+            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
+        whereArgs: ['%$Date%'],
         orderBy: '${TblTaskField.dateSched} ASC');
-    
-    // for(int x = 0; x < fromTable.length; x++){
-    //   var taskDate = DateTime.parse(fromTable[x][TblTaskField.dateSched] as String);
-    //   print(DateTime.parse(fromTable[x][TblTaskField.dateSched] as String));
-
-    //   if(DateTime.now() != taskDate){
-    //     fromTable.removeAt(x);
-    //   }
-    // }
-
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
