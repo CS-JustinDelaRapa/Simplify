@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,8 +14,9 @@ import 'package:simplify/page/boosterCommunity/service/firebaseHelper.dart';
 // ignore: must_be_immutable
 class ThreadItem extends StatefulWidget {
   final DocumentSnapshot postInfo;
-  final String userId;
+  String userId;
   final Map<String, dynamic>? myLikeList;
+
   ThreadItem(
       {Key? key, this.myLikeList, required this.postInfo, required this.userId})
       : super(key: key);
@@ -23,9 +27,32 @@ class ThreadItem extends StatefulWidget {
 
 class _ThreadItemState extends State<ThreadItem> {
   bool loading = false;
+  Map<String, dynamic>? myViewList;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late Timer timer;
+  bool counting = true;
+  bool viewFutureDone = false;
 
   @override
   void initState() {
+    widget.userId = _auth.currentUser!.uid.toString();
+    var viewListRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .collection('myViewList')
+        .doc(widget.userId);
+    viewListRef.get().then((value) {
+      myViewList = value.data();
+      viewFutureDone = true;
+    });
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (viewFutureDone == true) {
+        setState(() {
+          counting = false;
+          timer.cancel();
+        });
+      }
+    });
     super.initState();
   }
 
@@ -34,10 +61,7 @@ class _ThreadItemState extends State<ThreadItem> {
     return GestureDetector(
       onTap: () {
         try {
-          FirebaseFirestore.instance
-              .collection('thread')
-              .doc(widget.postInfo.id)
-              .update({"view-count": FieldValue.increment(1)});
+          viewCount();
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => CommentSection(
                     myLikeList: widget.myLikeList,
@@ -275,5 +299,28 @@ class _ThreadItemState extends State<ThreadItem> {
                     ),
                   ]))),
     );
+  }
+
+  viewCount() async {
+    if (!myViewList!.containsKey(widget.postInfo.id)) {
+      print('false');
+      setState(() {
+        myViewList!.addEntries([MapEntry(widget.postInfo.id, true)]);
+      });
+      try {
+        await FirebaseFirestore.instance
+            .collection("thread")
+            .doc(widget.postInfo.id)
+            .update({"view-count": FieldValue.increment(1)});
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(widget.userId)
+            .collection('myViewList')
+            .doc(widget.userId)
+            .update({widget.postInfo.id: true});
+      } on FirebaseException catch (e) {
+        Fluttertoast.showToast(msg: e.message.toString());
+      }
+    }
   }
 }

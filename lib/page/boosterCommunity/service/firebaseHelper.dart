@@ -53,10 +53,14 @@ class AuthService {
         'school': school,
         'userIcon': '001.png',
       });
-
       await userCollection
           .doc(user.uid)
           .collection('myLikeList')
+          .doc(user.uid)
+          .set({'postId': 'value'});
+      await userCollection
+          .doc(user.uid)
+          .collection('myViewList')
           .doc(user.uid)
           .set({'postId': 'value'});
       Navigator.pop(context);
