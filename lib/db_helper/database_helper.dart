@@ -123,8 +123,9 @@ CREATE TABLE $tableTask(
 
   Future<List<Task>> readAllTaskToday() async {
     final DateTime now = DateTime.now();
-    String Date = DateFormat('yyyy-MM-dd').format(now);
-
+    var newDate = new DateTime(now.year, now.month, now.day - 1);
+    String Date = DateFormat('yyyy-MM-dd').format(newDate);
+    print(Date);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
         where:
