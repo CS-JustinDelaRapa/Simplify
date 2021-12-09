@@ -41,16 +41,16 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
   //Time
   Future<void> selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(widget.dateSched!)
-    );
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(widget.dateSched!));
     if (picked != null) {
       setState(() {
         time = picked;
       });
     }
-    DateTime newTime = new DateTime(date.year,date.month,date.day, time.hour, time.minute);
-    widget.onChangeDateSched(newTime); 
+    DateTime newTime =
+        new DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    widget.onChangeDateSched(newTime);
   }
 
 //Date
@@ -65,7 +65,8 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
         date = pickedd;
       });
     }
-    DateTime newTime = new DateTime(date.year,date.month,date.day, time.hour, time.minute);
+    DateTime newTime =
+        new DateTime(date.year, date.month, date.day, time.hour, time.minute);
     widget.onChangeDateSched(newTime);
   }
 
@@ -207,7 +208,7 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
                             selectDatePicker(context);
                           }),
                       Text(
-                        "${DateFormat('M/d/y, EEE').format(date)}",
+                        "${DateFormat('M/d/y, EEE').format(widget.dateSched!)}",
                         style: const TextStyle(fontSize: 20),
                       ),
                     ],
