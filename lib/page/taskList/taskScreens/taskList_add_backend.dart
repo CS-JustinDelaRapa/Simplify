@@ -177,6 +177,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
               calendarController.add(true);
               homeController.add(true);
               listController.add(true);
+              unfinishedController.add(true);
             }
           },
           child: Text(

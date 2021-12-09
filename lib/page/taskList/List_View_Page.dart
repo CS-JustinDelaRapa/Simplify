@@ -488,6 +488,7 @@ class _ListViewPageState extends State<ListViewPage>
                             updateIsDone(index);
                             calendarController.add(true);
                             homeController.add(true);
+                            unfinishedController.add(true);
                           },
                           icon: taskContent[index].isDone
                               ? Icon(Icons.check_box_outlined, size: 30)
@@ -579,6 +580,7 @@ class _ListViewPageState extends State<ListViewPage>
                                 deleteItems();
                                 calendarController.add(true);
                                 homeController.add(true);
+                                unfinishedController.add(true);
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                               },

@@ -8,21 +8,19 @@ import 'package:simplify/algo/stringComparisonRanking.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/main.dart';
 import 'package:simplify/model/task.dart';
-import 'package:simplify/page/homePage/unfinished.dart';
 import 'package:simplify/page/taskList/List_View_Page.dart';
 import 'package:simplify/page/taskList/taskScreens/taskList_add_backend.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-class QuotesPage extends StatefulWidget {
-  final Stream<bool> stream;
+class UnfinishedPage extends StatefulWidget {
   final Stream<bool> streamUnfinished;
-  QuotesPage({Key? key, required this.stream,  required this.streamUnfinished}) : super(key: key);
+  UnfinishedPage({Key? key, required this.streamUnfinished}) : super(key: key);
 
   @override
-  _QuotesPageState createState() => _QuotesPageState();
+  _UnfinishedPageState createState() => _UnfinishedPageState();
 }
 
-class _QuotesPageState extends State<QuotesPage>
+class _UnfinishedPageState extends State<UnfinishedPage>
     with AutomaticKeepAliveClientMixin {
   //default task
   final Task defaultTask = Task(
@@ -41,18 +39,20 @@ class _QuotesPageState extends State<QuotesPage>
   @override
   void initState() {
     super.initState();
-    widget.stream.listen((isRefresh) {
-      if (isRefresh) {
-        refreshState();
-      }
-    });
+    try {
+    widget.streamUnfinished.listen((isRefresh) {
+    if (isRefresh) {
+    refreshState();
+    }
+    }); 
+    } catch (e) {
+    }
     refreshState();
   }
 
   Future refreshState() async {
     setState(() => isLoading = true);
-    priorityTask = await DatabaseHelper.instance.readAllTaskToday();
-
+    priorityTask = await DatabaseHelper.instance.readAllTask();
     if (priorityTask.isEmpty) {
       priorityTask = [defaultTask];
       priorityColor = [Colors.white];
@@ -90,47 +90,8 @@ class _QuotesPageState extends State<QuotesPage>
       ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(Icons.home_rounded),
-                Text(
-                  ' Home',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-            // centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            actions:[
-              Container(
-                decoration: BoxDecoration(
-                  color:
-                  Colors.blueGrey.shade900,
-                  borderRadius: BorderRadius.circular(5)
-                ),
-                child: TextButton(
-                onPressed: () {
-                  if(isUnfinished == false){
-                    setState(() {
-                      isUnfinished = true;
-                    });
-                  }else{
-                    setState(() {
-                      isUnfinished = false;
-                    });
-                  }
-                },
-                child: isUnfinished?
-                Text('Tasks Today', style: TextStyle(color: Colors.white) )
-                :Text('Unfinished Tasks', style: TextStyle(color: Colors.white)),
-                ),
-              )]
-          ),
           body: isUnfinished?
-          UnfinishedPage(streamUnfinished: widget.streamUnfinished)
+          Container(child: Text('Unfinished')) 
           :isLoading
               ? Center(child: CircularProgressIndicator())
               : TimerBuilder.scheduled([priorityTask[0].dateSched],
