@@ -121,10 +121,11 @@ class _QuotesPageState extends State<QuotesPage>
   Widget buildPriorityTask(int index) {
     now = DateTime.now();
     var diff = priorityTask[index].dateSched.difference(now);
-    if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
-      priorityColor[index] = Colors.amber.shade300;
-    } else if (diff.inDays <= -1.1) {
+
+    if (diff.inHours <= -24) {
       priorityColor[index] = Colors.red.shade400;
+    } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+      priorityColor[index] = Colors.amber.shade300;
     } else if (diff.inHours >= 3 && diff.inDays <= 1) {
       priorityColor[index] = Colors.purple.shade300;
     } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
@@ -132,6 +133,7 @@ class _QuotesPageState extends State<QuotesPage>
     } else {
       priorityColor[index] = Colors.lightGreen.shade400;
     }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

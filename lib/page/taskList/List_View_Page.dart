@@ -15,7 +15,8 @@ FlutterLocalNotificationsPlugin notificationPluginList =
 class ListViewPage extends StatefulWidget {
   final Stream<bool> stream;
   final Stream<bool> calendarStream;
-  ListViewPage({Key? key, required this.stream, required this.calendarStream }) : super(key: key);
+  ListViewPage({Key? key, required this.stream, required this.calendarStream})
+      : super(key: key);
 
   @override
   _ListViewPageState createState() => _ListViewPageState();
@@ -23,7 +24,6 @@ class ListViewPage extends StatefulWidget {
 
 class _ListViewPageState extends State<ListViewPage>
     with AutomaticKeepAliveClientMixin {
-
   late List<Task> taskContent;
   late DateTime priorityTime;
   List<Task> deleteList = [];
@@ -38,7 +38,7 @@ class _ListViewPageState extends State<ListViewPage>
   void initState() {
     super.initState();
     widget.stream.listen((isRefresh) {
-      if(isRefresh){
+      if (isRefresh) {
         refreshState();
       }
     });
@@ -413,10 +413,10 @@ class _ListViewPageState extends State<ListViewPage>
 
         if (taskContent[index].isDone == true) {
           priorityColor = Colors.grey.shade500;
+        } else if (diff.inHours <= -24) {
+          priorityColor = Colors.red.shade400;
         } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
           priorityColor = Colors.amber.shade300;
-        } else if (diff.inDays <= -1.1) {
-          priorityColor = Colors.red.shade400;
         } else if (diff.inHours >= 3 && diff.inDays <= 1) {
           priorityColor = Colors.purple.shade300;
         } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
@@ -487,7 +487,7 @@ class _ListViewPageState extends State<ListViewPage>
                           onPressed: () {
                             updateIsDone(index);
                             calendarController.add(true);
-                            homeController.add(true);                            
+                            homeController.add(true);
                           },
                           icon: taskContent[index].isDone
                               ? Icon(Icons.check_box_outlined, size: 30)
@@ -578,7 +578,7 @@ class _ListViewPageState extends State<ListViewPage>
                               onPressed: () {
                                 deleteItems();
                                 calendarController.add(true);
-                                homeController.add(true);                                
+                                homeController.add(true);
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                               },
