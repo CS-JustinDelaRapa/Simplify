@@ -40,19 +40,18 @@ class _UnfinishedPageState extends State<UnfinishedPage>
   void initState() {
     super.initState();
     try {
-    widget.streamUnfinished.listen((isRefresh) {
-    if (isRefresh) {
-    refreshState();
-    }
-    }); 
-    } catch (e) {
-    }
+      widget.streamUnfinished.listen((isRefresh) {
+        if (isRefresh) {
+          refreshState();
+        }
+      });
+    } catch (e) {}
     refreshState();
   }
 
   Future refreshState() async {
     setState(() => isLoading = true);
-    priorityTask = await DatabaseHelper.instance.readAllTask();
+    priorityTask = await DatabaseHelper.instance.readUnfinishedTask();
     if (priorityTask.isEmpty) {
       priorityTask = [defaultTask];
       priorityColor = [Colors.white];
@@ -90,21 +89,21 @@ class _UnfinishedPageState extends State<UnfinishedPage>
       ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: isUnfinished?
-          Container(child: Text('Unfinished')) 
-          :isLoading
-              ? Center(child: CircularProgressIndicator())
-              : TimerBuilder.scheduled([priorityTask[0].dateSched],
-                  builder: (context) {
-                  return Swiper(
-                    itemWidth: MediaQuery.of(context).size.width - 2,
-                    pagination: SwiperPagination(),
-                    itemCount: priorityTask.length,
-                    itemBuilder: (context, index) {
-                      return Stack(children: [buildPriorityTask(index)]);
-                    },
-                  );
-                })),
+          body: isUnfinished
+              ? Container(child: Text('Unfinished'))
+              : isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : TimerBuilder.scheduled([priorityTask[0].dateSched],
+                      builder: (context) {
+                      return Swiper(
+                        itemWidth: MediaQuery.of(context).size.width - 2,
+                        pagination: SwiperPagination(),
+                        itemCount: priorityTask.length,
+                        itemBuilder: (context, index) {
+                          return Stack(children: [buildPriorityTask(index)]);
+                        },
+                      );
+                    })),
     );
   }
 

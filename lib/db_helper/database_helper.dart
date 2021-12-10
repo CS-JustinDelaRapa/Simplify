@@ -132,7 +132,27 @@ CREATE TABLE $tableTask(
             'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
         whereArgs: ['%$Date%'],
         orderBy: '${TblTaskField.dateSched} ASC');
+
+    // final fromTable = await reference.rawQuery(
+    // "SELECT * FROM tbl_task WHERE date_Schedule NOT BETWEEN '1940-01-01' AND '$Date'");
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
+  }
+
+  Future<List<Task>> readUnfinishedTask() async {
+    final DateTime now = DateTime.now();
+    var newDate = new DateTime(now.year, now.month, now.day - 1);
+    String Date = DateFormat('yyyy-MM-dd').format(now);
+    print(Date);
+    final reference = await instance.database;
+    final fromTable = await reference.rawQuery(
+        "SELECT * FROM tbl_task WHERE date_Schedule  BETWEEN '1940-01-01' AND '$Date'");
+    return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
+
+    // final fromTable = await reference.query(tableTask,
+    // where:
+    //     'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
+    // whereArgs: ['%$Date%'],
+    // orderBy: '${TblTaskField.dateSched} ASC');
   }
 
   // Future<Task> readPriorityTask() async {
