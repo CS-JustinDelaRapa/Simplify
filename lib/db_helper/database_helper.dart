@@ -129,13 +129,13 @@ CREATE TABLE $tableTask(
         new DateTime(now.year, now.month, now.day, now.hour - 23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
-    final fromTable = await reference.rawQuery(
-        "SELECT * FROM tbl_task WHERE isDone = 'false' and date_Schedule BETWEEN '$newDate' AND '$newDate1' or date_Schedule LIKE '%$date%'  ORDER BY date_Schedule ASC");
-    // final fromTable = await reference.query(tableTask,
-    //     where:
-    //         'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
-    //     whereArgs: ['%$Date%'],
-    //     orderBy: '${TblTaskField.dateSched} ASC');
+    // final fromTable = await reference.rawQuery(
+    //     "SELECT * FROM tbl_task WHERE NOT isDone and date_Schedule BETWEEN '$newDate' AND '$newDate1' or date_Schedule LIKE '%$date%'  ORDER BY date_Schedule ASC");
+    final fromTable = await reference.query(tableTask,
+        where:
+            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ? or date_Schedule BETWEEN ? AND ?',
+        whereArgs: ['%$date%','$newDate','$newDate' ],
+        orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
