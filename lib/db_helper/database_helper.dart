@@ -122,20 +122,20 @@ CREATE TABLE $tableTask(
   }
 
   Future<List<Task>> readAllTaskToday() async {
-    final DateTime now = DateTime.now();
-    var newDate = new DateTime(now.year, now.month, now.day);
-    String Date = DateFormat('yyyy-MM-dd').format(now);
-    String Date1 = DateFormat('yyyy-MM-dd').format(newDate);
-    print(Date);
+    final DateTime now = new DateTime.now();
+    var newDate1 =
+        new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+    var newDate =
+        new DateTime(now.year, now.month, now.day, now.hour - 23, now.minute);
+    String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
-    final fromTable = await reference.query(tableTask,
-        where:
-            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
-        whereArgs: ['%$Date%'],
-        orderBy: '${TblTaskField.dateSched} ASC');
-
-    // final fromTable = await reference.rawQuery(
-    // "SELECT * FROM tbl_task WHERE date_Schedule NOT BETWEEN '1940-01-01' AND '$Date'");
+    final fromTable = await reference.rawQuery(
+        "SELECT * FROM tbl_task WHERE isDone = 'false' and date_Schedule BETWEEN '$newDate' AND '$newDate1' or date_Schedule LIKE '%$date%'  ORDER BY date_Schedule ASC");
+    // final fromTable = await reference.query(tableTask,
+    //     where:
+    //         'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
+    //     whereArgs: ['%$Date%'],
+    //     orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
@@ -143,10 +143,9 @@ CREATE TABLE $tableTask(
     final DateTime now = DateTime.now();
     // var newDate = new DateTime(now.year, now.month, now.day - 1);
     String Date = DateFormat('yyyy-MM-dd').format(now);
-    print(Date);
     final reference = await instance.database;
     final fromTable = await reference.rawQuery(
-        "SELECT * FROM tbl_task WHERE date_Schedule  BETWEEN '1940-01-01' AND '$Date' and NOT isDone");
+        "SELECT * FROM tbl_task WHERE date_Schedule BETWEEN '1940-01-01' AND '$Date' and NOT isDone");
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
 
     // final fromTable = await reference.query(tableTask,
