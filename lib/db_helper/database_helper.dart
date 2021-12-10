@@ -123,8 +123,9 @@ CREATE TABLE $tableTask(
 
   Future<List<Task>> readAllTaskToday() async {
     final DateTime now = DateTime.now();
-    var newDate = new DateTime(now.year, now.month, now.day - 1);
+    var newDate = new DateTime(now.year, now.month, now.day);
     String Date = DateFormat('yyyy-MM-dd').format(now);
+    String Date1 = DateFormat('yyyy-MM-dd').format(newDate);
     print(Date);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
@@ -140,12 +141,12 @@ CREATE TABLE $tableTask(
 
   Future<List<Task>> readUnfinishedTask() async {
     final DateTime now = DateTime.now();
-    var newDate = new DateTime(now.year, now.month, now.day - 1);
+    // var newDate = new DateTime(now.year, now.month, now.day - 1);
     String Date = DateFormat('yyyy-MM-dd').format(now);
     print(Date);
     final reference = await instance.database;
     final fromTable = await reference.rawQuery(
-        "SELECT * FROM tbl_task WHERE date_Schedule  BETWEEN '1940-01-01' AND '$Date'");
+        "SELECT * FROM tbl_task WHERE date_Schedule  BETWEEN '1940-01-01' AND '$Date' and NOT isDone");
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
 
     // final fromTable = await reference.query(tableTask,
