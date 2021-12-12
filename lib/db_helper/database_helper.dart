@@ -123,16 +123,16 @@ CREATE TABLE $tableTask(
 
   Future<List<Task>> readAllTaskToday() async {
     final DateTime now = new DateTime.now();
-    var newDate1 =
+    var newToday =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    var newDate =
-        new DateTime(now.year, now.month, now.day, now.hour - 23, now.minute+59);
+    var newDateTodayMinus23 =
+        new DateTime(now.year, now.month, now.day-1, now.hour, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
         where:
-            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ? or date_Schedule BETWEEN ? AND ?',
-        whereArgs: ['%$date%', '$newDate', '$newDate1'],
+            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ? or NOT ${TblTaskField.isDone} and date_Schedule < ? AND date_Schedule > ?',
+        whereArgs: ['%$date%', '$newToday', '$newDateTodayMinus23'],
         orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
