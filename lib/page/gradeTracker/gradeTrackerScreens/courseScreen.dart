@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseScreen.dart';
+import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseFactorScreen.dart';
 
-class GradeTrackerPage extends StatefulWidget {
-  const GradeTrackerPage({Key? key}) : super(key: key);
+class CourseScreenPage extends StatefulWidget {
+  const CourseScreenPage({Key? key}) : super(key: key);
 
   @override
-  _GradeTrackerPageState createState() => _GradeTrackerPageState();
+  _CourseScreenState createState() => _CourseScreenState();
 }
 
-class _GradeTrackerPageState extends State<GradeTrackerPage> {
-  String? courseName;
+class _CourseScreenState extends State<CourseScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,17 +21,13 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Row(children: [
-            Icon(Icons.menu_book_rounded),
-            SizedBox(
-              width: 10,
-            ),
-            Text('Grade Tracker',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500))
-          ]),
-        ),
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {}, child: Text('Add Category'))
+            ],
+            backgroundColor: Colors.indigo.shade800,
+            elevation: 0.0,
+            title: Text('Course #1')),
         body: Container(
             child: ListView.builder(
                 itemCount: 1,
@@ -40,7 +35,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                   return GestureDetector(
                     onTap: () async {
                       await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CourseScreenPage()));
+                          builder: (context) => CourseFactorScreen()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8),
@@ -65,7 +60,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                 Expanded(
                                   flex: 5,
                                   child: Text(
-                                    'Science',
+                                    'Assignment',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -91,43 +86,6 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                     ),
                   );
                 })),
-        floatingActionButton: FloatingActionButton(
-          heroTag: null,
-          backgroundColor: Colors.blueGrey[900],
-          child: Icon(
-            Icons.add,
-            size: 30.0,
-          ),
-          onPressed: () async {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => Form(
-                        // key: calculateKey1,
-                        child: AlertDialog(
-                            title: Text("Add course name"),
-                            actions: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                            child: TextFormField(
-                              autofocus: true,
-                              decoration:
-                                  InputDecoration(hintText: "Course name"),
-                              onChanged: (value) {
-                                setState(() {
-                                  courseName = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ElevatedButton(
-                              onPressed: () async {
-                                print(courseName);
-                                Navigator.pop(context);
-                              },
-                              child: Text('Confirm'))
-                        ])));
-          },
-        ),
       ),
     );
   }
