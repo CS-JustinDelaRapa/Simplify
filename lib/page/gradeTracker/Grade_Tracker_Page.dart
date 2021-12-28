@@ -79,8 +79,8 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                             onTap: () async {
                               await Navigator.of(context).push(
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          CourseScreenPage()));
+                                      builder: (context) => CourseScreenPage(
+                                          courseInfo: courseList[index])));
                             },
                             onLongPress: () async {
                               DatabaseHelper.instance
@@ -92,7 +92,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                               child: Container(
                                 height: 70,
                                 decoration: BoxDecoration(
-                                  color: Colors.yellow,
+                                  color: Colors.amber.shade300,
                                   borderRadius: BorderRadius.circular(15),
                                   boxShadow: [
                                     BoxShadow(

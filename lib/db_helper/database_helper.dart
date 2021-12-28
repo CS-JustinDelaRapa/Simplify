@@ -229,7 +229,7 @@ CREATE TABLE $tableFactorContent(
   }
 
 //get all date from tbl_gradeFactors using course ID
-  Future<Factor> readCourse(int searchKey) async {
+  Future<List<Factor>> readCourse(int searchKey) async {
     final reference = await instance.database;
     final specificID = await reference.query(
       tableGradeFactor,
@@ -237,11 +237,7 @@ CREATE TABLE $tableFactorContent(
       where: '${TblFactorField.fkCourse} = ?',
       whereArgs: [searchKey],
     );
-    if (specificID.isNotEmpty) {
-      return Factor.fromJson(specificID.first);
-    } else {
-      throw Exception('ID $searchKey not found');
-    }
+    return specificID.map((fromSQL) => Factor.fromJson(fromSQL)).toList();
   }
 
   Future<int> updateCourse(Course courseInstance) async {
