@@ -1,4 +1,7 @@
 import 'package:intl/intl.dart';
+import 'package:simplify/model/grade_tracker/course.dart';
+import 'package:simplify/model/grade_tracker/factorContent.dart';
+import 'package:simplify/model/grade_tracker/gradeFactor.dart';
 import 'package:simplify/model/task.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -50,6 +53,32 @@ CREATE TABLE $tableTask(
   ${TblTaskField.dateSched} TEXT NOT NUll,
   ${TblTaskField.isSmartAlert} BOOLEAN NOT NULL,
   ${TblTaskField.isDone} BOOLEAN NOT NULL
+  )
+''');
+    await query.execute('''
+CREATE TABLE $tableCourse(
+  ${TblCourseField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${TblCourseField.courseName} TEXT NOT NULL,
+  ${TblCourseField.courseGrade} REAL NOT NULL,
+  ${TblCourseField.courseColor} TEXT NOT NULL
+  )
+''');
+    await query.execute('''
+CREATE TABLE $tableGradeFactor(
+  ${TblFactorField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${TblFactorField.factorName} TEXT NOT NULL,
+  ${TblFactorField.factorPercentage} REAL NOT NULL,
+  ${TblFactorField.factorGrade} REAL NOT NULL,
+  ${TblFactorField.fkCourse} INTEGER NOT NULL
+  )
+''');
+    await query.execute('''
+CREATE TABLE $tableFactorContent(
+  ${TblContentField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${TblContentField.contentName} TEXT NOT NULL,
+  ${TblContentField.contentScore} REAL NOT NULL,
+  ${TblContentField.contentTotal} REAL NOT NULL,
+  ${TblContentField.fkContent} INTEGER NOT NULL
   )
 ''');
   }
@@ -126,7 +155,7 @@ CREATE TABLE $tableTask(
     var newToday =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
     var newDateTodayMinus23 =
-        new DateTime(now.year, now.month, now.day-1, now.hour, now.minute);
+        new DateTime(now.year, now.month, now.day-1, now.hour, now.minute+1);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
@@ -142,7 +171,7 @@ CREATE TABLE $tableTask(
     var newDate1 =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
     var newDate =
-        new DateTime(now.year, now.month, now.day, now.hour-24, now.minute+1);
+        new DateTime(now.year, now.month, now.day, now.hour-23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     print(newDate.toString()+' Date Minus 23 hrs');
     final reference = await instance.database;
@@ -153,36 +182,6 @@ CREATE TABLE $tableTask(
         orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
-
-  // Future<List<Task>> readUnfinishedTask() async {
-  //   final DateTime now = DateTime.now();
-  //   // var newDate = new DateTime(now.year, now.month, now.day - 1);
-  //   String Date = DateFormat('yyyy-MM-dd').format(now);
-  //   final reference = await instance.database;
-  //   final fromTable = await reference.rawQuery(
-  //       "SELECT * FROM tbl_task WHERE date_Schedule BETWEEN '1940-01-01' AND '$Date' and NOT isDone");
-  //   return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
-  // }
-
-  // Future<Task> readPriorityTask() async {
-  //   final reference = await instance.database;
-  //   final specificID = await reference.query(tableTask,
-  //       // columns: TblTaskField.taskFieldNames,
-  //       where: 'NOT ${TblTaskField.isDone}',
-  //       orderBy: '${TblTaskField.dateSched} ASC');
-  //   if (specificID.isNotEmpty) {
-  //     return Task.fromJson(specificID.first);
-  //   } else {
-  //     final Task defaultTask;
-  //     defaultTask = Task(
-  //         dateSched: DateTime.now(),
-  //         isDone: false,
-  //         description: '',
-  //         isSmartAlert: false,
-  //         title: 'Welcome To Simplify!');
-  //     return defaultTask;
-  //   }
-  // }
 
   Future<Task> readTask(int searchKey) async {
     final reference = await instance.database;
@@ -213,75 +212,135 @@ CREATE TABLE $tableTask(
         where: '${TblTaskField.id} = ?', whereArgs: [searchKey]);
   }
 
-//**Grade Tracker */
-  Future<List<GradeTracker>> readAllGrade() async {
+//Grade Tracker*************
+//course**********************
+  Future createCourse(Course courseCreate) async {
     final reference = await instance.database;
-
-    //SELECT * FROM tbl_diary ORDER BY dateTime
-    final fromTable = await reference.query(tblGradeTracker,
-        orderBy: '${TblGradeTrackerField.id} DESC');
-
-    return fromTable.map((fromSQL) => GradeTracker.fromJson(fromSQL)).toList();
+    //irereturn nito ang Primary key ng table, which is ID
+    int id = await reference.insert(tableCourse, courseCreate.toJson());
+    return id;
   }
 
-  Future<List<GradeTracker>> readFolderItem(String searchKey) async {
+  Future<List<Course>> readAllCourse() async {
     final reference = await instance.database;
 
-    final fromTable = await reference.query(
-      tblGradeTracker,
-      columns: TblGradeTrackerField.gradeTrackerFieldNames,
-      where: '${TblGradeTrackerField.folder} = ?',
+    final fromTable = await reference.query(tableCourse,
+        orderBy: '${TblCourseField.courseName} ASC');
+
+    return fromTable.map((fromSQL) => Course.fromJson(fromSQL)).toList();
+  }
+
+//get all date from tbl_gradeFactors using course ID
+  Future<Factor> readCourse(int searchKey) async {
+    final reference = await instance.database;
+    final specificID = await reference.query(
+      tableGradeFactor,
+      columns: TblFactorField.factorNames,
+      where: '${TblFactorField.fkCourse} = ?',
       whereArgs: [searchKey],
     );
-
-    if (fromTable.isNotEmpty) {
-      return fromTable
-          .map((fromSQL) => GradeTracker.fromJson(fromSQL))
-          .toList();
+    if (specificID.isNotEmpty) {
+      return Factor.fromJson(specificID.first);
     } else {
-      throw Exception('Folder $searchKey not found');
+      throw Exception('ID $searchKey not found');
     }
   }
 
-  Future<List<GradeTracker>> readSubjectItem(
-      String folderSearchKey, String subjectSearchKey) async {
+  Future<int> updateCourse(Course courseInstance) async {
     final reference = await instance.database;
 
-    final fromTable = await reference.query(
-      tblGradeTracker,
-      columns: TblGradeTrackerField.gradeTrackerFieldNames,
-      where:
-          '${TblGradeTrackerField.folder} = ? and ${TblGradeTrackerField.subject} = ?',
-      whereArgs: [folderSearchKey, subjectSearchKey],
-    );
-
-    if (fromTable.isNotEmpty) {
-      return fromTable
-          .map((fromSQL) => GradeTracker.fromJson(fromSQL))
-          .toList();
-    } else {
-      throw Exception('Search keys not found');
-    }
+    return reference.update(tableCourse, courseInstance.toJson(),
+        where: '${TblCourseField.id} = ?', whereArgs: [courseInstance.id]);
   }
 
-  Future<int> updateGradeTracker(GradeTracker gradeTrackerInstance) async {
-    final reference = await instance.database;
-
-    return reference.update(tblGradeTracker, gradeTrackerInstance.toJson(),
-        where: '${TblGradeTrackerField.id} = ?',
-        whereArgs: [gradeTrackerInstance.id]);
-  }
-
-  Future<int> deleteGradeTracker(int searchKey) async {
+  Future<int> deleteCourse(int searchKey) async {
     final refererence = await instance.database;
 
-    return refererence.delete(tblGradeTracker,
-        where: '${TblGradeTrackerField.id} = ?', whereArgs: [searchKey]);
+    return refererence.delete(tableCourse,
+        where: '${TblCourseField.id} = ?', whereArgs: [searchKey]);
   }
+
+//****************************
+//Factor***********************
+  Future createFactor(Factor factorCreate) async {
+    final reference = await instance.database;
+    //irereturn nito ang Primary key ng table, which is ID
+    int id = await reference.insert(tableGradeFactor, factorCreate.toJson());
+    return id;
+  }
+
+  Future<int> updateFactor(Factor factorInstance) async {
+    final reference = await instance.database;
+
+    return reference.update(tableGradeFactor, factorInstance.toJson(),
+        where: '${TblFactorField.id} = ?', whereArgs: [factorInstance.id]);
+  }
+
+  Future<int> deleteFactor(int searchKey) async {
+    final refererence = await instance.database;
+
+    return refererence.delete(tableGradeFactor,
+        where: '${TblFactorField.id} = ?', whereArgs: [searchKey]);
+  }
+
+//get all date from tbl_gradeFactors using course ID
+  Future<Content> readFactor(int searchKey) async {
+    final reference = await instance.database;
+    final specificID = await reference.query(
+      tableFactorContent,
+      columns: TblContentField.contentNames,
+      where: '${TblContentField.fkContent} = ?',
+      whereArgs: [searchKey],
+    );
+    if (specificID.isNotEmpty) {
+      return Content.fromJson(specificID.first);
+    } else {
+      throw Exception('ID $searchKey not found');
+    }
+  }
+
+//*******************
+//factorContent********
+  Future createContent(Content contentCreate) async {
+    final reference = await instance.database;
+    //irereturn nito ang Primary key ng table, which is ID
+    int id = await reference.insert(tableFactorContent, contentCreate.toJson());
+    return id;
+  }
+
+  Future<int> updateContent(Content contentInstance) async {
+    final reference = await instance.database;
+
+    return reference.update(tableFactorContent, contentInstance.toJson(),
+        where: '${TblContentField.id} = ?', whereArgs: [contentInstance.id]);
+  }
+
+  Future<int> deleteContent(int searchKey) async {
+    final refererence = await instance.database;
+
+    return refererence.delete(tableFactorContent,
+        where: '${TblContentField.id} = ?', whereArgs: [searchKey]);
+  }
+
+  Future<Content> readContent(int searchKey) async {
+    final reference = await instance.database;
+    final specificID = await reference.query(
+      tableFactorContent,
+      columns: TblContentField.contentNames,
+      where: '${TblContentField.id} = ?',
+      whereArgs: [searchKey],
+    );
+    if (specificID.isNotEmpty) {
+      return Content.fromJson(specificID.first);
+    } else {
+      throw Exception('ID $searchKey not found');
+    }
+  }
+//==============================
+
 
   Future closeConnection() async {
     final reference = await instance.database;
-
     reference.close();
   }
 }

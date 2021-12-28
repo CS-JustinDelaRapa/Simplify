@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:simplify/db_helper/database_helper.dart';
+import 'package:simplify/model/grade_tracker/course.dart';
 import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseScreen.dart';
 
 class GradeTrackerPage extends StatefulWidget {
@@ -9,7 +12,31 @@ class GradeTrackerPage extends StatefulWidget {
 }
 
 class _GradeTrackerPageState extends State<GradeTrackerPage> {
+  late List<Course> courseList;
+  Color pickedColor = Colors.red;
+  bool isLoading = false;
   String? courseName;
+
+  @override
+  void initState() {
+    refreshState();
+    super.initState();
+  }
+
+  void changeColor(Color color)=> setState(() {
+    pickedColor = color;
+  });
+
+  Future refreshState() async{
+    setState(() {
+      isLoading = true;
+    });
+    courseList = await DatabaseHelper.instance.readAllCourse();
+        setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,21 +60,33 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500))
           ]),
         ),
-        body: Container(
-            child: ListView.builder(
-                itemCount: 1,
+        body: isLoading? Center(child: CircularProgressIndicator(),) 
+            :Container(
+            child: courseList.isEmpty?
+            Center(
+              child: Text(
+                                'No Courses',
+                                style: TextStyle(fontSize: 20),
+                              ),
+            ) 
+            :ListView.builder(
+                itemCount: courseList.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async {
                       await Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => CourseScreenPage()));
                     },
+                    onLongPress: () async{
+                      DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                      refreshState();
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Container(
                         height: 70,
                         decoration: BoxDecoration(
-                          color: Colors.amber.shade300,
+                          color: courseList[index].courseColor,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
@@ -65,7 +104,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                 Expanded(
                                   flex: 5,
                                   child: Text(
-                                    'Science',
+                                    courseList[index].courseName,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -77,7 +116,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                               ],
                             ),
                             trailing: Text(
-                              "Grade: 81%",
+                              courseList[index].courseGrade.toString(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -104,28 +143,57 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                 builder: (BuildContext context) => Form(
                         // key: calculateKey1,
                         child: AlertDialog(
+                          scrollable: true,
                             title: Text("Add course name"),
-                            actions: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                            child: TextFormField(
-                              autofocus: true,
-                              decoration:
-                                  InputDecoration(hintText: "Course name"),
-                              onChanged: (value) {
-                                setState(() {
-                                  courseName = value;
-                                });
-                              },
+                            content: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  child: TextFormField(
+                                    autofocus: true,
+                                    decoration:
+                                        InputDecoration(hintText: "Course name"),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        courseName = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                          BlockPicker(
+                            pickerColor: pickedColor,
+                            availableColors: [
+                            Colors.red,
+                            Colors.pink,
+                            Colors.purple,
+                            Colors.deepPurple,
+                            Colors.indigo,
+                            Colors.blue,
+                            Colors.lightBlue,
+                            Colors.cyan,
+                            ], 
+                            onColorChanged: (value){
+changeColor(value);
+                            }),
+                              ],
                             ),
-                          ),
+                            actions: [
                           ElevatedButton(
                               onPressed: () async {
-                                print(courseName);
+                                final Course create = Course(
+                                  courseName: courseName!,
+                                  courseGrade: 0.0,
+                                  courseColor: Colors.red
+                                );
+                                DatabaseHelper.instance.createCourse(create);
                                 Navigator.pop(context);
+                                refreshState();
                               },
                               child: Text('Confirm'))
-                        ])));
+                        ]
+                        )
+                        )
+                        );
           },
         ),
       ),
