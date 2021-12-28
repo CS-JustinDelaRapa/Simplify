@@ -30,7 +30,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
       isLoading = true;
     });
     gradeFactor =
-        await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
+    await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
     setState(() {
       isLoading = false;
     });
@@ -79,7 +79,9 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                     decoration: InputDecoration(
                                         hintText: "Factor name"),
                                     onChanged: (value) {
-                                      setState(() {});
+                                      setState(() {
+                                        factorName = value;
+                                      });
                                     },
                                   ),
                                   TextFormField(
@@ -88,14 +90,30 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                     decoration: InputDecoration(
                                         hintText: "Factor percentage"),
                                     onChanged: (value) {
-                                      setState(() {});
+                                      setState(() {
+                                        factorPercentage = double.parse(value);
+                                      });
                                     },
                                   ),
                                 ],
                               ),
                               actions: [
                                 ElevatedButton(
-                                    onPressed: () async {},
+                                    onPressed: () async {
+                                      final Factor factorCreate = Factor(
+                                  factorName: factorName!,
+                                  factorGrade: 0.0,
+                                  factorPercentage: factorPercentage!,
+                                  fkCourse: widget.courseInfo.id!
+                                );
+                                DatabaseHelper.instance.createFactor(factorCreate);
+                                print(factorCreate.factorName);
+                                print(factorCreate.factorPercentage);
+                                print(factorCreate.factorGrade);
+                                print(factorCreate.fkCourse);
+                                Navigator.pop(context);
+                                refreshState();
+                                    },
                                     child: Text('Confirm'))
                               ],
                             ));

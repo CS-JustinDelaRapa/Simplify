@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class AddCoursesPage extends StatefulWidget {
   const AddCoursesPage({Key? key}) : super(key: key);
-
   @override
   _AddCoursesPageState createState() => _AddCoursesPageState();
 }
