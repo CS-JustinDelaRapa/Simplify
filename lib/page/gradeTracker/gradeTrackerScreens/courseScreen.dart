@@ -136,7 +136,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: 1,
+                        itemCount: gradeFactor.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () async {
@@ -168,7 +168,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                         Expanded(
                                           flex: 5,
                                           child: Text(
-                                            'Assignment',
+                                            gradeFactor[index].factorName,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -180,7 +180,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                       ],
                                     ),
                                     trailing: Text(
-                                      "Grade: 81%",
+                                      gradeFactor[index].factorPercentage.toString()+'%',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
