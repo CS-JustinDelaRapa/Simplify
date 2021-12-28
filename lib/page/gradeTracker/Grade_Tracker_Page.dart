@@ -23,16 +23,16 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
     super.initState();
   }
 
-  void changeColor(Color color)=> setState(() {
-    pickedColor = color;
-  });
+  void changeColor(Color color) => setState(() {
+        pickedColor = color;
+      });
 
-  Future refreshState() async{
+  Future refreshState() async {
     setState(() {
       isLoading = true;
     });
     courseList = await DatabaseHelper.instance.readAllCourse();
-        setState(() {
+    setState(() {
       isLoading = false;
     });
   }
@@ -60,76 +60,82 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500))
           ]),
         ),
-        body: isLoading? Center(child: CircularProgressIndicator(),) 
-            :Container(
-            child: courseList.isEmpty?
-            Center(
-              child: Text(
-                                'No Courses',
-                                style: TextStyle(fontSize: 20),
-                              ),
-            ) 
-            :ListView.builder(
-                itemCount: courseList.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CourseScreenPage()));
-                    },
-                    onLongPress: () async{
-                      DatabaseHelper.instance.deleteCourse(courseList[index].id!);
-                      refreshState();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: courseList[index].courseColor,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 2,
-                                offset: Offset(0, 4)),
-                          ],
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                child: courseList.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No Courses',
+                          style: TextStyle(fontSize: 20),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: ListTile(
-                            title: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    courseList[index].courseName,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                      )
+                    : ListView.builder(
+                        itemCount: courseList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CourseScreenPage()));
+                            },
+                            onLongPress: () async {
+                              DatabaseHelper.instance
+                                  .deleteCourse(courseList[index].id!);
+                              refreshState();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Container(
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 4)),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: ListTile(
+                                    title: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          flex: 5,
+                                          child: Text(
+                                            courseList[index].courseName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(
+                                      courseList[index].courseGrade.toString(),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            trailing: Text(
-                              courseList[index].courseGrade.toString(),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                })),
+                          );
+                        })),
         floatingActionButton: FloatingActionButton(
           heroTag: null,
           backgroundColor: Colors.blueGrey[900],
@@ -143,16 +149,17 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                 builder: (BuildContext context) => Form(
                         // key: calculateKey1,
                         child: AlertDialog(
-                          scrollable: true,
+                            scrollable: true,
                             title: Text("Add course name"),
                             content: Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
                                   child: TextFormField(
                                     autofocus: true,
-                                    decoration:
-                                        InputDecoration(hintText: "Course name"),
+                                    decoration: InputDecoration(
+                                        hintText: "Course name"),
                                     onChanged: (value) {
                                       setState(() {
                                         courseName = value;
@@ -160,21 +167,21 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                     },
                                   ),
                                 ),
-                          BlockPicker(
-                            pickerColor: pickedColor,
-                            availableColors: [
-                            Colors.red,
-                            Colors.pink,
-                            Colors.purple,
-                            Colors.deepPurple,
-                            Colors.indigo,
-                            Colors.blue,
-                            Colors.lightBlue,
-                            Colors.cyan,
-                            ], 
-                            onColorChanged: (value){
-changeColor(value);
-                            }),
+                                // BlockPicker(
+                                //     pickerColor: pickedColor,
+                                //     availableColors: [
+                                //       Colors.red,
+                                //       Colors.pink,
+                                //       Colors.purple,
+                                //       Colors.deepPurple,
+                                //       Colors.indigo,
+                                //       Colors.blue,
+                                //       Colors.lightBlue,
+                                //       Colors.cyan,
+                                //     ],
+                                //     onColorChanged: (value) {
+                                //       changeColor(value);
+                                //     }),
                               ],
                             ),
                             actions: [
@@ -183,17 +190,13 @@ changeColor(value);
                                 final Course create = Course(
                                   courseName: courseName!,
                                   courseGrade: 0.0,
-                                  courseColor: Colors.red
                                 );
                                 DatabaseHelper.instance.createCourse(create);
                                 Navigator.pop(context);
                                 refreshState();
                               },
                               child: Text('Confirm'))
-                        ]
-                        )
-                        )
-                        );
+                        ])));
           },
         ),
       ),

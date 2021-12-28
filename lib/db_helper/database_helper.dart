@@ -59,8 +59,7 @@ CREATE TABLE $tableTask(
 CREATE TABLE $tableCourse(
   ${TblCourseField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
   ${TblCourseField.courseName} TEXT NOT NULL,
-  ${TblCourseField.courseGrade} REAL NOT NULL,
-  ${TblCourseField.courseColor} TEXT NOT NULL
+  ${TblCourseField.courseGrade} REAL NOT NULL
   )
 ''');
     await query.execute('''
@@ -154,8 +153,8 @@ CREATE TABLE $tableFactorContent(
     final DateTime now = new DateTime.now();
     var newToday =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    var newDateTodayMinus23 =
-        new DateTime(now.year, now.month, now.day-1, now.hour, now.minute+1);
+    var newDateTodayMinus23 = new DateTime(
+        now.year, now.month, now.day - 1, now.hour, now.minute + 1);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
@@ -171,13 +170,12 @@ CREATE TABLE $tableFactorContent(
     var newDate1 =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
     var newDate =
-        new DateTime(now.year, now.month, now.day, now.hour-23, now.minute);
+        new DateTime(now.year, now.month, now.day, now.hour - 23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
-    print(newDate.toString()+' Date Minus 23 hrs');
+    print(newDate.toString() + ' Date Minus 23 hrs');
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
-        where:
-            'NOT ${TblTaskField.isDone} and date_Schedule BETWEEN ? AND ?',
+        where: 'NOT ${TblTaskField.isDone} and date_Schedule BETWEEN ? AND ?',
         whereArgs: ['1940-01-01 00:00:00.000', '$newDate'],
         orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
@@ -337,7 +335,6 @@ CREATE TABLE $tableFactorContent(
     }
   }
 //==============================
-
 
   Future closeConnection() async {
     final reference = await instance.database;
