@@ -68,7 +68,7 @@ class Factor {
         id: fromSQL[TblFactorField.id] as int?,
         factorName: fromSQL[TblFactorField.factorName] as String,
         factorGrade: fromSQL[TblFactorField.factorGrade] as double,
-        factorPercentage: fromSQL[TblFactorField.factorGrade] as double,
+        factorPercentage: fromSQL[TblFactorField.factorPercentage] as double,
         fkCourse: fromSQL[TblFactorField.fkCourse] as int,
       );
 }

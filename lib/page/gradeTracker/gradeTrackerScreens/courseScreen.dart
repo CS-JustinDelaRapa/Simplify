@@ -8,23 +8,19 @@ class CourseScreenPage extends StatefulWidget {
   final Course courseInfo;
   const CourseScreenPage({Key? key, required this.courseInfo})
       : super(key: key);
-
   @override
   _CourseScreenState createState() => _CourseScreenState();
 }
-
 class _CourseScreenState extends State<CourseScreenPage> {
   late List<Factor> gradeFactor;
   bool isLoading = false;
   String? factorName;
   double? factorPercentage;
-
   @override
   void initState() {
     refreshState();
     super.initState();
   }
-
   Future refreshState() async {
     setState(() {
       isLoading = true;
@@ -35,7 +31,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
       isLoading = false;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,15 +97,11 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                     onPressed: () async {
                                       final Factor factorCreate = Factor(
                                   factorName: factorName!,
-                                  factorGrade: 0.0,
                                   factorPercentage: factorPercentage!,
+                                  factorGrade: 0.0,
                                   fkCourse: widget.courseInfo.id!
                                 );
                                 DatabaseHelper.instance.createFactor(factorCreate);
-                                print(factorCreate.factorName);
-                                print(factorCreate.factorPercentage);
-                                print(factorCreate.factorGrade);
-                                print(factorCreate.fkCourse);
                                 Navigator.pop(context);
                                 refreshState();
                                     },

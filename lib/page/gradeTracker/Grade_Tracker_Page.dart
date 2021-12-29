@@ -16,6 +16,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
   Color pickedColor = Colors.red;
   bool isLoading = false;
   String? courseName;
+  bool isLongPressed = false;
 
   @override
   void initState() {
@@ -76,15 +77,30 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                         itemCount: courseList.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () async {
+                            onTap: isLongPressed?
+                            ()async{
+                              setState(() {
+                                  isLongPressed = false;
+                                });
+                            }
+                            :() async {
                               await Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) => CourseScreenPage(
                                           courseInfo: courseList[index])));
                             },
+                            
                             onLongPress: () async {
-                              DatabaseHelper.instance
-                                  .deleteCourse(courseList[index].id!);
+                              // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                              if(isLongPressed){
+                                setState(() {
+                                  isLongPressed = false;
+                                });
+                              }else{
+                                setState(() {
+                                  isLongPressed = true;
+                                });                                
+                              }
                               refreshState();
                             },
                             child: Padding(
@@ -104,24 +120,58 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),
                                   child: ListTile(
-                                    title: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: Text(
-                                            courseList[index].courseName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    leading: null,
+                                    title: Text(
+                                      courseList[index].courseName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                    trailing: Text(
+                                    trailing: isLongPressed?
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: (){
+                                            showDialogFunction(courseList[index]);
+                                          },
+                                          icon: Icon(Icons.edit)),
+                                        IconButton(
+                                          onPressed: (){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete '+ courseList[index].courseName+ ' from list?'),
+                          actions: [
+                            TextButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                                Navigator.of(context, rootNavigator: true).pop();
+                                setState(() {
+                                  isLongPressed = false;
+                                });
+                                refreshState();
+                              },
+                            )
+                          ],
+                        );
+                      });
+                                          },
+                                          icon: Icon(Icons.delete)),
+                                      ],
+                                    )
+                                    :Text(
                                       courseList[index].courseGrade.toString(),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -144,19 +194,32 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
             size: 30.0,
           ),
           onPressed: () async {
-            showDialog(
+            showDialogFunction(null);
+          },
+        ),
+      ),
+    );
+  }
+
+ showDialogFunction(Course? fromCourseList){
+  return showDialog(
                 context: context,
                 builder: (BuildContext context) => Form(
                         // key: calculateKey1,
                         child: AlertDialog(
                             scrollable: true,
-                            title: Text("Add course name"),
+                            title: fromCourseList == null?
+                            Text("Add course name")
+                            :Text("Edit course name"),
                             content: Column(
                               children: [
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 8, 8),
                                   child: TextFormField(
+                                    initialValue: fromCourseList == null?
+                                    null
+                                    :fromCourseList.courseName,
                                     autofocus: true,
                                     decoration: InputDecoration(
                                         hintText: "Course name"),
@@ -186,20 +249,34 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                             ),
                             actions: [
                           ElevatedButton(
-                              onPressed: () async {
+                              onPressed: fromCourseList == null?
+                              () async {
                                 final Course create = Course(
                                   courseName: courseName!,
                                   courseGrade: 0.0,
                                 );
                                 DatabaseHelper.instance.createCourse(create);
                                 Navigator.pop(context);
+                                setState(() {
+                                  isLongPressed = false;
+                                });
                                 refreshState();
+                              }
+                              :()async{
+                                final Course edit = Course(
+                                  courseName: courseName!,
+                                  courseGrade: fromCourseList.courseGrade,
+                                  id: fromCourseList.id
+                                );
+                                DatabaseHelper.instance.updateCourse(edit);
+                                Navigator.pop(context);
+                                setState(() {
+                                  isLongPressed = false;
+                                });
+                                refreshState();                                
                               },
                               child: Text('Confirm'))
                         ])));
-          },
-        ),
-      ),
-    );
-  }
+}
+
 }
