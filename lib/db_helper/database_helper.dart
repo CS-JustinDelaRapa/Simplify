@@ -263,7 +263,7 @@ CREATE TABLE $tableFactorContent(
     return id;
   }
 
-  Future<int> updateFactor(Factor factorInstance) async {
+  Future updateFactor(Factor factorInstance) async {
     final reference = await instance.database;
 
     return reference.update(tableGradeFactor, factorInstance.toJson(),

@@ -12,6 +12,7 @@ class GradeTrackerPage extends StatefulWidget {
 }
 
 class _GradeTrackerPageState extends State<GradeTrackerPage> {
+  final _formKey = GlobalKey<FormState>();
   late List<Course> courseList;
   Color pickedColor = Colors.red;
   bool isLoading = false;
@@ -36,6 +37,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
     setState(() {
       isLoading = false;
     });
+    courseName = '';
   }
 
   @override
@@ -205,7 +207,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
   return showDialog(
                 context: context,
                 builder: (BuildContext context) => Form(
-                        // key: calculateKey1,
+                        key: _formKey,
                         child: AlertDialog(
                             scrollable: true,
                             title: fromCourseList == null?
@@ -217,6 +219,9 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 8, 8),
                                   child: TextFormField(
+                                    validator: (value) => value != null && value.isEmpty
+                                    ? 'Required Subject Name'
+                                    : null,
                                     initialValue: fromCourseList == null?
                                     null
                                     :fromCourseList.courseName,
@@ -249,9 +254,11 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                             ),
                             actions: [
                           ElevatedButton(
-                              onPressed: fromCourseList == null?
+                              onPressed: 
+                              fromCourseList == null?
                               () async {
-                                final Course create = Course(
+                                if(_formKey.currentState!.validate()){
+                                  final Course create = Course(
                                   courseName: courseName!,
                                   courseGrade: 0.0,
                                 );
@@ -261,8 +268,10 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                   isLongPressed = false;
                                 });
                                 refreshState();
+                                }
                               }
                               :()async{
+                                if(_formKey.currentState!.validate()){
                                 final Course edit = Course(
                                   courseName: courseName!,
                                   courseGrade: fromCourseList.courseGrade,
@@ -274,6 +283,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                                   isLongPressed = false;
                                 });
                                 refreshState();                                
+                                }
                               },
                               child: Text('Confirm'))
                         ])));
