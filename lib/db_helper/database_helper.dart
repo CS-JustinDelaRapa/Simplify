@@ -74,6 +74,7 @@ CREATE TABLE $tableGradeFactor(
     await query.execute('''
 CREATE TABLE $tableFactorContent(
   ${TblContentField.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${TblContentField.contentDate} TEXT NOT NULL,
   ${TblContentField.contentName} TEXT NOT NULL,
   ${TblContentField.contentScore} REAL NOT NULL,
   ${TblContentField.contentTotal} REAL NOT NULL,
@@ -316,19 +317,15 @@ CREATE TABLE $tableFactorContent(
         where: '${TblContentField.id} = ?', whereArgs: [searchKey]);
   }
 
-  Future<Content> readContent(int searchKey) async {
+  Future<List<Content>> readContent(int searchKey) async {
     final reference = await instance.database;
     final specificID = await reference.query(
       tableFactorContent,
       columns: TblContentField.contentNames,
-      where: '${TblContentField.id} = ?',
+      where: '${TblContentField.fkContent} = ?',
       whereArgs: [searchKey],
     );
-    if (specificID.isNotEmpty) {
-      return Content.fromJson(specificID.first);
-    } else {
-      throw Exception('ID $searchKey not found');
-    }
+  return specificID.map((fromSQL) => Content.fromJson(fromSQL)).toList();
   }
 //==============================
 

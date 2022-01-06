@@ -47,7 +47,7 @@ class Content {
         TblContentField.contentName: contentName,
         TblContentField.contentScore: contentScore,
         TblContentField.contentTotal: contentTotal,
-        TblContentField.contentDate: contentDate,
+        TblContentField.contentDate: contentDate.toIso8601String(),
         TblContentField.fkContent: fkContent,
         //INSERT INTO tbl_Diary('_id',..) Values ('null','Tiltle'..)
       };
@@ -78,7 +78,7 @@ class Content {
       contentName: fromSQL[TblContentField.contentName] as String,
       contentScore: fromSQL[TblContentField.contentScore] as double,
       contentTotal: fromSQL[TblContentField.contentTotal] as double,
-      contentDate: fromSQL[TblContentField.contentDate] as DateTime,
+      contentDate: DateTime.parse(fromSQL[TblContentField.contentDate] as String),
       fkContent: fromSQL[TblContentField.fkContent] as int,
       );
 }

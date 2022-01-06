@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/grade_tracker/course.dart';
+import 'package:simplify/model/grade_tracker/factorContent.dart';
 import 'package:simplify/model/grade_tracker/gradeFactor.dart';
 import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseFactorScreen.dart';
 
@@ -13,12 +14,15 @@ class CourseScreenPage extends StatefulWidget {
 }
 class _CourseScreenState extends State<CourseScreenPage> {
   final _formKey = GlobalKey<FormState>();
-  late List<Factor> gradeFactor;
   bool isLoading = false;
   String? factorName;
   String? factorPercentage;
+  String? ContentName;
   double totalPercentage = 0.0;
   bool isLongPressed = false;
+
+  late List<Factor> gradeFactor;
+  late List<Item> contentList;
 
   @override
   void initState() {
@@ -37,8 +41,11 @@ class _CourseScreenState extends State<CourseScreenPage> {
     });
     for(int x = 0; x<gradeFactor.length; x++){
       totalPercentage+=gradeFactor[x].factorPercentage;
+      print(gradeFactor[x].id);
     }
     print(totalPercentage);
+
+    contentList = generateContent(gradeFactor.length);
   }
   @override
   Widget build(BuildContext context) {
@@ -66,133 +73,70 @@ class _CourseScreenState extends State<CourseScreenPage> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Container(
-                child: gradeFactor.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No Grade Factors',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: gradeFactor.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: isLongPressed?
-                            ()async{
-                              setState(() {
-                                  isLongPressed = false;
-                                });
-                            }
-                            : () async {
-                              await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CourseFactorScreen()));
-                            },
-                           onLongPress: () async {
-                              // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
-                              if(isLongPressed){
-                                setState(() {
-                                  isLongPressed = false;
-                                });
-                              }else{
-                                setState(() {
-                                  isLongPressed = true;
-                                });                                
-                              }
-                              refreshState();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Container(
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  color: Colors.amber.shade300,
-                                  borderRadius: BorderRadius.circular(15),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 4)),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: ListTile(
-                                    title: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: Text(
-                                            gradeFactor[index].factorName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: isLongPressed?
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          onPressed: (){
-                                            showDialogFunction(gradeFactor[index]);
-                                          },
-                                          icon: Icon(Icons.edit)),
-                                        IconButton(
-                                          onPressed: (){
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Delete '+ gradeFactor[index].factorName+ ' from list?'),
-                          actions: [
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () {
-                                Navigator.of(context, rootNavigator: true).pop();
-                              },
-                            ),
-                            TextButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                DatabaseHelper.instance.deleteFactor(gradeFactor[index].id!);
-                                Navigator.of(context, rootNavigator: true).pop();
-                                setState(() {
-                                  isLongPressed = false;
-                                });
-                                refreshState();
-                              },
-                            )
-                          ],
-                        );
-                      });
-                                          },
-                                          icon: Icon(Icons.delete)),
-                                      ],
-                                    )
-                                    :Text(
-                                      gradeFactor[index].factorPercentage.toString()+'%',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        })),
+            : SingleChildScrollView(
+              child: Container(
+                  child: contentList.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No Grade Factors',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                        : buildListPanel()
+                      // : ListView.builder(
+                      //     itemCount: gradeFactor.length,
+                      //     itemBuilder: (context, index) {
+                      //       return GestureDetector(
+                      //         onTap: isLongPressed?
+                      //         ()async{
+                      //           setState(() {
+                      //               isLongPressed = false;
+                      //             });
+                      //         }
+                      //         : () async {
+                      //           await Navigator.of(context).push(
+                      //               MaterialPageRoute(
+                      //                   builder: (context) =>
+                      //                       CourseFactorScreen()));
+                      //         },
+                      //        onLongPress: () async {
+                      //           // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                      //           if(isLongPressed){
+                      //             setState(() {
+                      //               isLongPressed = false;
+                      //             });
+                      //           }else{
+                      //             setState(() {
+                      //               isLongPressed = true;
+                      //             });                                
+                      //           }
+                      //           refreshState();
+                      //         },
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(8),
+                      //           child: Container(
+                      //             height: 70,
+                      //             decoration: BoxDecoration(
+                      //               color: Colors.amber.shade300,
+                      //               borderRadius: BorderRadius.circular(15),
+                      //               boxShadow: [
+                      //                 BoxShadow(
+                      //                     color: Colors.black26,
+                      //                     blurRadius: 2,
+                      //                     offset: Offset(0, 4)),
+                      //               ],
+                      //             ),
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(8),
+                      //               child: SingleChildScrollView(
+                      //                 child: buildListPanel())
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     })),
+              ),
+            )
       ),
     );
   }
@@ -304,5 +248,165 @@ builder: (BuildContext context) => AlertDialog(
             child: Text('Confirm'))
       ],
     ));
+
 }
+
+
+//from gradeFactor => contentList add isExpandedParameter
+
+List<Item> generateContent(int factorLength){
+Item defaultItem = Item(factorGrade: 0.0, factorName: 'default', factorPercentage: 0.0, fkCourse: 0, isExpanded: false, id: 0);
+List<Item> contentList = List.generate(factorLength, (index) => defaultItem);
+
+  for(int x = 0; x < factorLength; x++){
+    contentList[x] = Item(
+      isExpanded: false,
+      id: gradeFactor[x].id,
+      factorGrade: gradeFactor[x].factorGrade,
+      factorPercentage: gradeFactor[x].factorPercentage,
+      factorName: gradeFactor[x].factorName,
+      fkCourse: gradeFactor[x].fkCourse
+      );
+    print(contentList[x].id);
+  }
+  return contentList;
+}
+
+Widget buildListPanel(){
+  List<Content>? factorContent;
+  bool isLoading = false;
+  return ExpansionPanelList(
+      expansionCallback: (int index1, bool isExpanded) async {
+            setState(() {
+              isLoading = true;
+            });
+            factorContent = await DatabaseHelper.instance.readContent(2);
+            setState(() {
+              isLoading = false;
+              contentList[index1].isExpanded = !isExpanded;
+            });
+          },
+          children: contentList.map((Item item) => 
+          ExpansionPanel(
+            headerBuilder: (BuildContext context, bool isExpanded){
+              return ListTile(
+                title: Text(item.factorName),
+              );
+            },
+            body: !item.isExpanded? 
+            Text('No Content')
+            :isLoading?
+            Center(child: CircularProgressIndicator())
+            :factorContent == null?
+            Column(
+              children: [
+                Text('No '+ item.factorName+ ' Content'),
+                TextButton(onPressed: (){
+                  showDialogContent();
+                }, 
+                child: Text('Add Content'))
+              ],
+            )
+            :Column(
+              children: [
+                ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                            itemCount: factorContent!.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text('Content '+index.toString())
+                              );
+                            }),
+                TextButton(onPressed: (){
+                  showDialogContent();
+                }, 
+                child: Text('Add Content'))
+              ],
+            ),
+            isExpanded: item.isExpanded
+          )).toList()
+        );
+}
+//add content
+showDialogContent(){
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => Container(
+          child: AlertDialog(
+              title: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      Text("Factor name",
+                          style: TextStyle(fontSize: 24)),
+                      Text(
+                        "Enter your grades here",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ]),
+              ),
+              titlePadding: EdgeInsets.all(8.0),
+              actions: [
+                Padding(
+                  padding:
+                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                        hintText: "Factor Title"),
+                    onChanged: (value) {
+                      setState(() {
+                        ContentName = value;
+                      });
+                    },
+                  ),
+                ),
+                Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      'Score ',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Text('30 out of 30'),
+                ]),
+                ElevatedButton(
+                    onPressed: () async {
+                      final Content content = Content(
+                        contentName: ContentName!,
+                        contentDate: DateTime.now(),
+                        contentTotal: 50,
+                        contentScore: 50,
+                        fkContent: 2
+                      );
+                      DatabaseHelper.instance.createContent(content);
+                      Navigator.pop(context);
+                      refreshState();
+                    },
+                    child: Text('Confirm'))
+              ]),
+        ));
+}
+
+}
+class Item extends Factor{
+ bool isExpanded;
+ 
+ Item({required this.isExpanded,
+ required id,
+ required factorName,
+ required factorGrade,
+ required factorPercentage,
+ required fkCourse
+ }):
+ super(
+   id: id,
+   factorName: factorName,
+   factorPercentage: factorPercentage,
+   factorGrade: factorGrade,
+   fkCourse: fkCourse);
 }
