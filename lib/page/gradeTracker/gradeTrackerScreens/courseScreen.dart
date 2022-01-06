@@ -288,6 +288,9 @@ class _CourseScreenState extends State<CourseScreenPage> {
           });
           factorContent = await DatabaseHelper.instance
               .readContent(contentList[index1].id!);
+          for(int x = 0; x < contentList.length; x++){
+            contentList[x].isExpanded = false;
+          }
           setState(() {
             isLoading = false;
             contentList[index1].isExpanded = !isExpanded;
