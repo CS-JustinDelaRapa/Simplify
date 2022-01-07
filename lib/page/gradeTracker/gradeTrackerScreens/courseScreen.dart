@@ -28,6 +28,9 @@ class _CourseScreenState extends State<CourseScreenPage> {
   String contentTotal = '0';
   String contentScore = '0';
 
+  double sumTotal = 0.0;
+  double sumScore = 0.0;
+
   double totalPercentage = 0.0;
   bool isLongPressedFactor = false;
   bool isLongPressedContent = false;
@@ -241,6 +244,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
         expansionCallback: (int index1, bool isExpanded) async {
           setState(() {
             isLoading = true;
+            sumTotal = 0.0;
+            sumScore = 0.0;
           });
           factorContent = await DatabaseHelper.instance
               .readContent(contentList[index1].id!);
@@ -317,7 +322,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                             )
                           ],
                         )
-                        :Text(item.factorGrade.toString()),
+                        :Text(item.factorGrade.toStringAsFixed(2)),
                       ),
                     ),
                   );
@@ -500,8 +505,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
                           ? 'Required Score'
                           : double.parse(contentScore) > double.parse(contentTotal)?
                           'invalid Score'
-                          :double.parse(contentScore) <= 0?
-                          'invalid Score'
+                          :double.parse(contentScore) < 0?
+                          'Negative Number'
                           :null,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
@@ -525,7 +530,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                           ? 'Required Score'
                           : double.parse(contentTotal) < double.parse(contentScore)?
                           'invalid Total'
-                          :double.parse(contentScore) <= 0?
+                          :double.parse(contentTotal) <= 0?
                           'invalid Total'
                           :null,
                             keyboardType: TextInputType.number,
@@ -546,6 +551,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                       ElevatedButton(
                           onPressed: () async {
                             if(_formKeyContent.currentState!.validate()){
+                            //create content
                             final Content content = Content(
                                 contentName: contentName!,
                                 contentDate: DateTime.now(),
@@ -555,6 +561,19 @@ class _CourseScreenState extends State<CourseScreenPage> {
                             DatabaseHelper.instance.createContent(content);
                             setState(() {
                               factorContent!.add(content);
+                            });
+
+                            for(int x = 0; x<factorContent!.length; x++){
+                            sumTotal+=factorContent![x].contentTotal;
+                            sumScore+=factorContent![x].contentScore;
+                            };
+                            double factorGradeUpdate = (sumScore/sumTotal)*100;
+                            final factorUpdate = fromFactorList.returnID(
+                            factorGrade: factorGradeUpdate
+                            );
+                            DatabaseHelper.instance.updateFactor(factorUpdate);
+                            setState(() {
+                              //DITO
                             });
                             Navigator.pop(context);
                           }
