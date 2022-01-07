@@ -11,7 +11,7 @@ class GradeTrackerPage extends StatefulWidget {
   _GradeTrackerPageState createState() => _GradeTrackerPageState();
 }
 
-class _GradeTrackerPageState extends State<GradeTrackerPage> {
+class _GradeTrackerPageState extends State<GradeTrackerPage> with AutomaticKeepAliveClientMixin{
   final _formKey = GlobalKey<FormState>();
   late List<Course> courseList;
   Color pickedColor = Colors.red;
@@ -42,6 +42,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -205,7 +206,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
 
  showDialogFunction(Course? fromCourseList){
   return showDialog(
-                context: context,
+                context: this.context,
                 builder: (BuildContext context) => Form(
                         key: _formKey,
                         child: AlertDialog(
@@ -288,5 +289,8 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> {
                               child: Text('Confirm'))
                         ])));
 }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }

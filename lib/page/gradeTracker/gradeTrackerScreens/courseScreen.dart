@@ -3,6 +3,7 @@ import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/grade_tracker/course.dart';
 import 'package:simplify/model/grade_tracker/factorContent.dart';
 import 'package:simplify/model/grade_tracker/gradeFactor.dart';
+import 'package:simplify/model/grade_tracker/item.dart';
 import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseFactorScreen.dart';
 
 class CourseScreenPage extends StatefulWidget {
@@ -15,12 +16,21 @@ class CourseScreenPage extends StatefulWidget {
 
 class _CourseScreenState extends State<CourseScreenPage> {
   final _formKey = GlobalKey<FormState>();
+  final _formKeyContent = GlobalKey<FormState>();
   bool isLoading = false;
+
+  //GradeFactor
   String? factorName;
   String? factorPercentage;
-  String? ContentName;
+  
+  //FactorContent
+  String? contentName;
+  String contentTotal = '0';
+  String contentScore = '0';
+
   double totalPercentage = 0.0;
-  bool isLongPressed = false;
+  bool isLongPressedFactor = false;
+  bool isLongPressedContent = false;
 
   late List<Factor> gradeFactor;
   late List<Item> contentList;
@@ -87,58 +97,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
                               ),
                             )
                           : buildListPanel()
-                      // : ListView.builder(
-                      //     itemCount: gradeFactor.length,
-                      //     itemBuilder: (context, index) {
-                      //       return GestureDetector(
-                      //         onTap: isLongPressed?
-                      //         ()async{
-                      //           setState(() {
-                      //               isLongPressed = false;
-                      //             });
-                      //         }
-                      //         : () async {
-                      //           await Navigator.of(context).push(
-                      //               MaterialPageRoute(
-                      //                   builder: (context) =>
-                      //                       CourseFactorScreen()));
-                      //         },
-                      //        onLongPress: () async {
-                      //           // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
-                      //           if(isLongPressed){
-                      //             setState(() {
-                      //               isLongPressed = false;
-                      //             });
-                      //           }else{
-                      //             setState(() {
-                      //               isLongPressed = true;
-                      //             });
-                      //           }
-                      //           refreshState();
-                      //         },
-                      //         child: Padding(
-                      //           padding: const EdgeInsets.all(8),
-                      //           child: Container(
-                      //             height: 70,
-                      //             decoration: BoxDecoration(
-                      //               color: Colors.amber.shade300,
-                      //               borderRadius: BorderRadius.circular(15),
-                      //               boxShadow: [
-                      //                 BoxShadow(
-                      //                     color: Colors.black26,
-                      //                     blurRadius: 2,
-                      //                     offset: Offset(0, 4)),
-                      //               ],
-                      //             ),
-                      //             child: Padding(
-                      //               padding: const EdgeInsets.all(8),
-                      //               child: SingleChildScrollView(
-                      //                 child: buildListPanel())
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       );
-                      //     })),
                       ),
                 )),
     );
@@ -150,7 +108,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
         factorPercentage = fromFactorList.factorPercentage.toString();
       });
     }
-
     return showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -252,7 +209,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
               ],
             ));
   }
-
 //from gradeFactor => contentList add isExpandedParameter
 
   List<Item> generateContent(int factorLength) {
@@ -293,28 +249,93 @@ class _CourseScreenState extends State<CourseScreenPage> {
           }
           setState(() {
             isLoading = false;
+            isLongPressedContent = false;
             contentList[index1].isExpanded = !isExpanded;
           });
         },
         children: contentList
-            .map((Item item) => ExpansionPanel(
+            .map((Item item) => new ExpansionPanel(
                 headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: Text(item.factorName),
+                  return GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        isLongPressedFactor = false;
+                      });                      
+                    },
+                    onLongPress: (){
+                      if(isLongPressedFactor){
+                      setState(() {
+                        isLongPressedFactor = false;
+                      });
+                      }else{
+                        setState(() {
+                        isLongPressedFactor = true;
+                      });
+                      }
+                    },
+                    child: Container(
+                      child: ListTile(
+                        title: Text(item.factorName),
+                        leading: isLongPressedFactor? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: (){
+                                showDialogFunction(gradeFactor.firstWhere((element) => element.id == item.id));
+                              },
+                              icon: Icon(Icons.edit)),
+                            IconButton(
+                              onPressed: (){
+                                showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete '+ item.factorName+ ' from list?'),
+                          actions: [
+                            TextButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                DatabaseHelper.instance.deleteFactor(item.id!);
+                                Navigator.of(context, rootNavigator: true).pop();
+                                setState(() {
+                                  isLongPressedFactor = false;
+                                });
+                                refreshState();
+                              },
+                            )
+                          ],
+                        );
+                                });                             
+                              },
+                              icon: Icon(Icons.delete),
+                            )
+                          ],
+                        )
+                        :Text(item.factorGrade.toString()),
+                      ),
+                    ),
                   );
                 },
                 body: !item.isExpanded
-                    ? Text('No Content')
+                    ? Container()
                     : isLoading
                         ? Center(child: CircularProgressIndicator())
-                        // ignore: unnecessary_null_comparison
                         : factorContent == null
                             ? Column(
                                 children: [
-                                  Text('No ' + item.factorName + ' Content'),
                                   TextButton(
                                       onPressed: () {
-                                        showDialogContent();
+                                        setState(() {
+                                        contentName = item.factorName+' '+(factorContent!.length+1).toString();                                          
+                                        });
+                                        print(contentName);
+                                        showDialogContent(item, null);
                                       },
                                       child: Text('Add Content'))
                                 ],
@@ -322,17 +343,85 @@ class _CourseScreenState extends State<CourseScreenPage> {
                             : Column(
                                 children: [
                                   ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
                                       scrollDirection: Axis.vertical,
                                       shrinkWrap: true,
                                       itemCount: factorContent!.length,
                                       itemBuilder: (context, index) {
-                                        return ListTile(
-                                            title: Text(factorContent![index]
-                                                .contentName));
+                                        return GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                                isLongPressedContent = false;
+                                              });
+                                          },
+                                          onLongPress: (){
+                                            if(isLongPressedContent){
+                                              setState(() {
+                                                isLongPressedContent = false;
+                                              });
+                                            }else{
+                                              setState(() {
+                                                isLongPressedContent = true;
+                                              });
+                                            }
+                                          },
+                                          child: ListTile(
+                                              trailing: !isLongPressedContent?
+                                              Text(factorContent![index].contentScore.toString()+'/'+
+                                              factorContent![index].contentTotal.toString()
+                                              )
+                                              :Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: (){
+                                showDialogContent(item, factorContent![index]);
+                              },
+                              icon: Icon(Icons.edit)),
+                            IconButton(
+                              onPressed: (){
+                                showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete '+ factorContent![index].contentName+ ' from list?'),
+                          actions: [
+                            TextButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                DatabaseHelper.instance.deleteContent(factorContent![index].id!);
+                                Navigator.of(context, rootNavigator: true).pop();
+                                setState(() {
+                                  isLongPressedFactor = false;
+                                });
+                                factorContent!.remove(factorContent![index]);
+                              },
+                            )
+                          ],
+                        );
+                                });                             
+                              },
+                              icon: Icon(Icons.delete),
+                            )
+                          ],
+                        )
+                                              ,
+                                              title: Text(factorContent![index]
+                                                  .contentName)),
+                                        );
                                       }),
                                   TextButton(
                                       onPressed: () {
-                                        showDialogContent();
+                                        setState(() {
+                                        contentName = item.factorName+' '+(factorContent!.length+1).toString();                                          
+                                        });
+                                        showDialogContent(item, null);
                                       },
                                       child: Text('Add Content'))
                                 ],
@@ -340,81 +429,140 @@ class _CourseScreenState extends State<CourseScreenPage> {
                 isExpanded: item.isExpanded))
             .toList());
   }
-
 //add content
-  showDialogContent() {
+  showDialogContent(Item? fromFactorList, Content? editContent) {
+    if(editContent != null){
+      contentName = editContent.contentName;
+      contentTotal = editContent.contentTotal.toString();
+      contentScore = editContent.contentScore.toString();
+    }else{
+      contentTotal = '0';
+      contentScore = '0';
+    }
+
     showDialog(
         context: context,
         builder: (BuildContext context) => Container(
-              child: AlertDialog(
-                  title: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Factor name", style: TextStyle(fontSize: 24)),
-                          Text(
-                            "Enter your grades here",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ]),
-                  ),
-                  titlePadding: EdgeInsets.all(8.0),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      child: TextFormField(
-                        autofocus: true,
-                        decoration: InputDecoration(hintText: "Factor Title"),
-                        onChanged: (value) {
-                          setState(() {
-                            ContentName = value;
-                          });
-                        },
-                      ),
+              child: Form(
+                key: _formKeyContent,
+                child: AlertDialog(
+                    title: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Add '+fromFactorList!.factorName, style: TextStyle(fontSize: 24)),
+                            Text(
+                              "Enter Score Here",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ]),
                     ),
-                    Row(children: [
+                    titlePadding: EdgeInsets.all(8.0),
+                    content: 
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children:[
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'Score ',
-                          style: TextStyle(fontSize: 20),
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        child: TextFormField(
+                          validator: (value) => value != null && value.isEmpty
+                          ? 'Required Content Name'
+                          : null,
+                          initialValue: contentName,
+                          autofocus: true,
+                          decoration: InputDecoration(hintText: "Content Title"),
+                          onChanged: (value) {
+                            setState(() {
+                              contentName = value;
+                            });
+                          },
                         ),
                       ),
-                      Text('30 out of 30'),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                        Flexible(
+                          flex: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Score ',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 4,
+                          child: TextFormField(
+                          validator: (value) => value != null && value.isEmpty
+                          ? 'Required Score'
+                          : double.parse(contentScore) > double.parse(contentTotal)?
+                          'invalid Score'
+                          :double.parse(contentScore) <= 0?
+                          'invalid Score'
+                          :null,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            initialValue: contentScore,
+                            autofocus: true,
+                            decoration: InputDecoration(hintText: "Score"),
+                            onChanged: (value) {
+                              setState(() {
+                                contentScore = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child:Text('/')),
+                        Flexible(
+                          flex: 4,
+                          child: TextFormField(
+                          validator: (value) => value != null && value.isEmpty
+                          ? 'Required Score'
+                          : double.parse(contentTotal) < double.parse(contentScore)?
+                          'invalid Total'
+                          :double.parse(contentScore) <= 0?
+                          'invalid Total'
+                          :null,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            initialValue:contentTotal,
+                            autofocus: true,
+                            decoration: InputDecoration(hintText: "Total"),
+                            onChanged: (value) {
+                              setState(() {
+                                contentTotal = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ]),
                     ]),
-                    ElevatedButton(
-                        onPressed: () async {
-                          final Content content = Content(
-                              contentName: ContentName!,
-                              contentDate: DateTime.now(),
-                              contentTotal: 50,
-                              contentScore: 50,
-                              fkContent: 1);
-                          DatabaseHelper.instance.createContent(content);
-                          Navigator.pop(context);
-                          refreshState();
-                        },
-                        child: Text('Confirm'))
-                  ]),
+                    actions:[
+                      ElevatedButton(
+                          onPressed: () async {
+                            if(_formKeyContent.currentState!.validate()){
+                            final Content content = Content(
+                                contentName: contentName!,
+                                contentDate: DateTime.now(),
+                                contentTotal: double.parse(contentTotal),
+                                contentScore: double.parse(contentScore),
+                                fkContent: fromFactorList.id!);
+                            DatabaseHelper.instance.createContent(content);
+                            setState(() {
+                              factorContent!.add(content);
+                            });
+                            Navigator.pop(context);
+                          }
+                            },
+                          child: Text('Confirm'))
+                    ]
+                    ),
+              ),
             ));
   }
-}
-
-class Item extends Factor {
-  bool isExpanded;
-
-  Item(
-      {required this.isExpanded,
-      required id,
-      required factorName,
-      required factorGrade,
-      required factorPercentage,
-      required fkCourse})
-      : super(
-            id: id,
-            factorName: factorName,
-            factorPercentage: factorPercentage,
-            factorGrade: factorGrade,
-            fkCourse: fkCourse);
 }
