@@ -154,8 +154,8 @@ CREATE TABLE $tableFactorContent(
     final DateTime now = new DateTime.now();
     var newToday =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    var newDateTodayMinus23 = new DateTime(
-        now.year, now.month, now.day - 1, now.hour, now.minute + 1);
+    var newDateTodayMinus23 =
+        new DateTime(now.year, now.month, now.day, now.hour + 23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
@@ -171,7 +171,7 @@ CREATE TABLE $tableFactorContent(
     var newDate1 =
         new DateTime(now.year, now.month, now.day, now.hour, now.minute);
     var newDate =
-        new DateTime(now.year, now.month, now.day, now.hour - 23, now.minute);
+        new DateTime(now.year, now.month, now.day, now.hour + 23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     print(newDate.toString() + ' Date Minus 23 hrs');
     final reference = await instance.database;
@@ -325,7 +325,7 @@ CREATE TABLE $tableFactorContent(
       where: '${TblContentField.fkContent} = ?',
       whereArgs: [searchKey],
     );
-  return specificID.map((fromSQL) => Content.fromJson(fromSQL)).toList();
+    return specificID.map((fromSQL) => Content.fromJson(fromSQL)).toList();
   }
 //==============================
 
