@@ -23,11 +23,11 @@ class Factor {
   //final meaning when this attributes value are set in a current object instance, it can never be changed.
   final int? id;
   final String factorName;
-  double factorGrade;
+  final double factorGrade;
   final double factorPercentage;
   final int fkCourse;
 //const will just let a function to just read the value of our Diary class current value (context)
-  Factor(
+  const Factor(
       {
       //initializing our parameter, title = this, this refer's to a current method value.
       this.id,
