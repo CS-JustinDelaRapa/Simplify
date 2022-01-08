@@ -57,10 +57,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
     });
     for (int x = 0; x < gradeFactor.length; x++) {
       totalPercentage += gradeFactor[x].factorPercentage;
-      print(gradeFactor[x].id);
     }
-    print(totalPercentage);
-
     contentList = generateContent(gradeFactor.length);
   }
 
@@ -653,6 +650,10 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                             factorGrade: factorGradeUpdate);
                                     DatabaseHelper.instance
                                         .updateFactor(factorUpdate);
+                                    print(factorGradeUpdate);
+                                    setState(() {
+                                      factorGradeUpdate = 0;
+                                    });
                                     refreshState();
                                     Navigator.pop(context);
                                   }
@@ -668,21 +669,20 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                         fkContent: fromFactorList.id!,
                                         id: editContent.id);
                                     DatabaseHelper.instance.updateContent(contentUpdate);
-                                                                       for (int x = 0;
-                                        x < factorContent!.length;
-                                        x++) {
-                                      sumTotal +=
-                                          factorContent![x].contentTotal;
-                                      sumScore +=
-                                          factorContent![x].contentScore;
+
+                                    for (int x = 0; x < factorContent!.length; x++) {
+                                      if(factorContent![x].id != editContent.id!){
+                                      sumTotal +=factorContent![x].contentTotal;
+                                      sumScore += factorContent![x].contentScore;
+                                      }
                                     }
-                                    double factorGradeUpdate =
-                                        (sumScore / sumTotal) * 100;
-                                    final factorUpdate =
-                                        fromFactorList.returnID(
-                                            factorGrade: factorGradeUpdate);
-                                    DatabaseHelper.instance
-                                        .updateFactor(factorUpdate);
+                                    sumTotal+=double.parse(contentTotal);
+                                    sumScore+=double.parse(contentScore);
+                                    
+                                    double factorGradeUpdate = (sumScore / sumTotal) * 100;
+                                    final factorUpdate = fromFactorList.returnID(
+                                    factorGrade: factorGradeUpdate);
+                                    DatabaseHelper.instance.updateFactor(factorUpdate);
                                     refreshState();
                                     Navigator.pop(context);
                                   }
