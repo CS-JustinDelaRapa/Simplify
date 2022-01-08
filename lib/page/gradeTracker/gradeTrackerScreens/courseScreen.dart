@@ -50,8 +50,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
     setState(() {
       isLoading = true;
     });
-    gradeFactor =
-        await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
+    gradeFactor = await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
     setState(() {
       isLoading = false;
       totalPercentage = 0.0;
@@ -218,8 +217,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                   factorGrade: fromFactorList.factorGrade,
                                   fkCourse: widget.courseInfo.id!,
                                   id: fromFactorList.id);
-                              DatabaseHelper.instance
-                                  .updateFactor(factorUpdate);
+                              DatabaseHelper.instance.updateFactor(factorUpdate);
                               Navigator.pop(context);
                               refreshState();
                             }
@@ -252,13 +250,15 @@ class _CourseScreenState extends State<CourseScreenPage> {
       print(contentList[x].id);
     }
     // if (currentIndex != null) {
+    // setState(() {
     //   contentList[currentIndex!] = Item(
     //       isExpanded: true,
     //       id: gradeFactor[currentIndex!].id,
     //       factorGrade: gradeFactor[currentIndex!].factorGrade,
     //       factorPercentage: gradeFactor[currentIndex!].factorPercentage,
     //       factorName: gradeFactor[currentIndex!].factorName,
-    //       fkCourse: gradeFactor[currentIndex!].fkCourse);
+    //       fkCourse: gradeFactor[currentIndex!].fkCourse);      
+    // });
     // }
     return contentList;
   }
@@ -272,8 +272,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
             sumTotal = 0.0;
             sumScore = 0.0;
           });
-          factorContent = await DatabaseHelper.instance
-              .readContent(contentList[index1].id!);
+          factorContent = await DatabaseHelper.instance .readContent(contentList[index1].id!);
           for (int x = 0; x < contentList.length; x++) {
             contentList[x].isExpanded = false;
           }
@@ -516,7 +515,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
       contentTotal = '0';
       contentScore = '0';
     }
-
     showDialog(
         context: context,
         builder: (BuildContext context) => Container(
@@ -665,16 +663,28 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                     final Content contentUpdate = Content(
                                         contentName: contentName!,
                                         contentDate: DateTime.now(),
-                                        contentTotal:
-                                            double.parse(contentTotal),
-                                        contentScore:
-                                            double.parse(contentScore),
+                                        contentTotal:double.parse(contentTotal),
+                                        contentScore:double.parse(contentScore),
                                         fkContent: fromFactorList.id!,
                                         id: editContent.id);
+                                    DatabaseHelper.instance.updateContent(contentUpdate);
+                                                                       for (int x = 0;
+                                        x < factorContent!.length;
+                                        x++) {
+                                      sumTotal +=
+                                          factorContent![x].contentTotal;
+                                      sumScore +=
+                                          factorContent![x].contentScore;
+                                    }
+                                    double factorGradeUpdate =
+                                        (sumScore / sumTotal) * 100;
+                                    final factorUpdate =
+                                        fromFactorList.returnID(
+                                            factorGrade: factorGradeUpdate);
                                     DatabaseHelper.instance
-                                        .updateContent(contentUpdate);
-                                    Navigator.pop(context);
+                                        .updateFactor(factorUpdate);
                                     refreshState();
+                                    Navigator.pop(context);
                                   }
                                 },
                           child: Text('Confirm'))
