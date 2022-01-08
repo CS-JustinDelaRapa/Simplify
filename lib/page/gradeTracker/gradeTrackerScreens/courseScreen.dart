@@ -4,7 +4,6 @@ import 'package:simplify/model/grade_tracker/course.dart';
 import 'package:simplify/model/grade_tracker/factorContent.dart';
 import 'package:simplify/model/grade_tracker/gradeFactor.dart';
 import 'package:simplify/model/grade_tracker/item.dart';
-import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseFactorScreen.dart';
 
 class CourseScreenPage extends StatefulWidget {
   final Course courseInfo;
@@ -35,9 +34,11 @@ class _CourseScreenState extends State<CourseScreenPage> {
   bool isLongPressedFactor = false;
   bool isLongPressedContent = false;
 
-  late List<Factor> gradeFactor;
+  static late List<Factor> gradeFactor;
   late List<Item> contentList;
   List<Content>? factorContent;
+
+  int? currentIndex;
 
   @override
   void initState() {
@@ -62,6 +63,21 @@ class _CourseScreenState extends State<CourseScreenPage> {
     print(totalPercentage);
 
     contentList = generateContent(gradeFactor.length);
+  }
+
+   Future refreshGrade() async {
+    setState(() {
+      isLoading = true;
+    });
+    gradeFactor = await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
+    setState(() {
+      isLoading = false;
+      totalPercentage = 0.0;
+    });
+    for (int x = 0; x < gradeFactor.length; x++) {
+      totalPercentage += gradeFactor[x].factorPercentage;
+      print(gradeFactor[x].id);
+    }
   }
 
   @override
@@ -214,15 +230,15 @@ class _CourseScreenState extends State<CourseScreenPage> {
   }
 //from gradeFactor => contentList add isExpandedParameter
 
-  List<Item> generateContent(int factorLength) {
-    Item defaultItem = Item(
+List<Item> generateContent(int factorLength) {
+  Item defaultItem = Item(
         factorGrade: 0.0,
         factorName: 'default',
         factorPercentage: 0.0,
         fkCourse: 0,
         isExpanded: false,
         id: 0);
-    List<Item> contentList =
+  List<Item> contentList =
         List.generate(factorLength, (index) => defaultItem);
 
     for (int x = 0; x < factorLength; x++) {
@@ -234,6 +250,15 @@ class _CourseScreenState extends State<CourseScreenPage> {
           factorName: gradeFactor[x].factorName,
           fkCourse: gradeFactor[x].fkCourse);
       print(contentList[x].id);
+    }
+    if(currentIndex != null){
+      contentList[currentIndex!] = Item(
+        isExpanded: true,
+        id: gradeFactor[currentIndex!].id,
+        factorGrade: gradeFactor[currentIndex!].factorGrade,
+        factorPercentage: gradeFactor[currentIndex!].factorPercentage,
+        factorName: gradeFactor[currentIndex!].factorName,
+        fkCourse: gradeFactor[currentIndex!].fkCourse);
     }
     return contentList;
   }
@@ -253,10 +278,13 @@ class _CourseScreenState extends State<CourseScreenPage> {
             contentList[x].isExpanded = false;
           }
           setState(() {
+            currentIndex=index1;
             isLoading = false;
             isLongPressedContent = false;
             contentList[index1].isExpanded = !isExpanded;
           });
+
+          print(currentIndex);
         },
         children: contentList
             .map((Item item) => new ExpansionPanel(
@@ -562,19 +590,16 @@ class _CourseScreenState extends State<CourseScreenPage> {
                             setState(() {
                               factorContent!.add(content);
                             });
-
                             for(int x = 0; x<factorContent!.length; x++){
                             sumTotal+=factorContent![x].contentTotal;
                             sumScore+=factorContent![x].contentScore;
-                            };
+                            }
                             double factorGradeUpdate = (sumScore/sumTotal)*100;
                             final factorUpdate = fromFactorList.returnID(
                             factorGrade: factorGradeUpdate
                             );
                             DatabaseHelper.instance.updateFactor(factorUpdate);
-                            setState(() {
-                              //DITO
-                            });
+                            refreshState();
                             Navigator.pop(context);
                           }
                             },
