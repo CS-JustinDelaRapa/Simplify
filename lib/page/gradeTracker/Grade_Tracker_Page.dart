@@ -36,7 +36,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       isLoading = true;
     });
     courseList = await DatabaseHelper.instance.readAllCourse();
-    if(courseList.isNotEmpty){
+    if (courseList.isNotEmpty) {
       sumAverageGrade();
     }
     setState(() {
@@ -45,6 +45,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     courseName = '';
     print(averageGrade);
   }
+
   sumAverageGrade() {
     averageGrade = 0;
     for (int x = 0; x < courseList.length; x++) {
@@ -52,6 +53,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     }
     averageGrade = averageGrade / courseList.length;
   }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -68,7 +70,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: Row(children: [
-            Icon(Icons.menu_book_rounded),
+            Icon(Icons.calculate_rounded),
             SizedBox(
               width: 10,
             ),
@@ -84,46 +86,44 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                 child: courseList.isEmpty
                     ? Center(
                         child: GestureDetector(
-                                      onTap: () async {
-                                        showDialogFunction(null);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Container(
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                            color: Colors.blueGrey[800],
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 2,
-                                                  offset: Offset(0, 4)),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: ListTile(
-                                              leading: null,
-                                              title: Center(
-                                                child: Text(
-                                                  'ADD COURSE',
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                          onTap: () async {
+                            showDialogFunction(null);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey[800],
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 4)),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: ListTile(
+                                  leading: null,
+                                  title: Center(
+                                    child: Text(
+                                      'ADD SUBJECT',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       )
                     : Column(
                         children: [
@@ -138,7 +138,8 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                         const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(generateRemarksWord(averageGrade),
+                                      child: Text(
+                                          generateRemarksWord(averageGrade),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 50,
@@ -154,9 +155,8 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                     child: Text(averageGrade.toStringAsFixed(0),
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: averageGrade == 100?
-                                            70
-                                            :90,
+                                            fontSize:
+                                                averageGrade == 100 ? 70 : 90,
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.center),
                                   ),
@@ -216,13 +216,16 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                                     });
                                                   }
                                                 : () async {
-                                                    await Navigator.of(context).push(MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CourseScreenPage(courseInfo:courseList[
-                                                                            index])
-                                                                            ),
-                                                                            );
-                                                  refreshState();
+                                                    await Navigator.of(context)
+                                                        .push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CourseScreenPage(
+                                                                  courseInfo:
+                                                                      courseList[
+                                                                          index])),
+                                                    );
+                                                    refreshState();
                                                   },
                                             onLongPress: () async {
                                               if (isLongPressed) {
@@ -324,8 +327,10 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                                           )
                                                         : Text(
                                                             courseList[index]
-                                                                .courseGrade
-                                                                .toString(),
+                                                                    .courseGrade
+                                                                    .toStringAsFixed(
+                                                                        2) +
+                                                                "%",
                                                             maxLines: 1,
                                                             overflow:
                                                                 TextOverflow
@@ -368,7 +373,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                               leading: null,
                                               title: Center(
                                                 child: Text(
-                                                  'ADD COURSE',
+                                                  'ADD SUBJECT',
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -437,8 +442,8 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
             child: AlertDialog(
                 scrollable: true,
                 title: fromCourseList == null
-                    ? Text("Add course name")
-                    : Text("Edit course name"),
+                    ? Text("Add subject name")
+                    : Text("Edit subject name"),
                 content: Column(
                   children: [
                     Padding(
@@ -451,7 +456,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                             ? null
                             : fromCourseList.courseName,
                         autofocus: true,
-                        decoration: InputDecoration(hintText: "Course name"),
+                        decoration: InputDecoration(hintText: "Subject name"),
                         onChanged: (value) {
                           setState(() {
                             courseName = value;

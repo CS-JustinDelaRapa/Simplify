@@ -47,16 +47,16 @@ class _CourseScreenState extends State<CourseScreenPage> {
     super.initState();
   }
 
-  Future sumFactorGrade() async{
+  Future sumFactorGrade() async {
     sumAllGrade = 0;
-    for(int x = 0; x < gradeFactor.length; x++ ){
-      sumAllGrade+=(gradeFactor[x].factorGrade*(gradeFactor[x].factorPercentage/100));
+    for (int x = 0; x < gradeFactor.length; x++) {
+      sumAllGrade += (gradeFactor[x].factorGrade *
+          (gradeFactor[x].factorPercentage / 100));
     }
     final Course updateCourseGrade = Course(
-      id: widget.courseInfo.id,
-      courseName: widget.courseInfo.courseName,
-      courseGrade: sumAllGrade
-    );
+        id: widget.courseInfo.id,
+        courseName: widget.courseInfo.courseName,
+        courseGrade: sumAllGrade);
     await DatabaseHelper.instance.updateCourse(updateCourseGrade);
   }
 
@@ -89,6 +89,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+              actions: [buildRemarksLegend()],
               backgroundColor: Colors.indigo.shade800,
               elevation: 0.0,
               title: Text(widget.courseInfo.courseName)),
@@ -98,8 +99,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
                 )
               : SingleChildScrollView(
                   child: Container(
-                      child: contentList.isEmpty
-                          ? Column(
+                    child: contentList.isEmpty
+                        ? Column(
                             children: [
                               // Center(
                               //     child: Text(
@@ -108,45 +109,54 @@ class _CourseScreenState extends State<CourseScreenPage> {
                               //     ),
                               //   ),
                               GestureDetector(
-                              onTap: (){
-                                showDialogFunction(null);
-                              },
-                            child: Container(
-                              decoration: BoxDecoration(color: Colors.white),
-                              child: ListTile(
-                                title: Center(child: Text('Add Factor', style: TextStyle(color: Colors.blue)))
+                                onTap: () {
+                                  showDialogFunction(null);
+                                },
+                                child: Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: ListTile(
+                                      title: Center(
+                                          child: Text('Add Elements',
+                                              style: TextStyle(
+                                                  color: Colors.blue)))),
+                                ),
                               ),
-                            ),
-                            ),
                             ],
                           )
-                          : Container(
+                        : Container(
                             decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black45, blurRadius: 10, offset: Offset(0, 4)),
-        ],
-      ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4)),
+                              ],
+                            ),
                             child: Column(
-                        children: [
-                            buildListPanel(),
-                            SizedBox(height:1),
-                            GestureDetector(
-                              onTap: (){
-                                showDialogFunction(null);
-                              },
-                            child: Container(
-                              decoration: BoxDecoration(color: Colors.white),
-                              child: ListTile(
-                                title: Center(child: Text('Add Factor', style: TextStyle(color: Colors.blue)))
-                              ),
+                              children: [
+                                buildListPanel(),
+                                SizedBox(height: 1),
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialogFunction(null);
+                                  },
+                                  child: Container(
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                    child: ListTile(
+                                        title: Center(
+                                            child: Text('Add elements',
+                                                style: TextStyle(
+                                                    color: Colors.blue)))),
+                                  ),
+                                ),
+                              ],
                             ),
-                            ),
-                        ],
-                      ),
-                          ),),
+                          ),
+                  ),
                 )),
     );
   }
@@ -183,13 +193,13 @@ class _CourseScreenState extends State<CourseScreenPage> {
                   children: <Widget>[
                     TextFormField(
                       validator: (value) => value != null && value.isEmpty
-                          ? 'Required Factor Name'
+                          ? 'Required Factor element'
                           : null,
                       initialValue: fromFactorList == null
                           ? null
                           : fromFactorList.factorName,
                       autofocus: true,
-                      decoration: InputDecoration(hintText: "Factor name"),
+                      decoration: InputDecoration(hintText: "Element name"),
                       onChanged: (value) {
                         setState(() {
                           factorName = value;
@@ -212,7 +222,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                          errorMaxLines: 2, hintText: "Factor percentage"),
+                          errorMaxLines: 2, hintText: "Element percentage"),
                       onChanged: (value) {
                         setState(() {
                           factorPercentage = value;
@@ -418,7 +428,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
 
                                           showDialogContent(item, null);
                                         },
-                                        child: Text('Add Content'))
+                                        child: Text('Add ' + item.factorName))
                                   ],
                                 )
                               : Column(
@@ -497,9 +507,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                                     color: Colors.blue[800]),
                                                 child: Center(
                                                   child: Text(
-                                                    generateRemarks(item
-                                                        .factorGrade
-                                                        ),
+                                                    generateRemarks(
+                                                        item.factorGrade),
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white,
@@ -538,11 +547,12 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                                 trailing: !isLongPressedContent
                                                     ? Text(factorContent![index]
                                                             .contentScore
-                                                            .toString() +
+                                                            .toStringAsFixed(
+                                                                0) +
                                                         '/' +
                                                         factorContent![index]
                                                             .contentTotal
-                                                            .toString())
+                                                            .toStringAsFixed(0))
                                                     : Row(
                                                         mainAxisSize:
                                                             MainAxisSize.min,
@@ -639,7 +649,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                           });
                                           showDialogContent(item, null);
                                         },
-                                        child: Text('Add Content'))
+                                        child: Text('Add ' + item.factorName))
                                   ],
                                 ),
                   isExpanded: item.isExpanded))
@@ -849,17 +859,155 @@ class _CourseScreenState extends State<CourseScreenPage> {
             ));
   }
 
+  Widget buildRemarksLegend() => IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: Text("Remarks: "),
+                    content: Container(
+                      height: 300,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                  children: [
+                                TextSpan(text: "Grade\t\t\t\t\t\t\t\t\t\t"),
+                                TextSpan(text: "\t\t\t\t\t\t\t\t\tRemarks")
+                              ])),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("97.00 - 100.00"),
+                              SizedBox(width: 63),
+                              Text(" A")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("94.00 - 96.99"),
+                              SizedBox(width: 70),
+                              Text("A-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("91.00 - 93.99"),
+                              SizedBox(width: 75),
+                              Text("B+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("88.00 - 90.99"),
+                              SizedBox(width: 72),
+                              Text("B")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("85.00 - 87.99"),
+                              SizedBox(width: 73),
+                              Text("B-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("82.00 - 84.99"),
+                              SizedBox(width: 73),
+                              Text("C+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("80.00 - 81.99"),
+                              SizedBox(width: 77),
+                              Text("C")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("78.00 - 79.99"),
+                              SizedBox(width: 75),
+                              Text("C-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("75.00 - 77.99"),
+                              SizedBox(width: 75),
+                              Text("D+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("70.00 - 74.99"),
+                              SizedBox(width: 75),
+                              Text("D")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("0.00 - 69.99"),
+                              SizedBox(width: 82),
+                              Text("F")
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ));
+        },
+        icon: Icon(Icons.info_outline_rounded, color: Colors.white),
+        iconSize: 24,
+      );
+
   generateRemarks(double grade) {
     late String remarks;
-    if (grade >= 90) {
+    if (grade >= 97) {
       remarks = "A";
-    } else if (grade >= 85 && grade < 95) {
+    } else if (grade >= 94 && grade < 97) {
+      remarks = "A-";
+    } else if (grade >= 91 && grade < 94) {
+      remarks = "B+";
+    } else if (grade >= 88 && grade < 91) {
       remarks = "B";
-    } else if (grade >= 80 && grade < 85) {
+    } else if (grade >= 85 && grade < 88) {
+      remarks = "B-";
+    } else if (grade >= 82 && grade < 85) {
+      remarks = "C+";
+    } else if (grade >= 80 && grade < 82) {
       remarks = "C";
-    } else if (grade >= 75 && grade < 80) {
+    } else if (grade >= 78 && grade < 80) {
+      remarks = "C-";
+    } else if (grade >= 75 && grade < 78) {
+      remarks = "D+";
+    } else if (grade >= 70 && grade < 75) {
       remarks = "D";
-    } else if (grade < 75 && grade > 0) {
+    } else if (grade > 0 && grade < 70) {
       remarks = "F";
     } else if (grade == 0.0) {
       remarks = "N/A";

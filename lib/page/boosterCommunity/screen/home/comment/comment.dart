@@ -166,7 +166,7 @@ class _CommentSectionState extends State<CommentSection> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                                title: Text("Profanity Check"),
+                                title: Text("Offensive word alert"),
                                 content: Text(
                                     "Seems like your comment contains inapropriate or improper words, Please consider reconstructiong your comment."),
                                 actions: [
