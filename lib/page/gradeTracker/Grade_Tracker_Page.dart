@@ -36,20 +36,22 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       isLoading = true;
     });
     courseList = await DatabaseHelper.instance.readAllCourse();
-    sumAverageGrade();
+    if(courseList.isNotEmpty){
+      sumAverageGrade();
+    }
     setState(() {
       isLoading = false;
     });
     courseName = '';
+    print(averageGrade);
   }
-
   sumAverageGrade() {
+    averageGrade = 0;
     for (int x = 0; x < courseList.length; x++) {
       averageGrade += courseList[x].courseGrade;
     }
     averageGrade = averageGrade / courseList.length;
   }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -81,10 +83,47 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
             : Container(
                 child: courseList.isEmpty
                     ? Center(
-                        child: Text(
-                          'No Courses',
-                          style: TextStyle(fontSize: 20),
-                        ),
+                        child: GestureDetector(
+                                      onTap: () async {
+                                        showDialogFunction(null);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Container(
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueGrey[800],
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black26,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0, 4)),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: ListTile(
+                                              leading: null,
+                                              title: Center(
+                                                child: Text(
+                                                  'ADD COURSE',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                       )
                     : Column(
                         children: [
@@ -99,7 +138,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                         const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(generateRemarksWord(100),
+                                      child: Text(generateRemarksWord(averageGrade),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 50,
@@ -112,10 +151,12 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                   width: MediaQuery.of(context).size.width / 3,
                                   child: FittedBox(
                                     fit: BoxFit.none,
-                                    child: Text("100",
+                                    child: Text(averageGrade.toStringAsFixed(0),
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 90,
+                                            fontSize: averageGrade == 100?
+                                            70
+                                            :90,
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.center),
                                   ),
@@ -175,13 +216,13 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                                     });
                                                   }
                                                 : () async {
-                                                    await Navigator.of(context)
-                                                        .push(MaterialPageRoute(
+                                                    await Navigator.of(context).push(MaterialPageRoute(
                                                             builder: (context) =>
-                                                                CourseScreenPage(
-                                                                    courseInfo:
-                                                                        courseList[
-                                                                            index])));
+                                                                CourseScreenPage(courseInfo:courseList[
+                                                                            index])
+                                                                            ),
+                                                                            );
+                                                  refreshState();
                                                   },
                                             onLongPress: () async {
                                               if (isLongPressed) {
@@ -373,7 +414,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
   }
 
   generateRemarksWord(double grade) {
-    late String remarks;
+    String? remarks;
     if (grade >= 90) {
       remarks = "Excellent";
     } else if (grade >= 80 && grade < 90) {

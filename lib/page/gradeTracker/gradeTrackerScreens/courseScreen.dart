@@ -19,6 +19,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
   bool isLoading = false;
 
 //GradeFactor
+  double sumAllGrade = 0;
   String? factorName;
   String? factorPercentage;
 
@@ -46,12 +47,26 @@ class _CourseScreenState extends State<CourseScreenPage> {
     super.initState();
   }
 
+  Future sumFactorGrade() async{
+    sumAllGrade = 0;
+    for(int x = 0; x < gradeFactor.length; x++ ){
+      sumAllGrade+=(gradeFactor[x].factorGrade*(gradeFactor[x].factorPercentage/100));
+    }
+    final Course updateCourseGrade = Course(
+      id: widget.courseInfo.id,
+      courseName: widget.courseInfo.courseName,
+      courseGrade: sumAllGrade
+    );
+    await DatabaseHelper.instance.updateCourse(updateCourseGrade);
+  }
+
   Future refreshState() async {
     setState(() {
       isLoading = true;
     });
     gradeFactor =
         await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
+    sumFactorGrade();
     setState(() {
       isLoading = false;
       totalPercentage = 0.0;
@@ -60,22 +75,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
       totalPercentage += gradeFactor[x].factorPercentage;
     }
     contentList = generateContent(gradeFactor.length);
-  }
-
-  Future refreshGrade() async {
-    setState(() {
-      isLoading = true;
-    });
-    gradeFactor =
-        await DatabaseHelper.instance.readCourse(widget.courseInfo.id!);
-    setState(() {
-      isLoading = false;
-      totalPercentage = 0.0;
-    });
-    for (int x = 0; x < gradeFactor.length; x++) {
-      totalPercentage += gradeFactor[x].factorPercentage;
-      print(gradeFactor[x].id);
-    }
   }
 
   @override
@@ -90,18 +89,6 @@ class _CourseScreenState extends State<CourseScreenPage> {
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-              actions: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.blue[600],
-                        fixedSize: const Size(100, 100),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      showDialogFunction(null);
-                    },
-                    child: Text('Add Category'))
-              ],
               backgroundColor: Colors.indigo.shade800,
               elevation: 0.0,
               title: Text(widget.courseInfo.courseName)),
@@ -112,13 +99,54 @@ class _CourseScreenState extends State<CourseScreenPage> {
               : SingleChildScrollView(
                   child: Container(
                       child: contentList.isEmpty
-                          ? Center(
-                              child: Text(
-                                'No Grade Factors',
-                                style: TextStyle(fontSize: 20),
+                          ? Column(
+                            children: [
+                              // Center(
+                              //     child: Text(
+                              //       'No Grade Factors',
+                              //       style: TextStyle(fontSize: 20),
+                              //     ),
+                              //   ),
+                              GestureDetector(
+                              onTap: (){
+                                showDialogFunction(null);
+                              },
+                            child: Container(
+                              decoration: BoxDecoration(color: Colors.white),
+                              child: ListTile(
+                                title: Center(child: Text('Add Factor', style: TextStyle(color: Colors.blue)))
                               ),
-                            )
-                          : buildListPanel()),
+                            ),
+                            ),
+                            ],
+                          )
+                          : Container(
+                            decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black45, blurRadius: 10, offset: Offset(0, 4)),
+        ],
+      ),
+                            child: Column(
+                        children: [
+                            buildListPanel(),
+                            SizedBox(height:1),
+                            GestureDetector(
+                              onTap: (){
+                                showDialogFunction(null);
+                              },
+                            child: Container(
+                              decoration: BoxDecoration(color: Colors.white),
+                              child: ListTile(
+                                title: Center(child: Text('Add Factor', style: TextStyle(color: Colors.blue)))
+                              ),
+                            ),
+                            ),
+                        ],
+                      ),
+                          ),),
                 )),
     );
   }
@@ -173,7 +201,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                       validator: (value) => value != null && value.isEmpty
                           ? 'Required Percentage'
                           : double.parse(factorPercentage!) >
-                                  (100.0 - double.parse(factorPercentage!))
+                                  (100.0 - totalPercentage)
                               ? 'Total Percentage is over 100%, try less than ' +
                                   (100.0 - totalPercentage).toString() +
                                   '%'
@@ -260,7 +288,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
     bool isLoading = false;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black45,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -471,7 +499,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                                   child: Text(
                                                     generateRemarks(item
                                                         .factorGrade
-                                                        .toInt()),
+                                                        ),
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white,
@@ -821,7 +849,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
             ));
   }
 
-  generateRemarks(int grade) {
+  generateRemarks(double grade) {
     late String remarks;
     if (grade >= 90) {
       remarks = "A";
