@@ -76,119 +76,141 @@ class _GradeTrackerPageState extends State<GradeTrackerPage> with AutomaticKeepA
                           style: TextStyle(fontSize: 20),
                         ),
                       )
-                    : ListView.builder(
-                        itemCount: courseList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: isLongPressed?
-                            ()async{
-                              setState(() {
-                                  isLongPressed = false;
-                                });
-                            }
-                            :() async {
-                              await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => CourseScreenPage(
-                                          courseInfo: courseList[index])));
-                            },
-                            
-                            onLongPress: () async {
-                              // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
-                              if(isLongPressed){
-                                setState(() {
-                                  isLongPressed = false;
-                                });
-                              }else{
-                                setState(() {
-                                  isLongPressed = true;
-                                });                                
-                              }
-                              refreshState();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Container(
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  color: Colors.amber.shade300,
-                                  borderRadius: BorderRadius.circular(15),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 4)),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: ListTile(
-                                    leading: null,
-                                    title: Text(
-                                      courseList[index].courseName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    trailing: isLongPressed?
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          onPressed: (){
-                                            showDialogFunction(courseList[index]);
-                                          },
-                                          icon: Icon(Icons.edit)),
-                                        IconButton(
-                                          onPressed: (){
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Delete '+ courseList[index].courseName+ ' from list?'),
-                          actions: [
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () {
-                                Navigator.of(context, rootNavigator: true).pop();
-                              },
+                    : Column(
+                      children: [
+                        Expanded(
+                          child: Text('sample'),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 22),
+                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight:Radius.circular(30)  ),
+                              color: Colors.blue[50],
                             ),
-                            TextButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                DatabaseHelper.instance.deleteCourse(courseList[index].id!);
-                                Navigator.of(context, rootNavigator: true).pop();
-                                setState(() {
-                                  isLongPressed = false;
-                                });
-                                refreshState();
-                              },
-                            )
-                          ],
-                        );
-                      });
-                                          },
-                                          icon: Icon(Icons.delete)),
-                                      ],
-                                    )
-                                    :Text(
-                                      courseList[index].courseGrade.toString(),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                            child: SingleChildScrollView(
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                  itemCount: courseList.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: isLongPressed?
+                                      ()async{
+                                        setState(() {
+                                            isLongPressed = false;
+                                          });
+                                      }
+                                      :() async {
+                                        await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => CourseScreenPage(
+                                                    courseInfo: courseList[index])));
+                                      },
+                                      
+                                      onLongPress: () async {
+                                        // DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                                        if(isLongPressed){
+                                          setState(() {
+                                            isLongPressed = false;
+                                          });
+                                        }else{
+                                          setState(() {
+                                            isLongPressed = true;
+                                          });                                
+                                        }
+                                        refreshState();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Container(
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber.shade300,
+                                            borderRadius: BorderRadius.circular(15),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black26,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0, 4)),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: ListTile(
+                                              leading: null,
+                                              title: Text(
+                                                courseList[index].courseName,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              trailing: isLongPressed?
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: (){
+                                                      showDialogFunction(courseList[index]);
+                                                    },
+                                                    icon: Icon(Icons.edit)),
+                                                  IconButton(
+                                                    onPressed: (){
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Delete '+ courseList[index].courseName+ ' from list?'),
+                                    actions: [
+                                      TextButton(
+                                        child: Text("Cancel"),
+                                        onPressed: () {
+                                          Navigator.of(context, rootNavigator: true).pop();
+                                        },
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                      TextButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          DatabaseHelper.instance.deleteCourse(courseList[index].id!);
+                                          Navigator.of(context, rootNavigator: true).pop();
+                                          setState(() {
+                                            isLongPressed = false;
+                                          });
+                                          refreshState();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                                                    },
+                                                    icon: Icon(Icons.delete)),
+                                                ],
+                                              )
+                                              :Text(
+                                                courseList[index].courseGrade.toString(),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
                             ),
-                          );
-                        })),
+                          ),
+                        ),
+                      ],
+                    )),
         floatingActionButton: FloatingActionButton(
           heroTag: null,
           backgroundColor: Colors.blueGrey[900],

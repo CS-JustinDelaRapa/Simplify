@@ -24,6 +24,14 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   double unfinishedPercentage = 0;
   double finishedPercentage = 0;
 
+
+  int green = 0;
+  int purple = 0;
+  int pink = 0;
+  int yellow = 0;
+  int red = 0;
+  int gray = 0;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +47,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     _controllerCenter =
         ConfettiController(duration: const Duration(seconds: 3));
     _controllerCenter.play();
+    if(taskContent.isNotEmpty){
+      countColors();
+    }
     getDoneTask();
     setState(() => isLoading = false);
   }
@@ -53,6 +64,26 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     }
     finishedPercentage = doneTask / totalTask * 100;
     unfinishedPercentage = 100 - finishedPercentage;
+  }
+
+  countColors() {
+    for(int x = 0; x < taskContent.length; x++){
+        var now = DateTime.now();
+        var diff = taskContent[x].dateSched.difference(now);
+        if (taskContent[x].isDone == true) {
+          gray++;
+        } else if (diff.inHours <= -24) {
+          red++;
+        } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+          yellow++;
+        } else if (diff.inHours >= 3 && diff.inDays <= 1) {
+          purple++;
+        } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+          pink++;
+        } else {
+          green++;
+        }
+    }
   }
 
   @override
@@ -82,92 +113,337 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
-            : Center(
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
-                  width: 380,
-                  height: 380,
-                  child: this.taskContent.isEmpty
-                      ? Center(
-                          child: Text(
-                            "No task inputted",
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      : Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              finishedPercentage == 100.00
-                                  ? ConfettiWidget(
-                                      confettiController: _controllerCenter,
-                                      blastDirectionality:
-                                          BlastDirectionality.explosive,
-                                      particleDrag: 0.05,
-                                      emissionFrequency: 0.05,
-                                      numberOfParticles: 50,
-                                      gravity: 0.05,
-                                      shouldLoop: false,
-                                      colors: const [
-                                        Colors.green,
-                                        Colors.blue,
-                                        Colors.pink,
-                                        Colors.orange,
-                                        Colors.purple
-                                      ], // manually specify the colors to be used
-                                    )
-                                  : Container(),
-                              Text(
-                                finishedPercentage.toStringAsFixed(2) + "%",
-                                style: TextStyle(
-                                    fontSize: 70,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+            : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height/3.5,
+                            margin: EdgeInsets.fromLTRB(10, 10, 5, 5),
+                            padding: EdgeInsets.all(10),
+                            child: this.taskContent.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      "No task inputted",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        //green
+                                        Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(green.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: green/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .lightGreen.shade400, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .lightGreen.shade200, //background progressbar color
+                                            )),
+                                            //purple
+                                            Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(purple.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: purple/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .purple.shade300, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .purple.shade100, //background progressbar color
+                                            )),
+                                            Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(pink.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: pink/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .pink.shade200, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .pink.shade100, //background progressbar color
+                                            )),
+                                            Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(yellow.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: yellow/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .amber.shade300, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .amber.shade100, //background progressbar color
+                                            )),
+                                            Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(red.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: red/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .red.shade400, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .red.shade100, //background progressbar color
+                                            )),
+                                            Container(
+                                            // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                            child: LinearPercentIndicator(
+                                              leading: Text(gray.toString(), style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),),
+                                              //leaner progress bar
+                                              //width for progress bar
+                                              animation:
+                                                  true, //animation to show progress at first
+                                              animationDuration: 1000,
+                                              addAutomaticKeepAlive: false,
+                                              lineHeight: 10.0, //height of progress bar
+                                              percent: gray/
+                                                  taskContent.length, // 30/100 = 0.3//make round cap at start and end both
+                                              progressColor: Colors
+                                                  .grey.shade500, //percentage progress bar color
+                                              backgroundColor: Colors
+                                                  .grey.shade300, //background progressbar color
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
                               ),
-                              Text(
-                                "Task completed",
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              Container(
-                                  padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
-                                  child: LinearPercentIndicator(
-                                    //leaner progress bar
-                                    width: 210, //width for progress bar
-                                    animation:
-                                        true, //animation to show progress at first
-                                    animationDuration: 1000,
-                                    addAutomaticKeepAlive: false,
-                                    lineHeight: 25.0, //height of progress bar
-                                    percent: finishedPercentage /
-                                        100, // 30/100 = 0.3//make round cap at start and end both
-                                    progressColor: Colors
-                                        .black, //percentage progress bar color
-                                    backgroundColor: Colors
-                                        .grey, //background progressbar color
-                                  )),
-                            ],
+                              color: Colors.blue[50],
+                            ),
                           ),
                         ),
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(200),
                     ),
-                    color: Colors.yellow[800],
-                  ),
+
+                                        Flexible(
+                      flex: 2,
+                      child: Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height/3.5,
+                            margin: EdgeInsets.fromLTRB(5, 10, 10, 5),
+                            padding: EdgeInsets.all(10),
+                            child: this.taskContent.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      "No task inputted",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(doneTask.toStringAsFixed(0), style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.black)),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              color: Colors.indigo[400]),
+                                              child: Text('|', style: TextStyle(fontSize: 50, color: Colors.indigo[400], fontWeight: FontWeight.w100), textAlign: TextAlign.center,)),
+                                          ),
+                                          Text(taskContent.length.toString(),style: TextStyle(fontSize: 50,  fontWeight: FontWeight.bold, color: Colors.black), textAlign: TextAlign.center,),
+                                        ],
+                                      ),
+                                      Text(doneTask.toStringAsFixed(0)+' out of '+taskContent.length.toString()+' tasks are done',style: TextStyle(fontSize: 15,  fontWeight: FontWeight.bold, color: Colors.black),  textAlign: TextAlign.center)
+                                    ],
+                                  ),
+                                    // child: RichText(
+                                    //   text: new TextSpan(
+                                    //     style: TextStyle(
+                                    //       color: Colors.black,
+                                    //       fontWeight: FontWeight.bold),
+                                    //     children: [
+                                    //       TextSpan(
+                                    //       text: '8 ',
+                                    //       style: TextStyle(fontSize: 40)),
+                                    //       TextSpan(
+                                    //       text: 'out of',
+                                    //       style: TextStyle(fontSize: 20)),
+                                    //     ]
+                                    //   ),
+                                    // )
+                                  ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              color: Colors.blue[50],
+                            ),
+                          ),
+                        ),
+                    ),
+                  ],
                 ),
-              ),
+                                    Center(
+                                        child: Container(
+                                          height: MediaQuery.of(context).size.height/2.5,
+                                          margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                                          padding: EdgeInsets.all(10),
+                                          child: this.taskContent.isEmpty
+                                              ? Center(
+                                                  child: Text(
+                                                    "No task inputted",
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.bold),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                )
+                                              : Center(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      finishedPercentage == 100.00
+                                                          ? ConfettiWidget(
+                                                              confettiController: _controllerCenter,
+                                                              blastDirectionality:
+                                                                  BlastDirectionality.explosive,
+                                                              particleDrag: 0.05,
+                                                              emissionFrequency: 0.05,
+                                                              numberOfParticles: 50,
+                                                              gravity: 0.05,
+                                                              shouldLoop: false,
+                                                              colors: const [
+                                                                Colors.green,
+                                                                Colors.blue,
+                                                                Colors.pink,
+                                                                Colors.orange,
+                                                                Colors.purple
+                                                              ], // manually specify the colors to be used
+                                                            )
+                                                          : Container(),
+                                                      Container(
+                                                          // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
+                                                          child: CircularPercentIndicator(
+                                                            circularStrokeCap: CircularStrokeCap.round,
+                                                            center: Text(
+                                                        finishedPercentage.toStringAsFixed(2) + "%",
+                                                        style: TextStyle(
+                                                            fontSize: 30,
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.bold),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                            radius:180,
+                                                            lineWidth: 15.0,
+                                                            //leaner progress bar
+                                                            //width for progress bar
+                                                            animation:
+                                                                true, //animation to show progress at first
+                                                            animationDuration: 1000,
+                                                            addAutomaticKeepAlive: false,
+                                                            // lineHeight: 15.0, //height of progress bar
+                                                            percent: finishedPercentage /
+                                                                100, // 30/100 = 0.3//make round cap at start and end both
+                                                            progressColor: Colors
+                                                                .indigo[400], //percentage progress bar color
+                                                            backgroundColor: Colors
+                                                                .grey[400], //background progressbar color
+                                                          )),
+                                                          SizedBox(height: 20),
+                                                          Text(
+                                                            finishedPercentage == 100?
+                                                            'Great Job! All Task Are Finished!'
+                                                         :finishedPercentage.toStringAsFixed(0) +     
+                                                        " Percent of Task is Completed",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.bold),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: Colors.blue[50],
+                                          ),
+                                        ),
+                                      ),
+              ],
+            ),
       ),
     );
   }
