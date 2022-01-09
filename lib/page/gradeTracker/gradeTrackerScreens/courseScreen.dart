@@ -92,6 +92,11 @@ class _CourseScreenState extends State<CourseScreenPage> {
           appBar: AppBar(
               actions: [
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.blue[600],
+                        fixedSize: const Size(100, 100),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
                       showDialogFunction(null);
                     },
@@ -248,310 +253,370 @@ class _CourseScreenState extends State<CourseScreenPage> {
           fkCourse: gradeFactor[x].fkCourse);
       print(contentList[x].id);
     }
-// if (currentIndex != null) {
-// setState(() {
-// contentList[currentIndex!] = Item(
-// isExpanded: true,
-// id: gradeFactor[currentIndex!].id,
-// factorGrade: gradeFactor[currentIndex!].factorGrade,
-// factorPercentage: gradeFactor[currentIndex!].factorPercentage,
-// factorName: gradeFactor[currentIndex!].factorName,
-// fkCourse: gradeFactor[currentIndex!].fkCourse);
-// });
-// }
     return contentList;
   }
 
   Widget buildListPanel() {
     bool isLoading = false;
-    return ExpansionPanelList(
-        expansionCallback: (int index1, bool isExpanded) async {
-          setState(() {
-            isLoading = true;
-            sumTotal = 0.0;
-            sumScore = 0.0;
-          });
-          factorContent = await DatabaseHelper.instance
-              .readContent(contentList[index1].id!);
-          for (int x = 0; x < contentList.length; x++) {
-            contentList[x].isExpanded = false;
-          }
-          setState(() {
-            currentIndex = index1;
-            isLoading = false;
-            isLongPressedContent = false;
-            contentList[index1].isExpanded = !isExpanded;
-          });
-        },
-        children: contentList
-            .map((Item item) => new ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isLongPressedFactor = false;
-                      });
-                    },
-                    onLongPress: () {
-                      if (isLongPressedFactor) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black45,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black45, blurRadius: 10, offset: Offset(0, 4)),
+        ],
+      ),
+      child: ExpansionPanelList(
+          elevation: 0.0,
+          dividerColor: Colors.black54,
+          expansionCallback: (int index1, bool isExpanded) async {
+            setState(() {
+              isLoading = true;
+              sumTotal = 0.0;
+              sumScore = 0.0;
+            });
+            factorContent = await DatabaseHelper.instance
+                .readContent(contentList[index1].id!);
+            for (int x = 0; x < contentList.length; x++) {
+              contentList[x].isExpanded = false;
+            }
+            setState(() {
+              currentIndex = index1;
+              isLoading = false;
+              isLongPressedContent = false;
+              contentList[index1].isExpanded = !isExpanded;
+            });
+          },
+          children: contentList
+              .map((Item item) => new ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return GestureDetector(
+                      onTap: () {
                         setState(() {
                           isLongPressedFactor = false;
                         });
-                      } else {
-                        setState(() {
-                          isLongPressedFactor = true;
-                        });
-                      }
-                    },
-                    child: Container(
-                      child: ListTile(
-                        title: Text(item.factorName),
-                        leading: isLongPressedFactor
-                            ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
+                      },
+                      onLongPress: () {
+                        if (isLongPressedFactor) {
+                          setState(() {
+                            isLongPressedFactor = false;
+                          });
+                        } else {
+                          setState(() {
+                            isLongPressedFactor = true;
+                          });
+                        }
+                      },
+                      child: Container(
+                        child: ListTile(
+                          title: Text(item.factorName),
+                          leading: isLongPressedFactor
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          showDialogFunction(gradeFactor
+                                              .firstWhere((element) =>
+                                                  element.id == item.id));
+                                        },
+                                        icon: Icon(Icons.edit)),
+                                    IconButton(
                                       onPressed: () {
-                                        showDialogFunction(
-                                            gradeFactor.firstWhere((element) =>
-                                                element.id == item.id));
-                                      },
-                                      icon: Icon(Icons.edit)),
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Delete ' +
-                                                  item.factorName +
-                                                  ' from list?'),
-                                              actions: [
-                                                TextButton(
-                                                  child: Text("Cancel"),
-                                                  onPressed: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text("OK"),
-                                                  onPressed: () {
-                                                    DatabaseHelper.instance
-                                                        .deleteFactor(item.id!);
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop();
-                                                    setState(() {
-                                                      isLongPressedFactor =
-                                                          false;
-                                                    });
-                                                    refreshState();
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  )
-                                ],
-                              )
-                            : Text(
-                                item.factorPercentage.toStringAsFixed(0) + '%'),
-                      ),
-                    ),
-                  );
-                },
-                body: !item.isExpanded
-                    ? Container()
-                    : isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : factorContent == null
-                            ? Column(
-                                children: [
-                                  TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          contentName = item.factorName +
-                                              ' ' +
-                                              (factorContent!.length + 1)
-                                                  .toString();
-                                        });
-                                        print(contentName);
-                                        showDialogContent(item, null);
-                                      },
-                                      child: Text('Add Content'))
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(item.factorGrade
-                                                  .toStringAsFixed(2) +
-                                              "%")),
-                                      ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text((item.factorGrade *
-                                                      (item.factorPercentage /
-                                                          100))
-                                                  .toStringAsFixed(2) +
-                                              "%")),
-                                      ElevatedButton(
-                                          onPressed: () {},
-                                          child: Text(generateRemarks(
-                                              item.factorGrade.toInt())))
-                                    ],
-                                  ),
-                                  ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: factorContent!.length,
-                                      itemBuilder: (context, index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isLongPressedContent = false;
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Delete ' +
+                                                    item.factorName +
+                                                    ' from list?'),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text("Cancel"),
+                                                    onPressed: () {
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: Text("OK"),
+                                                    onPressed: () {
+                                                      DatabaseHelper.instance
+                                                          .deleteFactor(
+                                                              item.id!);
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop();
+                                                      setState(() {
+                                                        isLongPressedFactor =
+                                                            false;
+                                                      });
+                                                      refreshState();
+                                                    },
+                                                  )
+                                                ],
+                                              );
                                             });
-                                          },
-                                          onLongPress: () {
-                                            if (isLongPressedContent) {
+                                      },
+                                      icon: Icon(Icons.delete),
+                                    )
+                                  ],
+                                )
+                              : Text(item.factorPercentage.toStringAsFixed(0) +
+                                  '%'),
+                        ),
+                      ),
+                    );
+                  },
+                  body: !item.isExpanded
+                      ? Container()
+                      : isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : factorContent!.isEmpty
+                              ? Column(
+                                  children: [
+                                    TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            contentName = item.factorName +
+                                                ' ' +
+                                                (factorContent!.length + 1)
+                                                    .toString();
+                                          });
+
+                                          showDialogContent(item, null);
+                                        },
+                                        child: Text('Add Content'))
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "Overall Grade",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Container(
+                                                height: 40,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue[800]),
+                                                child: Center(
+                                                  child: Text(
+                                                    (item.factorGrade
+                                                            .toStringAsFixed(
+                                                                2) +
+                                                        "%"),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              item.factorName + " Grade",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Container(
+                                                height: 40,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue[800]),
+                                                child: Center(
+                                                  child: Text(
+                                                    ((item.factorGrade *
+                                                                (item.factorPercentage /
+                                                                    100))
+                                                            .toStringAsFixed(
+                                                                2) +
+                                                        "%"),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "Remarks",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Container(
+                                                height: 40,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue[800]),
+                                                child: Center(
+                                                  child: Text(
+                                                    generateRemarks(item
+                                                        .factorGrade
+                                                        .toInt()),
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: factorContent!.length,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
                                               setState(() {
                                                 isLongPressedContent = false;
                                               });
-                                            } else {
-                                              setState(() {
-                                                isLongPressedContent = true;
-                                              });
-                                            }
-                                          },
-                                          child: ListTile(
-                                              trailing: !isLongPressedContent
-                                                  ? Text(factorContent![index]
-                                                          .contentScore
-                                                          .toString() +
-                                                      '/' +
-                                                      factorContent![index]
-                                                          .contentTotal
-                                                          .toString())
-                                                  : Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        IconButton(
+                                            },
+                                            onLongPress: () {
+                                              if (isLongPressedContent) {
+                                                setState(() {
+                                                  isLongPressedContent = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  isLongPressedContent = true;
+                                                });
+                                              }
+                                            },
+                                            child: ListTile(
+                                                trailing: !isLongPressedContent
+                                                    ? Text(factorContent![index]
+                                                            .contentScore
+                                                            .toString() +
+                                                        '/' +
+                                                        factorContent![index]
+                                                            .contentTotal
+                                                            .toString())
+                                                    : Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                showDialogContent(
+                                                                    item,
+                                                                    factorContent![
+                                                                        index]);
+                                                              },
+                                                              icon: Icon(
+                                                                  Icons.edit)),
+                                                          IconButton(
                                                             onPressed: () {
-                                                              showDialogContent(
-                                                                  item,
-                                                                  factorContent![
-                                                                      index]);
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return AlertDialog(
+                                                                      title: Text('Delete ' +
+                                                                          factorContent![index]
+                                                                              .contentName +
+                                                                          ' from list?'),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text("Cancel"),
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context, rootNavigator: true).pop();
+                                                                          },
+                                                                        ),
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text("OK"),
+                                                                          onPressed:
+                                                                              () {
+                                                                            DatabaseHelper.instance.deleteContent(factorContent![index].id!);
+                                                                            setState(() {
+                                                                              factorContent!.remove(factorContent![index]);
+                                                                            });
+                                                                            // ignore: unnecessary_null_comparison
+                                                                            if (factorContent!.length !=
+                                                                                null) {
+                                                                              for (int x = 0; x < factorContent!.length; x++) {
+                                                                                sumTotal += factorContent![x].contentTotal;
+                                                                                sumScore += factorContent![x].contentScore;
+                                                                              }
+                                                                              double factorGradeUpdate = (sumScore / sumTotal) * 100;
+                                                                              print('factorrrrr' + factorGradeUpdate.toString());
+                                                                              if (factorGradeUpdate.isNaN) {
+                                                                                factorGradeUpdate = 0.0;
+                                                                              }
+                                                                              final factorUpdate = Factor(factorGrade: factorGradeUpdate, factorName: item.factorName, factorPercentage: item.factorPercentage, fkCourse: item.fkCourse, id: item.id);
+                                                                              DatabaseHelper.instance.updateFactor(factorUpdate);
+                                                                            }
+                                                                            refreshState();
+                                                                            Navigator.of(context, rootNavigator: true).pop();
+                                                                            setState(() {
+                                                                              isLongPressedFactor = false;
+                                                                            });
+                                                                          },
+                                                                        )
+                                                                      ],
+                                                                    );
+                                                                  });
                                                             },
                                                             icon: Icon(
-                                                                Icons.edit)),
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return AlertDialog(
-                                                                    title: Text('Delete ' +
-                                                                        factorContent![index]
-                                                                            .contentName +
-                                                                        ' from list?'),
-                                                                    actions: [
-                                                                      TextButton(
-                                                                        child: Text(
-                                                                            "Cancel"),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context, rootNavigator: true)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                      TextButton(
-                                                                        child: Text(
-                                                                            "OK"),
-                                                                        onPressed:
-                                                                            () {
-                                                                          DatabaseHelper
-                                                                              .instance
-                                                                              .deleteContent(factorContent![index].id!);
-                                                                          setState(
-                                                                              () {
-                                                                            factorContent!.remove(factorContent![index]);
-                                                                          });
-                                                                          // ignore: unnecessary_null_comparison
-                                                                          if (factorContent!.length !=
-                                                                              null) {
-                                                                            for (int x = 0;
-                                                                                x < factorContent!.length;
-                                                                                x++) {
-                                                                              sumTotal += factorContent![x].contentTotal;
-                                                                              sumScore += factorContent![x].contentScore;
-                                                                            }
-                                                                            double
-                                                                                factorGradeUpdate =
-                                                                                (sumScore / sumTotal) * 100;
-                                                                            print('factorrrrr' +
-                                                                                factorGradeUpdate.toString());
-                                                                            if (factorGradeUpdate.isNaN) {
-                                                                              factorGradeUpdate = 0.0;
-                                                                            }
-                                                                            final factorUpdate = Factor(
-                                                                                factorGrade: factorGradeUpdate,
-                                                                                factorName: item.factorName,
-                                                                                factorPercentage: item.factorPercentage,
-                                                                                fkCourse: item.fkCourse,
-                                                                                id: item.id);
-                                                                            DatabaseHelper.instance.updateFactor(factorUpdate);
-                                                                          }
-                                                                          refreshState();
-                                                                          Navigator.of(context, rootNavigator: true)
-                                                                              .pop();
-                                                                          setState(
-                                                                              () {
-                                                                            isLongPressedFactor =
-                                                                                false;
-                                                                          });
-                                                                        },
-                                                                      )
-                                                                    ],
-                                                                  );
-                                                                });
-                                                          },
-                                                          icon: Icon(
-                                                              Icons.delete),
-                                                        )
-                                                      ],
-                                                    ),
-                                              title: Text(factorContent![index]
-                                                  .contentName)),
-                                        );
-                                      }),
-                                  TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          contentName = item.factorName +
-                                              ' ' +
-                                              (factorContent!.length + 1)
-                                                  .toString();
-                                        });
-                                        showDialogContent(item, null);
-                                      },
-                                      child: Text('Add Content'))
-                                ],
-                              ),
-                isExpanded: item.isExpanded))
-            .toList());
+                                                                Icons.delete),
+                                                          )
+                                                        ],
+                                                      ),
+                                                title: Row(
+                                                  children: [
+                                                    Icon(Icons
+                                                        .library_books_outlined),
+                                                    Text(" " +
+                                                        factorContent![index]
+                                                            .contentName),
+                                                  ],
+                                                )),
+                                          );
+                                        }),
+                                    TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            contentName = item.factorName +
+                                                ' ' +
+                                                (factorContent!.length + 1)
+                                                    .toString();
+                                          });
+                                          showDialogContent(item, null);
+                                        },
+                                        child: Text('Add Content'))
+                                  ],
+                                ),
+                  isExpanded: item.isExpanded))
+              .toList()),
+    );
   }
 
 //add content
@@ -758,7 +823,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
 
   generateRemarks(int grade) {
     late String remarks;
-    if (grade >= 95) {
+    if (grade >= 90) {
       remarks = "A";
     } else if (grade >= 85 && grade < 95) {
       remarks = "B";
