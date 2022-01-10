@@ -148,7 +148,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                         BoxDecoration(color: Colors.white),
                                     child: ListTile(
                                         title: Center(
-                                            child: Text('Add elements',
+                                            child: Text('Add Elements',
                                                 style: TextStyle(
                                                     color: Colors.blue)))),
                                   ),
@@ -179,8 +179,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
                           style: TextStyle(fontSize: 24)),
                       Text(
                         fromFactorList == null
-                            ? "Enter your grade factor here"
-                            : "Edit Grade Factor",
+                            ? "Enter your grade element here"
+                            : "Edit Grade Element",
                         style: TextStyle(fontSize: 16),
                       ),
                     ]),
@@ -193,13 +193,13 @@ class _CourseScreenState extends State<CourseScreenPage> {
                   children: <Widget>[
                     TextFormField(
                       validator: (value) => value != null && value.isEmpty
-                          ? 'Required Factor element'
+                          ? 'Required Grade Element'
                           : null,
                       initialValue: fromFactorList == null
                           ? null
                           : fromFactorList.factorName,
                       autofocus: true,
-                      decoration: InputDecoration(hintText: "Element name"),
+                      decoration: InputDecoration(hintText: "Element Name"),
                       onChanged: (value) {
                         setState(() {
                           factorName = value;
