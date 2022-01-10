@@ -504,6 +504,7 @@ class _ListViewPageState extends State<ListViewPage>
                             calendarController.add(true);
                             homeController.add(true);
                             unfinishedController.add(true);
+                            mainController.add(true);
                           },
                           icon: taskContent[index].isDone
                               ? Icon(Icons.check_box_outlined, size: 30)
@@ -594,6 +595,7 @@ class _ListViewPageState extends State<ListViewPage>
                               onPressed: () {
                                 deleteItems();
                                 calendarController.add(true);
+                                mainController.add(true);
                                 homeController.add(true);
                                 unfinishedController.add(true);
                                 Navigator.of(context, rootNavigator: true)

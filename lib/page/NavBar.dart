@@ -15,12 +15,14 @@ class HomePage extends StatefulWidget {
   final StreamController<bool> homeController;
   final StreamController<bool> calendarController;
   final StreamController<bool> unfinishedController;
+  final StreamController<bool> mainController;
   HomePage(
       {Key? key,
       required this.listController,
       required this.homeController,
       required this.unfinishedController,
-      required this.calendarController})
+      required this.calendarController,
+      required this.mainController})
       : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _screens = [
-      HomeMain(stream: widget.homeController.stream, streamUnfinished: widget.unfinishedController.stream),
+      HomeMain(stream: widget.homeController.stream, streamUnfinished: widget.unfinishedController.stream, streamMain: widget.mainController.stream,),
       // QuotesPage(stream: widget.homeController.stream,
       // streamUnfinished: widget.unfinishedController.stream
       // ),

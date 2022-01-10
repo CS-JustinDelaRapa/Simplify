@@ -10,6 +10,7 @@ StreamController<bool> listController = StreamController<bool>();
 StreamController<bool> homeController = StreamController<bool>();
 StreamController<bool> calendarController = StreamController<bool>();
 StreamController<bool> unfinishedController = StreamController<bool>();
+StreamController<bool> mainController = StreamController<bool>();
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         visualDensity: VisualDensity.adaptivePlatformDensity
       ),
-      home: HomePage(listController: listController, calendarController: calendarController, homeController: homeController, unfinishedController:unfinishedController),
+      home: HomePage(listController: listController, calendarController: calendarController, homeController: homeController, unfinishedController:unfinishedController, mainController: mainController,),
     );
   }
 }

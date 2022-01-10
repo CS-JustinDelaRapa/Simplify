@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:simplify/page/NavBar.dart';
 import 'package:simplify/page/homePage/Home_Page.dart';
@@ -7,7 +8,8 @@ class HomeMain extends StatefulWidget {
 
   final Stream<bool> stream;
   final Stream<bool> streamUnfinished;
-  const HomeMain({Key? key, required this.stream, required this.streamUnfinished}) : super(key: key);
+  final Stream<bool> streamMain;
+  const HomeMain({Key? key, required this.stream, required this.streamUnfinished, required this.streamMain}) : super(key: key);
 
   @override
   _HomeMainState createState() => _HomeMainState();
@@ -16,11 +18,26 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  bool isLoading = false;
+  int unfinishedNumber = 2;
 
   @override
   void initState() {
     super.initState();
+        widget.streamMain.listen((isRefresh) {
+      if (isRefresh) {
+        refreshState();
+      }
+    });
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  refreshState(){
+    setState(() {
+      isLoading = true;
+      unfinishedNumber+=1;
+    });
+print('unfinishedddd'+unfinishedNumber.toString());
   }
 
   @override
@@ -51,9 +68,18 @@ class _HomeMainState extends State<HomeMain>
           ),
           bottom: TabBar(
             indicatorWeight: 3.0,
-            tabs: <Tab>[
+            tabs: [
               Tab(text: 'Today'),
-              Tab(text: 'Unfinished'),
+              Container(
+                child: unfinishedNumber == 0?
+                Text('Unfinished') 
+                :Badge(
+                  badgeColor: Colors.pink.shade400,
+                  padding: EdgeInsets.all(4),
+                  badgeContent: Text(unfinishedNumber.toString(), style: TextStyle(color: Colors.white)),
+                  child: Tab(
+                    text: 'Unfinished')),
+              ),
             ],
             controller: _tabController,
           ),
