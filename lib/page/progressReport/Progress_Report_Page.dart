@@ -147,7 +147,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: green /
+                                    percent: taskContent.isEmpty? 
+                                    0/1
+                                    :green /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.lightGreen
@@ -173,7 +175,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: purple /
+                                    percent: taskContent.isEmpty? 
+                                    0/1
+                                    :purple /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.purple
@@ -198,7 +202,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: pink /
+                                    percent: taskContent.isEmpty? 
+                                    0/1
+                                    :pink /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.pink
@@ -223,7 +229,10 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: yellow /
+                                    percent: 
+                                    taskContent.isEmpty? 
+                                    0/1
+                                    :yellow /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.amber
@@ -248,7 +257,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: red /
+                                    percent: taskContent.isEmpty? 
+                                    0/1
+                                    :red /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.red
@@ -273,7 +284,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
                                     lineHeight: 10.0, //height of progress bar
-                                    percent: gray /
+                                    percent:taskContent.isEmpty? 
+                                    0/1
+                                    : gray /
                                         taskContent
                                             .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.grey

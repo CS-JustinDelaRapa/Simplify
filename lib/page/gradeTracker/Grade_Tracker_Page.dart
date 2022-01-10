@@ -16,6 +16,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
   late List<Course> courseList;
   Color pickedColor = Colors.red;
   bool isLoading = false;
+  int validCourseLength = 0;
   String? courseName;
   bool isLongPressed = false;
   double averageGrade = 0;
@@ -47,10 +48,14 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
 
   sumAverageGrade() {
     averageGrade = 0;
+    validCourseLength = 0;
     for (int x = 0; x < courseList.length; x++) {
+      if(courseList[x].courseGrade != 0.0){
       averageGrade += courseList[x].courseGrade;
+      validCourseLength++;
+      }
     }
-    averageGrade = averageGrade / courseList.length;
+    averageGrade = averageGrade / validCourseLength;
   }
 
   @override
@@ -305,8 +310,10 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                                                       .delete)),
                                                             ],
                                                           )
-                                                        : Text(
-                                                            courseList[index]
+                                                        : Text(courseList[index]
+                                                                    .courseGrade == 0.0?
+                                                            'INC'
+                                                            :courseList[index]
                                                                     .courseGrade
                                                                     .toStringAsFixed(
                                                                         2) +

@@ -715,7 +715,7 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: Text(
                                   'Score ',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(fontSize: 15),
                                 ),
                               ),
                             ),
