@@ -421,6 +421,10 @@ class _ListViewPageState extends State<ListViewPage>
 //listTiles
   Widget buildList() => RefreshIndicator(
     onRefresh: (){
+    calendarController.add(true);
+    homeController.add(true);
+    mainController.add(true);
+    unfinishedController.add(true);
       return refreshState();
     },
     child: ListView.builder(
