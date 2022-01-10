@@ -15,8 +15,7 @@ import 'package:timer_builder/timer_builder.dart';
 
 class QuotesPage extends StatefulWidget {
   final Stream<bool> stream;
-  final Stream<bool> streamUnfinished;
-  QuotesPage({Key? key, required this.stream,  required this.streamUnfinished}) : super(key: key);
+  QuotesPage({Key? key, required this.stream}) : super(key: key);
 
   @override
   _QuotesPageState createState() => _QuotesPageState();
@@ -90,47 +89,48 @@ class _QuotesPageState extends State<QuotesPage>
       ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(Icons.home_rounded),
-                Text(
-                  ' Home',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-            // centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            actions:[
-              Container(
-                decoration: BoxDecoration(
-                  color:
-                  Colors.blueGrey.shade900,
-                  borderRadius: BorderRadius.circular(5)
-                ),
-                child: TextButton(
-                onPressed: () {
-                  if(isUnfinished == false){
-                    setState(() {
-                      isUnfinished = true;
-                    });
-                  }else{
-                    setState(() {
-                      isUnfinished = false;
-                    });
-                  }
-                },
-                child: isUnfinished?
-                Text('Tasks Today', style: TextStyle(color: Colors.white) )
-                :Text('Unfinished Tasks', style: TextStyle(color: Colors.white)),
-                ),
-              )]
-          ),
+          // appBar: AppBar(
+          //   title: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Icon(Icons.home_rounded),
+          //       Text(
+          //         ' Home',
+          //         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          //       ),
+          //     ],
+          //   ),
+          //   // centerTitle: true,
+          //   backgroundColor: Colors.transparent,
+          //   elevation: 0.0,
+          //   actions:[
+          //     Container(
+          //       decoration: BoxDecoration(
+          //         color:
+          //         Colors.blueGrey.shade900,
+          //         borderRadius: BorderRadius.circular(5)
+          //       ),
+          //       child: TextButton(
+          //       onPressed: () {
+          //         if(isUnfinished == false){
+          //           setState(() {
+          //             isUnfinished = true;
+          //           });
+          //         }else{
+          //           setState(() {
+          //             isUnfinished = false;
+          //           });
+          //         }
+          //       },
+          //       child: isUnfinished?
+          //       Text('Tasks Today', style: TextStyle(color: Colors.white) )
+          //       :Text('Unfinished Tasks', style: TextStyle(color: Colors.white)),
+          //       ),
+          //     )]
+          // ),
           body: isUnfinished?
-          UnfinishedPage(streamUnfinished: widget.streamUnfinished)
+          Container()
+          // UnfinishedPage(streamUnfinished: widget.streamUnfinished)
           :isLoading
               ? Center(child: CircularProgressIndicator())
               : TimerBuilder.scheduled([priorityTask[0].dateSched],

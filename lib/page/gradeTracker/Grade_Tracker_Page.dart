@@ -85,46 +85,66 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
             : Container(
                 child: courseList.isEmpty
                     ? Center(
-                        child: GestureDetector(
-                          onTap: () async {
-                            showDialogFunction(null);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              height: 70,
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey[800],
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 2,
-                                      offset: Offset(0, 4)),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: ListTile(
-                                  leading: null,
-                                  title: Center(
-                                    child: Text(
-                                      'ADD SUBJECT',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                                  height: 180,
+                                  width: 180,
+                                   decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/folder.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
+                                Text(
+                                  'No Subject',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                          // Center(
+                          //     child: GestureDetector(
+                          //       onTap: () async {
+                          //         showDialogFunction(null);
+                          //       },
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.all(8),
+                          //         child: Container(
+                          //           height: 70,
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.blueGrey[800],
+                          //             borderRadius: BorderRadius.circular(15),
+                          //             boxShadow: [
+                          //               BoxShadow(
+                          //                   color: Colors.black26,
+                          //                   blurRadius: 2,
+                          //                   offset: Offset(0, 4)),
+                          //             ],
+                          //           ),
+                          //           child: Padding(
+                          //             padding: const EdgeInsets.all(8),
+                          //             child: ListTile(
+                          //               leading: null,
+                          //               title: Center(
+                          //                 child: Text(
+                          //                   'ADD SUBJECT',
+                          //                   maxLines: 1,
+                          //                   overflow: TextOverflow.ellipsis,
+                          //                   style: TextStyle(
+                          //                     fontSize: 16,
+                          //                     color: Colors.white,
+                          //                     fontWeight: FontWeight.w500,
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                        ],
+                      ),
+                    )
                     : Column(
                         children: [
                           Expanded(
@@ -396,7 +416,21 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                           ),
                         ],
                       )),
-      ),
+        floatingActionButton: courseList.isEmpty? FloatingActionButton(
+                heroTag: null,
+                backgroundColor: Colors.blueGrey[900],
+                child: Icon(
+                  Icons.add,
+                  size: 30.0,
+                ),
+                onPressed: () async {
+                showDialogFunction(null);
+                  refreshState();
+                },
+              )
+              :null,
+        
+        ),
     );
   }
 

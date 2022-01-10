@@ -74,10 +74,25 @@ class _DiaryPageState extends State<DiaryPage>
             child: isLoading
                 ? CircularProgressIndicator()
                 : diaryContent.isEmpty
-                    ? Text(
-                        'No Diary Content',
-                        style: TextStyle(fontSize: 20),
-                      )
+                    ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 180,
+                                width: 180,
+                                 decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/folder.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+                              ),
+                              Text(
+                                  'No Diary Content',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                            ],
+                          )
                     : buildList(),
           ),
         ),

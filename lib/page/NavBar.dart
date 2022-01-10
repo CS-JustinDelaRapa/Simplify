@@ -6,6 +6,7 @@ import 'boosterCommunity/Booster_Community_Page.dart';
 import 'diary/Diary_Page.dart';
 import 'gradeTracker/Grade_Tracker_Page.dart';
 import 'homePage/Home_Page.dart';
+import 'homePage/homepageMain.dart';
 import 'taskList/List_View_Page.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 
@@ -50,9 +51,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _screens = [
-      QuotesPage(stream: widget.homeController.stream,
-      streamUnfinished: widget.unfinishedController.stream
-      ),
+      HomeMain(stream: widget.homeController.stream, streamUnfinished: widget.unfinishedController.stream),
+      // QuotesPage(stream: widget.homeController.stream,
+      // streamUnfinished: widget.unfinishedController.stream
+      // ),
       ListViewPage(
           stream: widget.listController.stream,
           calendarStream: widget.calendarController.stream),

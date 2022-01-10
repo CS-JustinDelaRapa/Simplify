@@ -122,10 +122,25 @@ class _ListViewPageState extends State<ListViewPage>
                   child: isLoading
                       ? CircularProgressIndicator()
                       : taskContent.isEmpty
-                          ? Text(
-                              'No Task Content',
-                              style: TextStyle(fontSize: 20),
-                            )
+                          ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 180,
+                                width: 180,
+                                 decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/testing/folder.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+                              ),
+                              Text(
+                                  'No Task Content',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                            ],
+                          )
                           : TimerBuilder.scheduled([priorityTime],
                               builder: (context) {
                               return buildList();
