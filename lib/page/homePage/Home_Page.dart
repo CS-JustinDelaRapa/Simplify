@@ -128,22 +128,22 @@ class _QuotesPageState extends State<QuotesPage>
           //       ),
           //     )]
           // ),
-          body: isUnfinished?
-          Container()
-          // UnfinishedPage(streamUnfinished: widget.streamUnfinished)
-          :isLoading
-              ? Center(child: CircularProgressIndicator())
-              : TimerBuilder.scheduled([priorityTask[0].dateSched],
-                  builder: (context) {
-                  return Swiper(
-                    itemWidth: MediaQuery.of(context).size.width - 2,
-                    pagination: SwiperPagination(),
-                    itemCount: priorityTask.length,
-                    itemBuilder: (context, index) {
-                      return Stack(children: [buildPriorityTask(index)]);
-                    },
-                  );
-                })),
+          body: isUnfinished
+              ? Container()
+              // UnfinishedPage(streamUnfinished: widget.streamUnfinished)
+              : isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : TimerBuilder.scheduled([priorityTask[0].dateSched],
+                      builder: (context) {
+                      return Swiper(
+                        itemWidth: MediaQuery.of(context).size.width - 2,
+                        pagination: SwiperPagination(),
+                        itemCount: priorityTask.length,
+                        itemBuilder: (context, index) {
+                          return Stack(children: [buildPriorityTask(index)]);
+                        },
+                      );
+                    })),
     );
   }
 
@@ -261,12 +261,11 @@ class _QuotesPageState extends State<QuotesPage>
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-          image: AssetImage("assets/testing/today.jpg"),
-          fit: BoxFit.cover,
-          opacity: 0.5
-        ),
+                            image: AssetImage("assets/testing/today.png"),
+                            fit: BoxFit.cover,
+                            opacity: 0.5),
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
+                        color: Colors.white70,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -284,7 +283,9 @@ class _QuotesPageState extends State<QuotesPage>
                             getQuote(priorityTask[index].title,
                                 priorityTask[index].description),
                             style: TextStyle(
-                                fontSize: 23, fontWeight: FontWeight.w600),
+                                fontSize: 23,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
                         ),
