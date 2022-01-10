@@ -50,13 +50,13 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     averageGrade = 0;
     validCourseLength = 0;
     for (int x = 0; x < courseList.length; x++) {
-      if(courseList[x].courseGrade != 0.0){
-      averageGrade += courseList[x].courseGrade;
-      validCourseLength++;
+      if (courseList[x].courseGrade != 0.0) {
+        averageGrade += courseList[x].courseGrade;
+        validCourseLength++;
       }
     }
     averageGrade = averageGrade / validCourseLength;
-    if(averageGrade.isNaN){
+    if (averageGrade.isNaN) {
       averageGrade = 0;
     }
   }
@@ -74,6 +74,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          actions: [buildRemarksLegend()],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: Row(children: [
@@ -313,14 +314,17 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                                                       .delete)),
                                                             ],
                                                           )
-                                                        : Text(courseList[index]
-                                                                    .courseGrade == 0.0?
-                                                            'INC'
-                                                            :courseList[index]
-                                                                    .courseGrade
-                                                                    .toStringAsFixed(
-                                                                        2) +
-                                                                "%",
+                                                        : Text(
+                                                            courseList[index]
+                                                                        .courseGrade ==
+                                                                    0.0
+                                                                ? 'INC'
+                                                                : courseList[
+                                                                            index]
+                                                                        .courseGrade
+                                                                        .toStringAsFixed(
+                                                                            2) +
+                                                                    "%",
                                                             maxLines: 1,
                                                             overflow:
                                                                 TextOverflow
@@ -407,6 +411,132 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       ),
     );
   }
+
+  Widget buildRemarksLegend() => IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: Text("Remarks: "),
+                    content: Container(
+                      height: 300,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                  children: [
+                                TextSpan(text: "Grade\t\t\t\t\t\t\t\t\t\t"),
+                                TextSpan(text: "\t\t\t\t\t\t\t\t\tRemarks")
+                              ])),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("97.00 - 100.00"),
+                              SizedBox(width: 63),
+                              Text(" A")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("94.00 - 96.99"),
+                              SizedBox(width: 70),
+                              Text("A-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("91.00 - 93.99"),
+                              SizedBox(width: 75),
+                              Text("B+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("88.00 - 90.99"),
+                              SizedBox(width: 72),
+                              Text("B")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("85.00 - 87.99"),
+                              SizedBox(width: 73),
+                              Text("B-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("82.00 - 84.99"),
+                              SizedBox(width: 73),
+                              Text("C+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("80.00 - 81.99"),
+                              SizedBox(width: 77),
+                              Text("C")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("78.00 - 79.99"),
+                              SizedBox(width: 75),
+                              Text("C-")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("75.00 - 77.99"),
+                              SizedBox(width: 75),
+                              Text("D+")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("70.00 - 74.99"),
+                              SizedBox(width: 75),
+                              Text("D")
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text("0.00 - 69.99"),
+                              SizedBox(width: 82),
+                              Text("F")
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ));
+        },
+        icon: Icon(Icons.info_outline_rounded, color: Colors.white),
+        iconSize: 24,
+      );
 
   generateRemarks(double grade) {
     late String remarks;
