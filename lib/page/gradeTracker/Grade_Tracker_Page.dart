@@ -56,6 +56,9 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       }
     }
     averageGrade = averageGrade / validCourseLength;
+    if(averageGrade.isNaN){
+      averageGrade = 0;
+    }
   }
 
   @override
