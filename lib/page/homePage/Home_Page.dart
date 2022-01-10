@@ -260,8 +260,13 @@ class _QuotesPageState extends State<QuotesPage>
                     flex: 4,
                     child: Container(
                       decoration: BoxDecoration(
+                        image: DecorationImage(
+          image: AssetImage("assets/testing/today.jpg"),
+          fit: BoxFit.cover,
+          opacity: 0.5
+        ),
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.white70,
+                        color: Colors.transparent,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -279,7 +284,7 @@ class _QuotesPageState extends State<QuotesPage>
                             getQuote(priorityTask[index].title,
                                 priorityTask[index].description),
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600),
+                                fontSize: 23, fontWeight: FontWeight.w600),
                             textAlign: TextAlign.center,
                           ),
                         ),

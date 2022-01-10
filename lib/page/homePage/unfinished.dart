@@ -220,8 +220,13 @@ class _UnfinishedPageState extends State<UnfinishedPage>
                     flex: 4,
                     child: Container(
                       decoration: BoxDecoration(
+                        image: DecorationImage(
+          image: AssetImage("assets/testing/unfinished.jpg"),
+          fit: BoxFit.cover,
+          opacity: 0.4
+        ),
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.white70,
+                        color: Colors.transparent,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -239,7 +244,7 @@ class _UnfinishedPageState extends State<UnfinishedPage>
                             getQuote(priorityTask[index].title,
                                 priorityTask[index].description),
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600),
+                                fontSize: 23, fontWeight: FontWeight.w600),
                             textAlign: TextAlign.center,
                           ),
                         ),

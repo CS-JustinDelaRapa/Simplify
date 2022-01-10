@@ -1,5 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:simplify/db_helper/database_helper.dart';
+import 'package:simplify/model/task.dart';
 import 'package:simplify/page/NavBar.dart';
 import 'package:simplify/page/homePage/Home_Page.dart';
 import 'package:simplify/page/homePage/unfinished.dart';
@@ -18,8 +20,10 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late List<Task> unfinishedTask;
+
   bool isLoading = false;
-  int unfinishedNumber = 2;
+  int unfinishedNumber = 0;
 
   @override
   void initState() {
@@ -27,17 +31,25 @@ class _HomeMainState extends State<HomeMain>
         widget.streamMain.listen((isRefresh) {
       if (isRefresh) {
         refreshState();
+        print('unfinisheddddd'+unfinishedNumber.toString());
       }
     });
     _tabController = TabController(length: 2, vsync: this);
+    refreshState();
   }
 
-  refreshState(){
+  Future refreshState() async{
+    unfinishedNumber = 0;
     setState(() {
       isLoading = true;
-      unfinishedNumber+=1;
     });
-print('unfinishedddd'+unfinishedNumber.toString());
+    unfinishedTask = await DatabaseHelper.instance.readUnfinishedTask();
+    setState(() {
+      isLoading = false;
+    });
+    if(unfinishedTask.isNotEmpty){
+      unfinishedNumber = unfinishedTask.length;
+    }
   }
 
   @override
@@ -71,14 +83,19 @@ print('unfinishedddd'+unfinishedNumber.toString());
             tabs: [
               Tab(text: 'Today'),
               Container(
-                child: unfinishedNumber == 0?
-                Text('Unfinished') 
-                :Badge(
-                  badgeColor: Colors.pink.shade400,
-                  padding: EdgeInsets.all(4),
-                  badgeContent: Text(unfinishedNumber.toString(), style: TextStyle(color: Colors.white)),
-                  child: Tab(
-                    text: 'Unfinished')),
+                child: isLoading?
+                Center(child: 
+                CircularProgressIndicator(),)
+                :Container(
+                  child: unfinishedNumber == 0?
+                  Text('Unfinished') 
+                  :Badge(
+                    badgeColor: Colors.pink.shade400,
+                    padding: EdgeInsets.all(4),
+                    badgeContent: Text(unfinishedNumber.toString(), style: TextStyle(color: Colors.white)),
+                    child: Tab(
+                      text: 'Unfinished')),
+                ),
               ),
             ],
             controller: _tabController,
