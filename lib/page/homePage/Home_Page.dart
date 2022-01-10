@@ -202,6 +202,8 @@ class _QuotesPageState extends State<QuotesPage>
                                     updateIsDone(index);
                                     listController.add(true);
                                     calendarController.add(true);
+                                    unfinishedController.add(true);
+                                    mainController.add(true);
                                   },
                                   icon: Stack(
                                     children: <Widget>[

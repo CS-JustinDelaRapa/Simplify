@@ -419,140 +419,145 @@ class _ListViewPageState extends State<ListViewPage>
       );
 
 //listTiles
-  Widget buildList() => ListView.builder(
-      itemCount: taskContent.length,
-      itemBuilder: (context, index) {
-        var now = DateTime.now();
-        var diff = taskContent[index].dateSched.difference(now);
-        late Color priorityColor;
-
-        if (taskContent[index].isDone == true) {
-          priorityColor = Colors.grey.shade500;
-        } else if (diff.inHours <= -24) {
-          priorityColor = Colors.red.shade400;
-        } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
-          priorityColor = Colors.amber.shade300;
-        } else if (diff.inHours >= 3 && diff.inDays <= 1) {
-          priorityColor = Colors.purple.shade300;
-        } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-          priorityColor = Colors.pink.shade200;
-        } else {
-          priorityColor = Colors.lightGreen.shade400;
-        }
-
-        return GestureDetector(
-          onTap
-              //if
-              : onLongPress
-                  ? () async {
-                      if (deleteList.contains(taskContent[index])) {
-                        setState(() {
-                          deleteList.remove(taskContent[index]);
-                          allSelected = false;
-                        });
-                      } else {
-                        setState(() {
-                          deleteList.add(taskContent[index]);
-                          if (deleteList.length == taskContent.length) {
-                            allSelected = true;
-                          }
-                        });
+  Widget buildList() => RefreshIndicator(
+    onRefresh: (){
+      return refreshState();
+    },
+    child: ListView.builder(
+        itemCount: taskContent.length,
+        itemBuilder: (context, index) {
+          var now = DateTime.now();
+          var diff = taskContent[index].dateSched.difference(now);
+          late Color priorityColor;
+  
+          if (taskContent[index].isDone == true) {
+            priorityColor = Colors.grey.shade500;
+          } else if (diff.inHours <= -24) {
+            priorityColor = Colors.red.shade400;
+          } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+            priorityColor = Colors.amber.shade300;
+          } else if (diff.inHours >= 3 && diff.inDays <= 1) {
+            priorityColor = Colors.purple.shade300;
+          } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+            priorityColor = Colors.pink.shade200;
+          } else {
+            priorityColor = Colors.lightGreen.shade400;
+          }
+  
+          return GestureDetector(
+            onTap
+                //if
+                : onLongPress
+                    ? () async {
+                        if (deleteList.contains(taskContent[index])) {
+                          setState(() {
+                            deleteList.remove(taskContent[index]);
+                            allSelected = false;
+                          });
+                        } else {
+                          setState(() {
+                            deleteList.add(taskContent[index]);
+                            if (deleteList.length == taskContent.length) {
+                              allSelected = true;
+                            }
+                          });
+                        }
                       }
-                    }
-                  //else
-                  : () async {
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddEditTaskPage(
-                              taskContent: taskContent[index])));
-                      refreshState();
-                    },
-          onLongPress: !onLongPress
-              ? () async {
-                  onLongPress = true;
-                  setState(() {
-                    deleteList.add(taskContent[index]);
-                    if (deleteList.length == taskContent.length) {
-                      allSelected = true;
-                    } else {
-                      allSelected = false;
-                    }
-                  });
-                }
-              : () {},
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-            child: Container(
-              height: 100,
-              decoration: BoxDecoration(
-                color: priorityColor,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 2,
-                      offset: Offset(0, 4)),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
-                child: ListTile(
-                  leading: onLongPress
-                      ? null
-                      : IconButton(
-                          onPressed: () {
-                            updateIsDone(index);
-                            calendarController.add(true);
-                            homeController.add(true);
-                            unfinishedController.add(true);
-                            mainController.add(true);
-                          },
-                          icon: taskContent[index].isDone
-                              ? Icon(Icons.check_box_outlined, size: 30)
-                              : Icon(Icons.check_box_outline_blank, size: 30)),
-                  title: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Text(
-                          taskContent[index].title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                    //else
+                    : () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddEditTaskPage(
+                                taskContent: taskContent[index])));
+                        refreshState();
+                      },
+            onLongPress: !onLongPress
+                ? () async {
+                    onLongPress = true;
+                    setState(() {
+                      deleteList.add(taskContent[index]);
+                      if (deleteList.length == taskContent.length) {
+                        allSelected = true;
+                      } else {
+                        allSelected = false;
+                      }
+                    });
+                  }
+                : () {},
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+              child: Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  color: priorityColor,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 2,
+                        offset: Offset(0, 4)),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                  child: ListTile(
+                    leading: onLongPress
+                        ? null
+                        : IconButton(
+                            onPressed: () {
+                              updateIsDone(index);
+                              calendarController.add(true);
+                              homeController.add(true);
+                              unfinishedController.add(true);
+                              mainController.add(true);
+                            },
+                            icon: taskContent[index].isDone
+                                ? Icon(Icons.check_box_outlined, size: 30)
+                                : Icon(Icons.check_box_outline_blank, size: 30)),
+                    title: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            taskContent[index].title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          DateFormat.yMMMd()
-                              .format(taskContent[index].dateSched),
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                  subtitle: Text(
-                    taskContent[index].description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                        Spacer(),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            DateFormat.yMMMd()
+                                .format(taskContent[index].dateSched),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
                     ),
+                    subtitle: Text(
+                      taskContent[index].description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    trailing: deleteList.contains(taskContent[index])
+                        ? Icon(Icons.check)
+                        : null,
                   ),
-                  trailing: deleteList.contains(taskContent[index])
-                      ? Icon(Icons.check)
-                      : null,
                 ),
               ),
             ),
-          ),
-        );
-      });
+          );
+        }),
+  );
 
 //appBar select all and delete button
   Widget trailingAppbar() {

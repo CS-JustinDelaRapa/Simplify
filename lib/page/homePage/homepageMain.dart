@@ -79,22 +79,25 @@ class _HomeMainState extends State<HomeMain>
             ],
           ),
           bottom: TabBar(
+            enableFeedback: false,
             indicatorWeight: 3.0,
             tabs: [
               Tab(text: 'Today'),
-              Container(
-                child: isLoading?
-                Center(child: 
-                CircularProgressIndicator(),)
-                :Container(
-                  child: unfinishedNumber == 0?
-                  Text('Unfinished') 
-                  :Badge(
-                    badgeColor: Colors.pink.shade400,
-                    padding: EdgeInsets.all(4),
-                    badgeContent: Text(unfinishedNumber.toString(), style: TextStyle(color: Colors.white)),
-                    child: Tab(
-                      text: 'Unfinished')),
+              Tab(
+                child: Container(
+                  child: isLoading?
+                  Center(child: 
+                  CircularProgressIndicator(),)
+                  :Container(
+                    child: unfinishedNumber == 0?
+                    Text('Unfinished') 
+                    :Badge(
+                      badgeColor: Colors.pink.shade400,
+                      padding: EdgeInsets.all(4),
+                      badgeContent: Text(unfinishedNumber.toString(), style: TextStyle(color: Colors.white)),
+                      child: Text(
+                        'Unfinished')),
+                  ),
                 ),
               ),
             ],

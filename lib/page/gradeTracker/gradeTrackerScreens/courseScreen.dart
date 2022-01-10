@@ -355,6 +355,8 @@ class _CourseScreenState extends State<CourseScreenPage> {
                                   children: [
                                     IconButton(
                                         onPressed: () {
+                                          totalPercentage-=item.factorPercentage;
+                                          factorName = item.factorName;
                                           showDialogFunction(gradeFactor
                                               .firstWhere((element) =>
                                                   element.id == item.id));

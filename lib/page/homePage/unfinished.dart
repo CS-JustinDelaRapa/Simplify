@@ -162,6 +162,8 @@ class _UnfinishedPageState extends State<UnfinishedPage>
                                     updateIsDone(index);
                                     listController.add(true);
                                     calendarController.add(true);
+                                    homeController.add(true);
+                                    mainController.add(true);
                                   },
                                   icon: Stack(
                                     children: <Widget>[
