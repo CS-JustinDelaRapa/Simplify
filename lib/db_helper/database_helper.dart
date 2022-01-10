@@ -152,33 +152,30 @@ CREATE TABLE $tableFactorContent(
 
   Future<List<Task>> readAllTaskToday() async {
     final DateTime now = new DateTime.now();
-    var newToday =
-        new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    var newDateTodayMinus23 =
-        new DateTime(now.year, now.month, now.day, now.hour + 23, now.minute);
     String date = DateFormat('yyyy-MM-dd').format(now);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
         where:
-            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ? or NOT ${TblTaskField.isDone} and date_Schedule < ? AND date_Schedule > ?',
-        whereArgs: ['%$date%', '$newToday', '$newDateTodayMinus23'],
+            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} LIKE ?',
+        whereArgs: ['%$date%'],
         orderBy: '${TblTaskField.dateSched} ASC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 
   Future<List<Task>> readUnfinishedTask() async {
     final DateTime now = new DateTime.now();
-    var newDate1 =
-        new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    var newDate =
-        new DateTime(now.year, now.month, now.day, now.hour + 23, now.minute);
-    String date = DateFormat('yyyy-MM-dd').format(now);
-    print(newDate.toString() + ' Date Minus 23 hrs');
+    DateTime newDate = new DateTime(
+        now.year, now.month, now.day, now.hour, now.minute, now.second);
+    String date = DateFormat('yyyy-MM-dd').format(newDate);
     final reference = await instance.database;
     final fromTable = await reference.query(tableTask,
-        where: 'NOT ${TblTaskField.isDone} and date_Schedule BETWEEN ? AND ?',
-        whereArgs: ['1940-01-01 00:00:00.000', '$newDate'],
-        orderBy: '${TblTaskField.dateSched} ASC');
+        where:
+            'NOT ${TblTaskField.isDone} and ${TblTaskField.dateSched} BETWEEN ? AND ?',
+        whereArgs: [
+          '1940-01-01 00:00:00.000',
+          '$date',
+        ],
+        orderBy: '${TblTaskField.dateSched} DESC');
     return fromTable.map((fromSQL) => Task.fromJson(fromSQL)).toList();
   }
 

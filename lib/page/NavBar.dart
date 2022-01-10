@@ -53,10 +53,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _screens = [
-      HomeMain(stream: widget.homeController.stream, streamUnfinished: widget.unfinishedController.stream, streamMain: widget.mainController.stream,),
-      // QuotesPage(stream: widget.homeController.stream,
-      // streamUnfinished: widget.unfinishedController.stream
-      // ),
+      HomeMain(
+        stream: widget.homeController.stream,
+        streamUnfinished: widget.unfinishedController.stream,
+        streamMain: widget.mainController.stream,
+      ),
       ListViewPage(
           stream: widget.listController.stream,
           calendarStream: widget.calendarController.stream),
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                     _selectedIndex == 3 ? Colors.white : Colors.indigo.shade200,
                 size: 30,
               ),
-              label: 'Grade Tracker',
+              label: 'Grade Evaluator',
             ),
             BottomNavigationBarItem(
               icon: Icon(

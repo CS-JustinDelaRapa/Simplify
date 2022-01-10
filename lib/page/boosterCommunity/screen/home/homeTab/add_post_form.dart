@@ -122,7 +122,7 @@ class _AddPostState extends State<AddPostForm> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Profanity Check"),
+                                    title: Text("Offensive Word Alert"),
                                     content: Text(
                                         "Seems like your post contains inapropriate or improper words, Please consider reconstructiong your post."),
                                     actions: [
