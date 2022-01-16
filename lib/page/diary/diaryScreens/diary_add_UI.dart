@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryFormWidget extends StatefulWidget {
   //pwede walang laman
   final String? title;
   final String? description;
   final DateTime? dateCreated;
+  final int? color;
 
   final ValueChanged<String> onChangedTitle;
   final ValueChanged<String> onChangedDescription;
+  final ValueChanged<int> onChangeColor;
   const DiaryFormWidget({
     Key? key,
     this.dateCreated,
     this.title,
     this.description,
+    this.color,
     required this.onChangedTitle,
     required this.onChangedDescription,
+    required this.onChangeColor,
   }) : super(key: key);
 
   @override
@@ -35,15 +40,36 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
           backgroundColor: Colors.transparent,
           body: Padding(
             padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildDate(),
-                SizedBox(height: 15),
-                buildTitle(),
-                SizedBox(height: 8),
-                buildDescription(),
-              ],
+            child: Container(
+              padding: EdgeInsets.all(20),
+               decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                      offset: Offset(0, 4)),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  FittedBox(
+                    child: Row(
+                      children: [
+                        buildDate(),
+                        SizedBox(width: 10),                      
+                        buildColor(),
+                      ],
+                    ),
+                  ),
+                  buildTitle(),
+                  SizedBox(height: 8),
+                  buildDescription(),
+                ],
+              ),
             ),
           ),
         ),
@@ -51,20 +77,20 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
   Widget buildDate() => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Text(
+          DateFormat.d().format(widget.dateCreated!),
+          style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500,)),
           RichText(
             text: new TextSpan(
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.grey[900],
               ),
               children: <TextSpan>[
                 new TextSpan(
-                    text: DateFormat.d().format(widget.dateCreated!),
-                    style: TextStyle(fontSize: 30)),
-                new TextSpan(
-                    text: ' ' +
+                    text:
                         DateFormat.MMM().format(widget.dateCreated!) +
-                        '. ',
+                        '. \n',
                     style: TextStyle(fontSize: 15)),
                 new TextSpan(
                     text: DateFormat.y().format(widget.dateCreated!),
@@ -78,18 +104,11 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
         maxLines: 1,
         initialValue: widget.title,
         style: TextStyle(
-          fontStyle: FontStyle.italic,
           fontSize: 20,
         ),
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 2.0),
-              borderRadius: BorderRadius.all(Radius.circular(16.0))),
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 2.0),
-              borderRadius: BorderRadius.all(Radius.circular(16.0))),
           hintText: 'Title',
           hintStyle: TextStyle(color: Colors.black54),
         ),
@@ -104,14 +123,10 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
           initialValue: widget.description,
           style: TextStyle(fontSize: 18),
           decoration: InputDecoration(
+                            focusedBorder: InputBorder.none,
+                border: InputBorder.none,
               filled: true,
               fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
-              border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
               hintText: 'Tell us what you feel',
               hintStyle: TextStyle(color: Colors.black54)),
           validator: (description) => description != null && description.isEmpty
@@ -120,4 +135,155 @@ class _DiaryFormWidgetState extends State<DiaryFormWidget> {
           onChanged: widget.onChangedDescription,
         ),
       );
+  Widget buildColor() => Row(
+    children: [
+      //amber
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: widget.color == Colors.amber.value? 
+            Border.all(
+              color: Colors.blue,
+              width: 3,
+            ):null,
+          ),
+          child: GestureDetector(
+            onTap: (){
+              widget.onChangeColor(Colors.amber.value);
+              setState(() {
+                widget.onChangeColor(Colors.amber.value);
+              });
+            },
+            child: Container(
+              height: 25,
+              width: 25,
+              color: Colors.amber,
+              child: widget.color == Colors.amber.value?
+              Icon(Icons.check)
+              :null,
+            ),
+          ),
+        ),
+      ),
+      //blue
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: widget.color == Colors.blue.shade500.value? 
+            Border.all(
+              color: Colors.blue,
+              width: 3,
+            ):null,
+          ),
+          child: GestureDetector(
+            onTap: (){
+              widget.onChangeColor(Colors.blue.shade500.value);
+              setState(() {
+                widget.onChangeColor(Colors.blue.shade500.value);
+              });
+            },
+            child: Container(
+              height: 25,
+              width: 25,
+              color: Colors.blue.shade500,
+              child: widget.color == Colors.blue.shade500.value?
+              Icon(Icons.check)
+              :null,
+            ),
+          ),
+        ),
+      ), 
+      //green
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: widget.color == Colors.green.shade500.value? 
+            Border.all(
+              color: Colors.blue,
+              width: 3,
+            ):null,
+          ),
+          child: GestureDetector(
+            onTap: (){
+                widget.onChangeColor(Colors.green.shade500.value);
+              setState(() {
+                widget.onChangeColor(Colors.green.shade500.value);
+              });
+            },
+            child: Container(
+              height: 25,
+              width: 25,
+              color: Colors.green.shade500,
+              child: widget.color == Colors.green.shade500.value?
+              Icon(Icons.check)
+              :null,
+            ),
+          ),
+        ),
+      ),
+      //pink
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: widget.color == Colors.pink.shade500.value? 
+            Border.all(
+              color: Colors.blue,
+              width: 3,
+            ):null,
+          ),
+          child: GestureDetector(
+            onTap: (){
+                widget.onChangeColor(Colors.pink.shade500.value);
+              setState(() {
+                widget.onChangeColor(Colors.pink.shade500.value);
+              });
+            },
+            child: Container(
+              height: 25,
+              width: 25,
+              color: Colors.pink.shade500,
+              child: widget.color == Colors.pink.shade500.value?
+              Icon(Icons.check)
+              :null,
+            ),
+          ),
+        ),
+      ),
+      //red
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: widget.color == Colors.red.shade500.value? 
+            Border.all(
+              color: Colors.blue,
+              width: 3,
+            ):null,
+          ),
+          child: GestureDetector(
+            onTap: (){
+              widget.onChangeColor(Colors.red.shade500.value);
+              setState(() {
+                widget.onChangeColor(Colors.red.shade500.value);
+              });
+            },
+            child: Container(
+              height: 25,
+              width: 25,
+              color: Colors.red.shade500,
+              child: widget.color == Colors.red.shade500.value?
+              Icon(Icons.check)
+              :null,
+            ),
+          ),
+        ),
+      ),      
+
+   ],
+  );
+
 }

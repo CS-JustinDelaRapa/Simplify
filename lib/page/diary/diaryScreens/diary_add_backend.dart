@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/diary.dart';
 import 'package:simplify/page/diary/diaryScreens/diary_add_UI.dart';
@@ -13,30 +14,54 @@ class AddEditDiaryPage extends StatefulWidget {
 
 class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
   final _formKey = GlobalKey<FormState>();
+  late int color;
   late String title;
   late String description;
   late DateTime dateCreated;
   late bool _btnEnabled = false;
+  late String id;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    id = widget.diaryContent?.id.toString() ?? 'temp';
     title = widget.diaryContent?.title ?? '';
     description = widget.diaryContent?.description ?? '';
     dateCreated = widget.diaryContent?.dateCreated ?? DateTime.now();
+    loadColorShared();
+  }
+
+    void loadColorShared() async {
+      setState(() {
+        isLoading = true;
+      });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      int _color = (prefs.getInt(id.toString()) ?? Colors.amber.value);
+      color = _color;
+    });
+        setState(() {
+        isLoading = false;
+      });
+    print('colorsssss '+color.toString());
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0.0,
           centerTitle: true,
           backgroundColor: Colors.indigo.shade800,
           actions: [buildButton(_btnEnabled)],
         ),
-        body: Form(
+        body: isLoading?
+          Center(child: CircularProgressIndicator(),)
+        :Form(
           key: _formKey,
           child: DiaryFormWidget(
+              color: color,
               title: title,
               description: description,
               dateCreated: dateCreated,
@@ -49,7 +74,13 @@ class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
                 return setState(
                   () => this.description = description,
                 );
-              }),
+              }, onChangeColor: (int value) {
+                print(color);
+                validateFields();
+                return setState(
+                  () => color = value,
+                );
+              },),
         ),
       );
 
@@ -94,6 +125,8 @@ class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
   }
 
   Future updateDiary() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(id, color);
     final diary = widget.diaryContent!.returnID(
       title: title,
       description: description,
@@ -102,8 +135,10 @@ class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
   }
 
   Future addDiary() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final diary = Diary(
         title: title, description: description, dateCreated: DateTime.now());
-    await DatabaseHelper.instance.createDiary(diary);
+    int returnID = await DatabaseHelper.instance.createDiary(diary);
+    prefs.setInt(returnID.toString(), color);
   }
 }

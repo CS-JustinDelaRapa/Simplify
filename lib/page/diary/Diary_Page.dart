@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simplify/model/diary.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/page/diary/diaryScreens/diary_add_backend.dart';
@@ -18,6 +19,7 @@ class _DiaryPageState extends State<DiaryPage>
   bool allSelected = false;
   bool onLongPress = false;
   bool isLoading = false;
+  bool isLoadingPrefs = false;
 
   @override
   void initState() {
@@ -117,103 +119,119 @@ class _DiaryPageState extends State<DiaryPage>
 
 //** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions *///** */**Funtions */**Funtions */**Funtions */**Funtions */**Funtions */
 
+Future<int> loadShared(int id) async{
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  int sharedPref = pref.getInt(id.toString()) ?? Colors.amber.value;
+  return sharedPref;
+}
+
 //listTiles
   Widget buildList() => ListView.builder(
       itemCount: diaryContent.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap
-              //if
-              : onLongPress
-                  ? () async {
-                      if (deleteList.contains(diaryContent[index])) {
-                        setState(() {
-                          deleteList.remove(diaryContent[index]);
-                          allSelected = false;
-                        });
-                      } else {
-                        setState(() {
-                          deleteList.add(diaryContent[index]);
-                          if (deleteList.length == diaryContent.length) {
-                            allSelected = true;
-                          }
-                        });
+        return FutureBuilder(
+          future: loadShared(diaryContent[index].id!),
+          builder: (context, snapshot){
+          if(snapshot.hasData){
+            final int color = snapshot.data as int;
+         return GestureDetector(
+            onTap
+                //if
+                : onLongPress
+                    ? () async {
+                        if (deleteList.contains(diaryContent[index])) {
+                          setState(() {
+                            deleteList.remove(diaryContent[index]);
+                            allSelected = false;
+                          });
+                        } else {
+                          setState(() {
+                            deleteList.add(diaryContent[index]);
+                            if (deleteList.length == diaryContent.length) {
+                              allSelected = true;
+                            }
+                          });
+                        }
                       }
-                    }
-                  //else
-                  : () async {
-                      await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddEditDiaryPage(
-                              diaryContent: diaryContent[index])));
-                      refreshState();
-                    },
-          onLongPress: 
-          !onLongPress?
-          () async {
-            onLongPress = true;
-            setState(() {
-              deleteList.add(diaryContent[index]);
-              if (deleteList.length == diaryContent.length) {
-                allSelected = true;
-              } else {
-                allSelected = false;
-              }
-            });
-          }
-          :(){},
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 12),
-            child: Container(
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.amber.shade300,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 2,
-                      offset: Offset(0, 4)),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                child: ListTile(
-                  title: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Text(
-                          diaryContent[index].title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                    //else
+                    : () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddEditDiaryPage(
+                                diaryContent: diaryContent[index])));
+                        refreshState();
+                      },
+            onLongPress: 
+            !onLongPress?
+            () async {
+              onLongPress = true;
+              setState(() {
+                deleteList.add(diaryContent[index]);
+                if (deleteList.length == diaryContent.length) {
+                  allSelected = true;
+                } else {
+                  allSelected = false;
+                }
+              });
+            }
+            :(){},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 12),
+              child: Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Color(color),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 2,
+                        offset: Offset(0, 4)),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                  child: ListTile(
+                    title: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            diaryContent[index].title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      Spacer(),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                      DateFormat.yMMMd().format(diaryContent[index].dateCreated),
-                                      style: TextStyle(fontSize: 12),),
-                    )                      
-                    ],
+                        Spacer(),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                        DateFormat.yMMMd().format(diaryContent[index].dateCreated),
+                                        style: TextStyle(fontSize: 12),),
+                      )                      
+                      ],
+                    ),
+                    subtitle: Text(
+                      diaryContent[index].description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14),),
+                    trailing: deleteList.contains(diaryContent[index])
+                        ? Icon(Icons.check)
+                        : null,
                   ),
-                  subtitle: Text(
-                    diaryContent[index].description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),),
-                  trailing: deleteList.contains(diaryContent[index])
-                      ? Icon(Icons.check)
-                      : null,
                 ),
               ),
             ),
-          ),
+          );
+        } else{
+         return Center(child: CircularProgressIndicator(),);
+        }
+        },
         );
       });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simplify/db_helper/database_helper.dart';
 import 'package:simplify/model/grade_tracker/course.dart';
 import 'package:simplify/page/gradeTracker/gradeTrackerScreens/courseScreen.dart';
@@ -11,8 +12,11 @@ class GradeTrackerPage extends StatefulWidget {
 }
 
 class _GradeTrackerPageState extends State<GradeTrackerPage>
-    with AutomaticKeepAliveClientMixin {
+with AutomaticKeepAliveClientMixin{
+
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey _menuKey = GlobalKey();
+
   late List<Course> courseList;
   Color pickedColor = Colors.red;
   bool isLoading = false;
@@ -21,9 +25,28 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
   bool isLongPressed = false;
   double averageGrade = 0;
 
+  late int remarksType;
+
+  //shared preference
+    void loadRemarksType() async {
+      setState(() {
+        isLoading = true;
+      });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      int _remarksType = (prefs.getInt('remarks') ?? 0);
+      remarksType = _remarksType;
+    });
+        setState(() {
+        isLoading = false;
+      });
+    print('remarkkkkkkks'+remarksType.toString());
+  }
+
   @override
   void initState() {
     refreshState();
+    loadRemarksType();
     super.initState();
   }
 
@@ -74,7 +97,10 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          actions: [buildRemarksLegend()],
+          actions: [
+            buildRemarksLegend(),
+            selectRemarksChoice()
+            ],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: Row(children: [
@@ -127,13 +153,27 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                         const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(
+                                      child:
+                                      Column(
+                                        children: [
+                                      Text(
                                           generateRemarksWord(averageGrade),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 50,
                                               fontWeight: FontWeight.bold),
                                           textAlign: TextAlign.center),
+                                      averageGrade == 0.0?
+                                      Text(
+                                          'No Grade Available',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center):
+                                          Container()
+                                        ],
+                                      )
                                     ),
                                   ),
                                 ),
@@ -154,13 +194,26 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
                                   width: MediaQuery.of(context).size.width / 3,
                                   child: FittedBox(
                                     fit: BoxFit.none,
-                                    child: Text(
-                                      generateRemarks(averageGrade),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 50,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
+                                    child: Column(
+                                      children: [
+                                        Text(remarksType == 0?
+                                          generateRemarksLetters(averageGrade)
+                                          :generateRemarksNumbers(averageGrade),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          'Remarks',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 )
@@ -412,6 +465,68 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     );
   }
 
+  Widget selectRemarksChoice() => PopupMenuButton(
+    key: _menuKey,
+    offset: Offset(-15, 45),
+    tooltip: 'Choose Remarks Type',
+    icon: Icon(Icons.settings),
+    itemBuilder:(context) =>
+    [
+      PopupMenuItem(
+        value: 3,
+        enabled: false,
+        child: Text('Remarks Type:', style: TextStyle(color: Colors.black),)),
+      PopupMenuItem(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RichText(text: TextSpan(
+                style: TextStyle(fontSize: 15, color: Colors.black),
+                children: [
+                      TextSpan(text: 'A+ ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: 'to',),
+                      TextSpan(text: ' F', style: TextStyle(fontWeight: FontWeight.bold)),                                    
+                ]
+              )
+              ),
+              SizedBox(width: 5,),
+              Icon(Icons.check, color: remarksType == 0? Colors.black87 :Colors.white,)
+                    ],
+                  ), value: 0),
+      PopupMenuItem(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RichText(text: TextSpan(
+                style: TextStyle(fontSize: 15, color: Colors.black),
+                children: [
+                      TextSpan(text: '1.0 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: 'to',),
+                      TextSpan(text: ' 5.0', style: TextStyle(fontWeight: FontWeight.bold)),                                    
+                ]
+              )
+              ),
+              SizedBox(width: 5,),
+              Icon(Icons.check, color: remarksType == 1? Colors.black87 :Colors.white,)
+                    ],
+                  ), value: 1),
+                  
+    ],
+    onSelected: (int value) async{
+      //remarksHere
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setInt('remarks', value);     
+      setState(() {
+        remarksType = prefs.getInt('remarks')!;
+      });
+      print(remarksType);
+            print(prefs.getInt('remarks'));
+    refreshState();
+    },
+    );
+
   Widget buildRemarksLegend() => IconButton(
         onPressed: () {
           showDialog(
@@ -538,7 +653,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
         iconSize: 24,
       );
 
-  generateRemarks(double grade) {
+  generateRemarksLetters(double grade) {
     late String remarks;
     if (grade >= 90) {
       remarks = "A";
@@ -556,6 +671,24 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     return remarks;
   }
 
+    generateRemarksNumbers(double grade) {
+    late String remarks;
+    if (grade >= 90) {
+      remarks = "1";
+    } else if (grade >= 85 && grade < 95) {
+      remarks = "1.5";
+    } else if (grade >= 80 && grade < 85) {
+      remarks = "2";
+    } else if (grade >= 75 && grade < 80) {
+      remarks = "3";
+    } else if (grade < 75 && grade > 0) {
+      remarks = "5";
+    } else if (grade == 0.0) {
+      remarks = "N/A";
+    }
+    return remarks;
+  }
+
   generateRemarksWord(double grade) {
     String? remarks;
     if (grade >= 90) {
@@ -567,7 +700,7 @@ class _GradeTrackerPageState extends State<GradeTrackerPage>
     } else if (grade < 75 && grade > 0) {
       remarks = "Failed";
     } else if (grade == 0.0) {
-      remarks = "INC";
+      remarks = "NGA";
     }
     return remarks;
   }
