@@ -139,6 +139,7 @@ class _AddEditDiaryPageState extends State<AddEditDiaryPage> {
     final diary = Diary(
         title: title, description: description, dateCreated: DateTime.now());
     int returnID = await DatabaseHelper.instance.createDiary(diary);
+    print(returnID);
     prefs.setInt(returnID.toString(), color);
   }
 }

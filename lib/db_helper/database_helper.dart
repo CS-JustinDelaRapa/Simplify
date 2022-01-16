@@ -88,7 +88,8 @@ CREATE TABLE $tableFactorContent(
     final reference = await instance.database;
 
     //irereturn nito ang Primary key ng table, which is ID
-    await reference.insert(tableDiary, diaryCreate.toJson());
+    int id = await reference.insert(tableDiary, diaryCreate.toJson());
+    return id;
   }
 
 //**Diary */

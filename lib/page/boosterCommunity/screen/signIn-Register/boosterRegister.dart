@@ -292,13 +292,17 @@ class _BoosterRegisterState extends State<BoosterRegister> {
                             ))),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            AuthService().registerWithEmailandPassword(
+                            if(isAgree == true){
+                                AuthService().registerWithEmailandPassword(
                                 _email,
                                 _password,
                                 _firstName,
                                 _lastName,
                                 _school,
                                 context);
+                            }else{
+                              showCheck();
+                            }
                           }
                         },
                         child: Text('Register',
@@ -324,8 +328,74 @@ class _BoosterRegisterState extends State<BoosterRegister> {
       builder: (context){
         return AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
-          title: Text('Terms and Conditions'),
-          content: Text("A Terms and Conditions is not required and it's not mandatory by law. Unlike Privacy Policies, which are required by laws such as the GDPR, CalOPPA and many others, there's no law or regulation on Terms and Conditions. However, having a Terms and Conditions gives you the right to terminate the access of abusive users or to terminate the access to users who do not follow your rules and guidelines, as well as other desirable business benefits. It's extremely important to have this agreement if you operate a SaaS app. Here are a few examples of how this agreement can help you: If users abuse your website or mobile app in any way, you can terminate their account. Your 'Termination' clause can inform users that their accounts would be terminated if they abuse your service. If users can post content on your website or mobile app (create content and share it on your platform), you can remove any content they created if it infringes copyright. Your Terms and Conditions will inform users that they can only create and/or share content they own rights to. Similarly, if users can register for an account and choose a username, you can inform users that they are not allowed to choose usernames that may infringe trademarks, i.e. usernames like Google, Facebook, and so on.If you sell products or services, you could cancel specific orders if a product price is incorrect. Your Terms and Conditions can include a clause to inform users that certain orders, at your sole discretion, can be canceled if the products ordered have incorrect prices due to various errors. And many more examples."),
+          title: Text('Terms And Conditions', style: TextStyle(fontWeight: FontWeight.bold),),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Terms of Use',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text('''Thank you for joining Simplify! ("We," "Us," "Company"). These Terms of Use, along with the Privacy Policy and any other documents expressly included by reference, establish the terms and conditions under which you may access and use the task organizer and scheduler services, mobile application, and Service provided or maintained by Simplify! ("Service"), which includes any content and functionality made available through the Service. ("Terms and Conditions" or "Agreement")'''),
+                SizedBox(height: 10),
+                Text('''PLEASE READ THE TERMS OF USE CAREFULLY BEFORE YOU START TO USE THE SERVICE. BY USING THE SERVICE, YOU ACCEPT AND AGREE TO BE BOUND AND ABIDE BY THESE TERMS OF USE. IF YOU DO NOT WANT TO AGREE TO THESE TERMS OF USE, YOU MUST NOT ACCESS OR USE THE SERVICE. WE RESERVE THE RIGHT TO CHANGE, ADD OR REMOVE PORTIONS OF THESE TERMS OF USE AND ANY DOCUMENTS INCORPORATED HEREIN AT ANY TIME AND AT OUR SOLE DISCRETION. YOUR CONTINUED USE OF THE SERVICE FOLLOWING THE POSTING OF ANY CHANGES MEANS THAT YOU ACCEPT AND AGREE TO SUCH CHANGES. IT IS YOUR RESPONSIBILITY TO CHECK THESE TERMS OF USE PERIODICALLY FOR CHANGES.''', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text('General',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text('''The Service has been designed by Simplify with the purpose of assisting people to achieve productive day through organizing and scheduling tasks effectively. The Service requires your active engagement and participation. You understand that, despite your efforts, individual users' results will vary for a variety of reasons and Simplify cannot guarantee that you will achieve your goals without your willingness to cooperate.'''),
+                SizedBox(height: 10),
+                Text('Registration',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),  
+                Text('''You are required to register for the Service and provide certain information about yourself. All information we collect about you in connection with the Services is subject to our Privacy Policy. By using the Service, you consent to all actions taken by us with respect to your information in compliance with the Privacy Policy, including being contacted via email. You will receive a user account for our personal use that requires an e-mail and password. You are responsible for all activities that occur under your user account. You shall: (i) have sole responsibility for the accuracy, quality, integrity, legality, reliability, and appropriateness of all data you provide; (ii) maintain the confidentiality of your password and user account information; (iii) use commercially reasonable efforts to prevent unauthorized access to, and (iv) comply with all applicable local, state, and federal laws in using the Service'''),              
+                SizedBox(height: 10),
+                Text('Terms and Termination',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10), 
+                Text('''The term of this Agreement will begin upon your successful registration for the Service and will continue indefinitely unless terminated by either party as permitted herein. The Company may suspend or terminate your access to the Service if you (a) breach any term of this Agreement, or (b) engage in any conduct that the Company determines in its discretion may have an adverse effect on the Company or its reputation. Upon termination, you will no longer have access to the Service, mobile application, or content provided through the Services. In addition to termination, the Company reserves the right to pursue any and all remedies available to it.''')                 
+                ,SizedBox(height: 10), 
+                Text('Conditions of Community Booster',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10), 
+                Text('''The conditions given in the Community Booster are as follows:'''),
+                SizedBox(height: 5),
+                Text('''(a)	Any offensive or swear words detected by the application and checked thoroughly by the moderator or administrator will be deleted accordingly.'''),                
+                SizedBox(height: 5),
+                Text('''(b)	A message through email given upon registration will be sent to the user whenever warnings and offenses were made'''),
+                SizedBox(height: 5),
+                Text('''(c)	There are 3 warnings for the account if a report is made by another user whenever a post in the community booster slipped through the profanity checker.'''),
+                SizedBox(height: 5),
+                Text('''(d)	In addition, if the user receives more than three warnings, the account will be terminated.'''),
+                SizedBox(height: 10), 
+                Text('Warnings of Community Booster',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10), 
+                Text('''(a)	FIRST WARNING: Any foul or swear word placed in the community booster that slipped past the profanity checker and was reported by another user will result in the post being frozen and will be under review. If the post indeed contains offensive language, the moderator or administrator will delete it immediately and send the first warning to the user's email address.'''),
+                SizedBox(height: 5),
+                Text('''(b)	SECOND WARNING: If another foul or swear word placed in the community booster that slipped past the profanity checker and was reported by another user will result in the post being frozen and will be under review. If the post indeed contains offensive language, the moderator or administrator will delete it immediately and send the second warning to the user's email address.'''),
+                SizedBox(height: 5),
+                Text('''(c) THIRD WARNING: If another foul or swear phrase is posted in the community booster that slipped past the profanity checker and is reported by another user, the post will be frozen and reviewed. If the post does actually contain foul language, the moderator or administrator will promptly delete the account and send a message to the user's email address.'''),
+                SizedBox(height: 10),
+                Text('Trademarks',style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text('''Trademarks, service marks, graphics, and logos used in connection with the Service are the trademarks of their respective owners. You are granted no right or license with respect to any of the trademarks mentioned above and any use of such trademarks. You acknowledge and agree that all text, graphics, photographs, trademarks, logos, visual interfaces, artwork, computer code, and all other related content contained on the Service is owned by the Company or third parties and is protected by trade dress, copyright, patent and trademark laws, and various other intellectual property rights and unfair competition laws. Any reproduction, publication, further distribution, or public exhibition of materials provided through the Service, in whole or in part, is strictly prohibited. Except as expressly provided in these Terms of Use, no part of the Service and no content may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, distributed, or transmitted in any way (including “mirroring”) to any other computer, server, Service or another medium for publication or distribution or for any commercial enterprise, without the express prior written consent of the Company.'''),              
+                SizedBox(height: 10),
+                Text('EFFECTIVE: January 15, 2022',style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).pop();
+            }, child: Text('Okay'))
+          ],
+        );
+      });
+  }
+
+ showCheck(){
+    return showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          content: Text('You must read and agree to our Community Terms and Condition to continue.', 
+          textAlign: TextAlign.center,),
           actions: [
             ElevatedButton(onPressed: (){
               Navigator.of(context).pop();
