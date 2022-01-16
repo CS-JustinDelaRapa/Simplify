@@ -155,9 +155,7 @@ class _QuotesPageState extends State<QuotesPage>
       priorityColor[index] = Colors.red.shade400;
     } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
       priorityColor[index] = Colors.amber.shade300;
-    } else if (diff.inHours >= 3 && diff.inDays <= 1) {
-      priorityColor[index] = Colors.purple.shade300;
-    } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+    } else if (diff.inDays < 1) {
       priorityColor[index] = Colors.pink.shade200;
     } else {
       priorityColor[index] = Colors.lightGreen.shade400;

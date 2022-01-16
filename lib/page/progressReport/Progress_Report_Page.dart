@@ -75,9 +75,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         red++;
       } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
         yellow++;
-      } else if (diff.inHours >= 3 && diff.inDays <= 1) {
-        purple++;
-      } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
+      } else if (diff.inDays < 1) {
         pink++;
       } else {
         green++;
@@ -140,51 +138,28 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    center: Text("Low Priority",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold)),
                                     //leaner progress bar
                                     //width for progress bar
                                     animation:
                                         true, //animation to show progress at first
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent: taskContent.isEmpty? 
-                                    0/1
-                                    :green /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
+                                    lineHeight: 18.0, //height of progress bar
+                                    percent: taskContent.isEmpty
+                                        ? 0 / 1
+                                        : green /
+                                            taskContent
+                                                .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.lightGreen
                                         .shade400, //percentage progress bar color
                                     backgroundColor: Colors.lightGreen
                                         .shade200, //background progressbar color
                                   )),
-                                  //purple
-                                  Container(
-                                      // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
-                                      child: LinearPercentIndicator(
-                                    leading: Text(
-                                      purple.toString(),
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    //leaner progress bar
-                                    //width for progress bar
-                                    animation:
-                                        true, //animation to show progress at first
-                                    animationDuration: 1000,
-                                    addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent: taskContent.isEmpty? 
-                                    0/1
-                                    :purple /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
-                                    progressColor: Colors.purple
-                                        .shade300, //percentage progress bar color
-                                    backgroundColor: Colors.purple
-                                        .shade100, //background progressbar color
-                                  )),
+                                  //pink
                                   Container(
                                       // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
                                       child: LinearPercentIndicator(
@@ -195,23 +170,28 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    center: Text("Medium Priority",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold)),
                                     //leaner progress bar
                                     //width for progress bar
                                     animation:
                                         true, //animation to show progress at first
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent: taskContent.isEmpty? 
-                                    0/1
-                                    :pink /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
+                                    lineHeight: 18.0, //height of progress bar
+                                    percent: taskContent.isEmpty
+                                        ? 0 / 1
+                                        : pink /
+                                            taskContent
+                                                .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.pink
                                         .shade200, //percentage progress bar color
                                     backgroundColor: Colors.pink
                                         .shade100, //background progressbar color
                                   )),
+                                  //yellow
                                   Container(
                                       // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
                                       child: LinearPercentIndicator(
@@ -222,24 +202,28 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    center: Text("High Priority",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold)),
                                     //leaner progress bar
                                     //width for progress bar
                                     animation:
                                         true, //animation to show progress at first
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent: 
-                                    taskContent.isEmpty? 
-                                    0/1
-                                    :yellow /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
+                                    lineHeight: 18.0, //height of progress bar
+                                    percent: taskContent.isEmpty
+                                        ? 0 / 1
+                                        : yellow /
+                                            taskContent
+                                                .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.amber
                                         .shade300, //percentage progress bar color
                                     backgroundColor: Colors.amber
                                         .shade100, //background progressbar color
                                   )),
+                                  //red
                                   Container(
                                       // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
                                       child: LinearPercentIndicator(
@@ -250,23 +234,28 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    center: Text("Look-Over Task",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold)),
                                     //leaner progress bar
                                     //width for progress bar
                                     animation:
                                         true, //animation to show progress at first
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent: taskContent.isEmpty? 
-                                    0/1
-                                    :red /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
+                                    lineHeight: 18.0, //height of progress bar
+                                    percent: taskContent.isEmpty
+                                        ? 0 / 1
+                                        : red /
+                                            taskContent
+                                                .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.red
                                         .shade400, //percentage progress bar color
                                     backgroundColor: Colors.red
                                         .shade100, //background progressbar color
                                   )),
+                                  //grey
                                   Container(
                                       // padding: EdgeInsets.fromLTRB(70, 10, 10, 10),
                                       child: LinearPercentIndicator(
@@ -277,18 +266,22 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    center: Text("Finished Task",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold)),
                                     //leaner progress bar
                                     //width for progress bar
                                     animation:
                                         true, //animation to show progress at first
                                     animationDuration: 1000,
                                     addAutomaticKeepAlive: false,
-                                    lineHeight: 10.0, //height of progress bar
-                                    percent:taskContent.isEmpty? 
-                                    0/1
-                                    : gray /
-                                        taskContent
-                                            .length, // 30/100 = 0.3//make round cap at start and end both
+                                    lineHeight: 18.0, //height of progress bar
+                                    percent: taskContent.isEmpty
+                                        ? 0 / 1
+                                        : gray /
+                                            taskContent
+                                                .length, // 30/100 = 0.3//make round cap at start and end both
                                     progressColor: Colors.grey
                                         .shade500, //percentage progress bar color
                                     backgroundColor: Colors.grey

@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:simplify/db_helper/database_helper.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:simplify/main.dart';
 import 'package:simplify/model/task.dart';
 import 'package:simplify/page/taskList/calendarView/calendarView.dart';
@@ -123,24 +124,25 @@ class _ListViewPageState extends State<ListViewPage>
                       ? CircularProgressIndicator()
                       : taskContent.isEmpty
                           ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 180,
-                                width: 180,
-                                 decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/testing/folder.png"),
-          fit: BoxFit.cover,
-        ),
-      ),
-                              ),
-                              Text(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 180,
+                                  width: 180,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/testing/folder.png"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Text(
                                   'No Task Content',
                                   style: TextStyle(fontSize: 20),
                                 ),
-                            ],
-                          )
+                              ],
+                            )
                           : TimerBuilder.scheduled([priorityTime],
                               builder: (context) {
                               return buildList();
@@ -223,36 +225,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    'The task(s) is due in more than 2 days',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            //yellow text
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  margin: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.purple.shade300,
-                                      shape: BoxShape.circle),
-                                  child: Text(
-                                    ' ',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                flex: 8,
-                                child: Text(
-                                    '\tThe task(s) is due in less than 2 days',
+                                    'Low Priority - Due in more than 1 day',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -282,7 +255,7 @@ class _ListViewPageState extends State<ListViewPage>
                               Expanded(
                                 flex: 8,
                                 child: Text(
-                                    '\tThe task(s) is due in less than 3 hours',
+                                    'Medium Priority - Due in less than 1 day',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -292,7 +265,7 @@ class _ListViewPageState extends State<ListViewPage>
                             height: 10,
                           ),
                           Row(
-                            //purple text
+                            //yellow text
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
@@ -311,7 +284,7 @@ class _ListViewPageState extends State<ListViewPage>
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 8,
-                                child: Text('\tOngoing task(s)',
+                                child: Text('High Priority - Ongoing task(s)',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -340,7 +313,7 @@ class _ListViewPageState extends State<ListViewPage>
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 8,
-                                child: Text('Unfinished task(s)',
+                                child: Text('Look-Over task(s)',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                               ),
@@ -420,148 +393,147 @@ class _ListViewPageState extends State<ListViewPage>
 
 //listTiles
   Widget buildList() => RefreshIndicator(
-    onRefresh: (){
-    calendarController.add(true);
-    homeController.add(true);
-    mainController.add(true);
-    unfinishedController.add(true);
-      return refreshState();
-    },
-    child: ListView.builder(
-        itemCount: taskContent.length,
-        itemBuilder: (context, index) {
-          var now = DateTime.now();
-          var diff = taskContent[index].dateSched.difference(now);
-          late Color priorityColor;
-  
-          if (taskContent[index].isDone == true) {
-            priorityColor = Colors.grey.shade500;
-          } else if (diff.inHours <= -24) {
-            priorityColor = Colors.red.shade400;
-          } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
-            priorityColor = Colors.amber.shade300;
-          } else if (diff.inHours >= 3 && diff.inDays <= 1) {
-            priorityColor = Colors.purple.shade300;
-          } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-            priorityColor = Colors.pink.shade200;
-          } else {
-            priorityColor = Colors.lightGreen.shade400;
-          }
-  
-          return GestureDetector(
-            onTap
-                //if
-                : onLongPress
-                    ? () async {
-                        if (deleteList.contains(taskContent[index])) {
-                          setState(() {
-                            deleteList.remove(taskContent[index]);
-                            allSelected = false;
-                          });
-                        } else {
-                          setState(() {
-                            deleteList.add(taskContent[index]);
-                            if (deleteList.length == taskContent.length) {
-                              allSelected = true;
+        onRefresh: () {
+          calendarController.add(true);
+          homeController.add(true);
+          mainController.add(true);
+          unfinishedController.add(true);
+          return refreshState();
+        },
+        child: ListView.builder(
+            itemCount: taskContent.length,
+            itemBuilder: (context, index) {
+              var now = DateTime.now();
+              var diff = taskContent[index].dateSched.difference(now);
+              late Color priorityColor;
+
+              if (taskContent[index].isDone == true) {
+                priorityColor = Colors.grey.shade500;
+              } else if (diff.inHours <= -24) {
+                priorityColor = Colors.red.shade400;
+              } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
+                priorityColor = Colors.amber.shade300;
+              } else if (diff.inDays < 1) {
+                priorityColor = Colors.pink.shade200;
+              } else {
+                priorityColor = Colors.lightGreen.shade400;
+              }
+
+              return GestureDetector(
+                onTap
+                    //if
+                    : onLongPress
+                        ? () async {
+                            if (deleteList.contains(taskContent[index])) {
+                              setState(() {
+                                deleteList.remove(taskContent[index]);
+                                allSelected = false;
+                              });
+                            } else {
+                              setState(() {
+                                deleteList.add(taskContent[index]);
+                                if (deleteList.length == taskContent.length) {
+                                  allSelected = true;
+                                }
+                              });
                             }
-                          });
-                        }
+                          }
+                        //else
+                        : () async {
+                            await Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddEditTaskPage(
+                                    taskContent: taskContent[index])));
+                            refreshState();
+                          },
+                onLongPress: !onLongPress
+                    ? () async {
+                        onLongPress = true;
+                        setState(() {
+                          deleteList.add(taskContent[index]);
+                          if (deleteList.length == taskContent.length) {
+                            allSelected = true;
+                          } else {
+                            allSelected = false;
+                          }
+                        });
                       }
-                    //else
-                    : () async {
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => AddEditTaskPage(
-                                taskContent: taskContent[index])));
-                        refreshState();
-                      },
-            onLongPress: !onLongPress
-                ? () async {
-                    onLongPress = true;
-                    setState(() {
-                      deleteList.add(taskContent[index]);
-                      if (deleteList.length == taskContent.length) {
-                        allSelected = true;
-                      } else {
-                        allSelected = false;
-                      }
-                    });
-                  }
-                : () {},
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-              child: Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  color: priorityColor,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 2,
-                        offset: Offset(0, 4)),
-                  ],
-                ),
+                    : () {},
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
-                  child: ListTile(
-                    leading: onLongPress
-                        ? null
-                        : IconButton(
-                            onPressed: () {
-                              updateIsDone(index);
-                              calendarController.add(true);
-                              homeController.add(true);
-                              unfinishedController.add(true);
-                              mainController.add(true);
-                            },
-                            icon: taskContent[index].isDone
-                                ? Icon(Icons.check_box_outlined, size: 30)
-                                : Icon(Icons.check_box_outline_blank, size: 30)),
-                    title: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            taskContent[index].title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            DateFormat.yMMMd()
-                                .format(taskContent[index].dateSched),
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        )
+                  padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: priorityColor,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 2,
+                            offset: Offset(0, 4)),
                       ],
                     ),
-                    subtitle: Text(
-                      taskContent[index].description,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                      child: ListTile(
+                        leading: onLongPress
+                            ? null
+                            : IconButton(
+                                onPressed: () {
+                                  updateIsDone(index);
+                                  calendarController.add(true);
+                                  homeController.add(true);
+                                  unfinishedController.add(true);
+                                  mainController.add(true);
+                                },
+                                icon: taskContent[index].isDone
+                                    ? Icon(Icons.check_box_outlined, size: 30)
+                                    : Icon(Icons.check_box_outline_blank,
+                                        size: 30)),
+                        title: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                taskContent[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                DateFormat.yMMMd()
+                                    .format(taskContent[index].dateSched),
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            )
+                          ],
+                        ),
+                        subtitle: Text(
+                          taskContent[index].description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: deleteList.contains(taskContent[index])
+                            ? Icon(Icons.check)
+                            : null,
                       ),
                     ),
-                    trailing: deleteList.contains(taskContent[index])
-                        ? Icon(Icons.check)
-                        : null,
                   ),
                 ),
-              ),
-            ),
-          );
-        }),
-  );
+              );
+            }),
+      );
 
 //appBar select all and delete button
   Widget trailingAppbar() {

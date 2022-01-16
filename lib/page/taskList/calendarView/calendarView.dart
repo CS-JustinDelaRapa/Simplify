@@ -11,10 +11,7 @@ import 'package:timer_builder/timer_builder.dart';
 
 class CalendarView extends StatefulWidget {
   final Stream<bool> stream;
-  CalendarView({
-    Key? key,
-    required this.stream
-  }) : super(key: key);
+  CalendarView({Key? key, required this.stream}) : super(key: key);
 
   @override
   _CalendarViewState createState() => _CalendarViewState();
@@ -41,12 +38,11 @@ class _CalendarViewState extends State<CalendarView>
     super.initState();
     try {
       widget.stream.listen((isRefresh) {
-      if(isRefresh){
-        refreshState();
-      }
-    });
-    } catch (e) {
-    }
+        if (isRefresh) {
+          refreshState();
+        }
+      });
+    } catch (e) {}
     refreshState();
   }
 
@@ -201,21 +197,16 @@ class _CalendarViewState extends State<CalendarView>
                                         .isDone ==
                                     true) {
                                   priorityColor = Colors.grey.shade500;
+                                } else if (diff.inHours <= -24) {
+                                  priorityColor = Colors.red.shade400;
                                 } else if (diff.inMicroseconds <= 0 &&
                                     diff.inDays >= -1) {
                                   priorityColor = Colors.amber.shade300;
-                                } else if (diff.inDays <= -1.1) {
-                                  priorityColor = Colors.red.shade400;
-                                } else if (diff.inHours >= 3 &&
-                                    diff.inDays <= 1) {
-                                  priorityColor = Colors.purple.shade300;
-                                } else if (diff.inHours < 3 &&
-                                    diff.inMicroseconds > 0) {
+                                } else if (diff.inDays < 1) {
                                   priorityColor = Colors.pink.shade200;
                                 } else {
                                   priorityColor = Colors.lightGreen.shade400;
                                 }
-
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 8, 8),

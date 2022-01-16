@@ -1,7 +1,6 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'dart:async';
-
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simplify/algo/stringComparisonRanking.dart';
@@ -63,12 +62,12 @@ class _UnfinishedPageState extends State<UnfinishedPage>
         var diff = priorityTask[x].dateSched.difference(now);
         now = DateTime.now();
         //if task is due within 3hrs
-        if (diff.inMicroseconds <= 0) {
+        if (diff.inHours <= -24) {
           priorityColor[x] = Colors.red.shade400;
-        } else if (diff.inHours < 3 && diff.inMicroseconds > 0) {
-          priorityColor[x] = Colors.orange.shade400;
-        } else if (diff.inHours > 3 && diff.inDays < 1) {
+        } else if (diff.inMicroseconds <= 0 && diff.inDays >= -1) {
           priorityColor[x] = Colors.amber.shade300;
+        } else if (diff.inDays < 1) {
+          priorityColor[x] = Colors.pink.shade200;
         } else {
           priorityColor[x] = Colors.lightGreen.shade400;
         }

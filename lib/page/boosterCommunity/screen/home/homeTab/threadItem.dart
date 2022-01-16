@@ -257,7 +257,7 @@ class _ThreadItemState extends State<ThreadItem> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text('FREEZED POST'),
+                                          child: Text('ON HOLD'),
                                         ),
                                       ),
                                     ),
