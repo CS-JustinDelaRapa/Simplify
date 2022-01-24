@@ -12,8 +12,7 @@ class GradeTrackerPage extends StatefulWidget {
 }
 
 class _GradeTrackerPageState extends State<GradeTrackerPage>
-with AutomaticKeepAliveClientMixin{
-
+    with AutomaticKeepAliveClientMixin {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _menuKey = GlobalKey();
 
@@ -28,19 +27,19 @@ with AutomaticKeepAliveClientMixin{
   late int remarksType;
 
   //shared preference
-    void loadRemarksType() async {
-      setState(() {
-        isLoading = true;
-      });
+  void loadRemarksType() async {
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       int _remarksType = (prefs.getInt('remarks') ?? 0);
       remarksType = _remarksType;
     });
-        setState(() {
-        isLoading = false;
-      });
-    print('remarkkkkkkks'+remarksType.toString());
+    setState(() {
+      isLoading = false;
+    });
+    print('remarkkkkkkks' + remarksType.toString());
   }
 
   @override
@@ -97,10 +96,7 @@ with AutomaticKeepAliveClientMixin{
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          actions: [
-            buildRemarksLegend(),
-            selectRemarksChoice()
-            ],
+          actions: [buildRemarksLegend(), selectRemarksChoice()],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: Row(children: [
@@ -152,29 +148,29 @@ with AutomaticKeepAliveClientMixin{
                                     padding:
                                         const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child:
-                                      Column(
-                                        children: [
-                                      Text(
-                                          generateRemarksWord(averageGrade),
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 50,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center),
-                                      averageGrade == 0.0?
-                                      Text(
-                                          'No Grade Available',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center):
-                                          Container()
-                                        ],
-                                      )
-                                    ),
+                                        fit: BoxFit.scaleDown,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                generateRemarksWord(
+                                                    averageGrade),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 50,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                textAlign: TextAlign.center),
+                                            averageGrade == 0.0
+                                                ? Text('No Grade Available',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.center)
+                                                : Container()
+                                          ],
+                                        )),
                                   ),
                                 ),
                                 Container(
@@ -196,9 +192,12 @@ with AutomaticKeepAliveClientMixin{
                                     fit: BoxFit.none,
                                     child: Column(
                                       children: [
-                                        Text(remarksType == 0?
-                                          generateRemarksLetters(averageGrade)
-                                          :generateRemarksNumbers(averageGrade),
+                                        Text(
+                                          remarksType == 0
+                                              ? generateRemarksLetters(
+                                                  averageGrade)
+                                              : generateRemarksNumbers(
+                                                  averageGrade),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 50,
@@ -466,66 +465,89 @@ with AutomaticKeepAliveClientMixin{
   }
 
   Widget selectRemarksChoice() => PopupMenuButton(
-    key: _menuKey,
-    offset: Offset(-15, 45),
-    tooltip: 'Choose Remarks Type',
-    icon: Icon(Icons.settings),
-    itemBuilder:(context) =>
-    [
-      PopupMenuItem(
-        value: 3,
-        enabled: false,
-        child: Text('Remarks Type:', style: TextStyle(color: Colors.black),)),
-      PopupMenuItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      RichText(text: TextSpan(
-                style: TextStyle(fontSize: 15, color: Colors.black),
+        key: _menuKey,
+        offset: Offset(-15, 45),
+        tooltip: 'Choose Remarks Type',
+        icon: Icon(Icons.settings),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+              value: 3,
+              enabled: false,
+              child: Text(
+                'Remarks Type:',
+                style: TextStyle(color: Colors.black),
+              )),
+          PopupMenuItem(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                      TextSpan(text: 'A+ ', style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'to',),
-                      TextSpan(text: ' F', style: TextStyle(fontWeight: FontWeight.bold)),                                    
-                ]
-              )
+                  RichText(
+                      text: TextSpan(
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          children: [
+                        TextSpan(
+                            text: 'A+ ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: 'to',
+                        ),
+                        TextSpan(
+                            text: ' F',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ])),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.check,
+                    color: remarksType == 0 ? Colors.black87 : Colors.white,
+                  )
+                ],
               ),
-              SizedBox(width: 5,),
-              Icon(Icons.check, color: remarksType == 0? Colors.black87 :Colors.white,)
-                    ],
-                  ), value: 0),
-      PopupMenuItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      RichText(text: TextSpan(
-                style: TextStyle(fontSize: 15, color: Colors.black),
+              value: 0),
+          PopupMenuItem(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                      TextSpan(text: '1.0 ', style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'to',),
-                      TextSpan(text: ' 5.0', style: TextStyle(fontWeight: FontWeight.bold)),                                    
-                ]
-              )
+                  RichText(
+                      text: TextSpan(
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          children: [
+                        TextSpan(
+                            text: '1.0 ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: 'to',
+                        ),
+                        TextSpan(
+                            text: ' 5.0',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ])),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.check,
+                    color: remarksType == 1 ? Colors.black87 : Colors.white,
+                  )
+                ],
               ),
-              SizedBox(width: 5,),
-              Icon(Icons.check, color: remarksType == 1? Colors.black87 :Colors.white,)
-                    ],
-                  ), value: 1),
-                  
-    ],
-    onSelected: (int value) async{
-      //remarksHere
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setInt('remarks', value);     
-      setState(() {
-        remarksType = prefs.getInt('remarks')!;
-      });
-      print(remarksType);
-            print(prefs.getInt('remarks'));
-    refreshState();
-    },
-    );
+              value: 1),
+        ],
+        onSelected: (int value) async {
+          //remarksHere
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setInt('remarks', value);
+          setState(() {
+            remarksType = prefs.getInt('remarks')!;
+          });
+          print(remarksType);
+          print(prefs.getInt('remarks'));
+          refreshState();
+        },
+      );
 
   Widget buildRemarksLegend() => IconButton(
         onPressed: () {
@@ -671,21 +693,34 @@ with AutomaticKeepAliveClientMixin{
     return remarks;
   }
 
-    generateRemarksNumbers(double grade) {
+  generateRemarksNumbers(double grade) {
     late String remarks;
-    if (grade >= 90) {
+    if (grade >= 96) {
       remarks = "1";
-    } else if (grade >= 85 && grade < 95) {
+    } else if (grade >= 94 && grade < 96) {
+      remarks = "1.25";
+    } else if (grade >= 91 && grade < 94) {
       remarks = "1.5";
-    } else if (grade >= 80 && grade < 85) {
+    } else if (grade >= 89 && grade < 91) {
+      remarks = "1.75";
+    } else if (grade >= 86 && grade < 89) {
       remarks = "2";
-    } else if (grade >= 75 && grade < 80) {
+    } else if (grade >= 83 && grade < 86) {
+      remarks = "2.25";
+    } else if (grade >= 80 && grade < 83) {
+      remarks = "2.5";
+    } else if (grade >= 77 && grade < 80) {
+      remarks = "2.75";
+    } else if (grade >= 75 && grade < 77) {
       remarks = "3";
-    } else if (grade < 75 && grade > 0) {
+    } else if (grade >= 70 && grade < 75) {
+      remarks = "4";
+    } else if (grade < 70 && grade > 0) {
       remarks = "5";
     } else if (grade == 0.0) {
-      remarks = "N/A";
+      remarks = "NGA";
     }
+
     return remarks;
   }
 

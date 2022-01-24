@@ -199,7 +199,7 @@ class _ListViewPageState extends State<ListViewPage>
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Task Colors: "),
                     content: Container(
-                      height: 405,
+                      height: 350,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
